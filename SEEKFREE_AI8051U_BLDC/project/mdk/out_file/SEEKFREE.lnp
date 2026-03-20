@@ -1,0 +1,27 @@
+".\out_file\ai8051u_isr.obj",
+".\out_file\zf_common_clock.obj",
+".\out_file\zf_common_debug.obj",
+".\out_file\zf_common_function.obj",
+".\out_file\zf_common_typedef.obj",
+".\out_file\zf_common_interrupt.obj",
+".\out_file\START251.obj",
+".\out_file\zf_driver_delay.obj",
+".\out_file\zf_driver_gpio.obj",
+".\out_file\zf_driver_pit.obj",
+".\out_file\zf_driver_uart.obj",
+".\out_file\zf_driver_pwm.obj",
+".\out_file\zf_driver_timer.obj",
+".\out_file\isr.obj",
+".\out_file\main.obj",
+".\out_file\battery.obj",
+".\out_file\comparator.obj",
+".\out_file\motor_control.obj",
+".\out_file\pit_timer.obj",
+".\out_file\pwm_out.obj",
+".\out_file\signal_input.obj",
+".\out_file\sine_control.obj" 
+TO ".\out_file\SEEKFREE" 
+PRINT(".\out_file\SEEKFREE.map") CASE DISABLEWARNING (57,16) 
+REMOVEUNUSED,NOOVERLAY 
+CLASSES (EDATA (0x0-0x7FF), 
+HDATA (0x0-0x7FF)) 

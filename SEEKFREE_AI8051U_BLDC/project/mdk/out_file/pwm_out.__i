@@ -1,0 +1,1 @@
+"..\..\bldc\pwm_out.c" XSMALL INTR2 NOALIAS WARNINGLEVEL (3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\pwm_out.lst) OBJECT(.\out_file\pwm_out.obj)

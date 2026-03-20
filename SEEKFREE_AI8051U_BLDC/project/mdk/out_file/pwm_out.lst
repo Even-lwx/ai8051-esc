@@ -1,0 +1,389 @@
+C251 COMPILER V5.60.0,  pwm_out                                                            06/03/26  16:59:33  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm_out
+OBJECT MODULE PLACED IN .\out_file\pwm_out.obj
+COMPILER INVOKED BY: D:\profession_software\MDK\C251\BIN\C251.EXE ..\..\bldc\pwm_out.c XSMALL INTR2 NOALIAS WARNINGLEVEL
+                    -(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_d
+                    -river;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\pwm_out.lst) OBJECT(.\out_file\pwm_out.obj) 
+
+stmt  level    source
+
+    1          /********************************************************************************************************
+             -*************
+    2           * COPYRIGHT NOTICE
+    3           * Copyright (c) 2020,逐飞科技
+    4           * All rights reserved.
+    5           * 技术讨论QQ群：一群：179029047(已满)  二群：244861897(已满)  三群：824575535
+    6           *
+    7           * 以下所有内容版权均属逐飞科技所有，未经允许不得用于商业用途，
+    8           * 欢迎各位使用并传播本程序，修改内容时必须保留逐飞科技的版权声明。
+    9           *
+   10           * @file                pit_timer
+   11           * @company                     成都逐飞科技有限公司
+   12           * @author              逐飞科技(QQ790875685)
+   13           * @version             查看doc内version文件 版本说明
+   14           * @Software            MDK FOR C251 V5.60
+   15           * @Target core         STC32G12K128
+   16           * @Taobao              https://seekfree.taobao.com/
+   17           * @date                2024-01-22
+   18           ********************************************************************************************************
+             -************/
+   19          
+   20          #include "intrins.h"
+   21          #include "zf_driver_gpio.h"
+   22          #include "bldc_config.h"
+   23          #include "comparator.h"
+   24          #include "pwm_out.h"
+   25          
+   26          
+   27          uint8 g_use_complementary = 0;
+   28          
+   29          
+   30          
+   31          pwm_x_output_func* pwm_x_output[6] = 
+   32          {
+   33              pwm_a_bn_output,
+   34              pwm_a_cn_output,
+   35              pwm_b_cn_output,
+   36              pwm_b_an_output,
+   37              pwm_c_an_output,
+   38              pwm_c_bn_output
+   39          };
+   40          
+   41          
+   42          
+   43          //-------------------------------------------------------------------------------------------------------
+             -------------
+   44          //  @brief      软延时
+   45          //  @param      void                        
+   46          //  @return     void          
+   47          //  @since      v1.0
+   48          //  Sample usage:
+   49          //-------------------------------------------------------------------------------------------------------
+             -------------
+   50          void delay_500ns(void)
+   51          {
+   52   1              _nop_();
+   53   1          _nop_();
+C251 COMPILER V5.60.0,  pwm_out                                                            06/03/26  16:59:33  PAGE 2   
+
+   54   1          _nop_();
+   55   1          _nop_();
+   56   1          _nop_();
+   57   1          _nop_();
+   58   1          _nop_();
+   59   1          _nop_();
+   60   1              _nop_();
+   61   1      }
+   62          
+   63          //-------------------------------------------------------------------------------------------------------
+             -------------
+   64          //  @brief      刹车（关闭输出并开启所有下桥）
+   65          //  @param      void                        
+   66          //  @return     void          
+   67          //  @since      v1.0
+   68          //  Sample usage:
+   69          //-------------------------------------------------------------------------------------------------------
+             -------------
+   70          void pwm_brake(void)
+   71          {
+   72   1          PWMA_ENO = 0;
+   73   1          PWM_A_L_PIN = 1;
+   74   1          PWM_B_L_PIN = 1;
+   75   1          PWM_C_L_PIN = 1;
+   76   1      }
+   77          
+   78          //-------------------------------------------------------------------------------------------------------
+             -------------
+   79          //  @brief      关闭输出
+   80          //  @param      void                        
+   81          //  @return     void          
+   82          //  @since      v1.0
+   83          //  Sample usage:
+   84          //-------------------------------------------------------------------------------------------------------
+             -------------
+   85          void pwm_close_output(void)
+   86          {
+   87   1          PWM_A_H_PIN = 0;
+   88   1          PWM_B_H_PIN = 0;
+   89   1          PWM_C_H_PIN = 0;
+   90   1      
+   91   1          PWM_A_L_PIN = 0;
+   92   1          PWM_B_L_PIN = 0;
+   93   1          PWM_C_L_PIN = 0;
+   94   1          PWMA_ENO = 0;
+   95   1      }
+   96          
+   97          //-------------------------------------------------------------------------------------------------------
+             -------------
+   98          //  @brief      开启A上B下
+   99          //  @param      void                        
+  100          //  @return     void          
+  101          //  @since      v1.0
+  102          //  Sample usage:
+  103          //-------------------------------------------------------------------------------------------------------
+             -------------
+  104          void pwm_a_bn_output()
+  105          {
+  106   1      #if BLDC_USR_COMPLEMENTARY
+                   PWMA_ENO = 0x03;
+               #else
+  109   1          PWMA_ENO = 0x01;
+  110   1      #endif
+  111   1      
+  112   1          PWM_A_L_PIN = 0;
+  113   1          PWM_C_L_PIN = 0;
+C251 COMPILER V5.60.0,  pwm_out                                                            06/03/26  16:59:33  PAGE 3   
+
+  114   1          PWM_B_L_PIN = 1;
+  115   1          
+  116   1          CMP_SELECT_C;
+  117   1      }
+  118          
+  119          //-------------------------------------------------------------------------------------------------------
+             -------------
+  120          //  @brief      开启A上C下
+  121          //  @param      void                        
+  122          //  @return     void          
+  123          //  @since      v1.0
+  124          //  Sample usage:
+  125          //-------------------------------------------------------------------------------------------------------
+             -------------
+  126          void pwm_a_cn_output()
+  127          {
+  128   1      #if BLDC_USR_COMPLEMENTARY
+                   PWMA_ENO = 0x03;
+               #else
+  131   1          PWMA_ENO = 0x01;
+  132   1      #endif
+  133   1      
+  134   1          PWM_A_L_PIN = 0;
+  135   1          PWM_B_L_PIN = 0;
+  136   1          PWM_C_L_PIN = 1;
+  137   1          
+  138   1          CMP_SELECT_B;
+  139   1      }
+  140          
+  141          //-------------------------------------------------------------------------------------------------------
+             -------------
+  142          //  @brief      开启B上C下
+  143          //  @param      void                        
+  144          //  @return     void          
+  145          //  @since      v1.0
+  146          //  Sample usage:
+  147          //-------------------------------------------------------------------------------------------------------
+             -------------
+  148          void pwm_b_cn_output()
+  149          {
+  150   1      #if BLDC_USR_COMPLEMENTARY
+                   PWMA_ENO = 0x0C;
+               #else
+  153   1          PWMA_ENO = 0x04;
+  154   1      #endif
+  155   1          
+  156   1          PWM_A_L_PIN = 0;
+  157   1          PWM_B_L_PIN = 0;
+  158   1          PWM_C_L_PIN = 1;
+  159   1          
+  160   1          CMP_SELECT_A;
+  161   1      
+  162   1      }
+  163          
+  164          //-------------------------------------------------------------------------------------------------------
+             -------------
+  165          //  @brief      开启B上A下
+  166          //  @param      void                        
+  167          //  @return     void          
+  168          //  @since      v1.0
+  169          //  Sample usage:
+  170          //-------------------------------------------------------------------------------------------------------
+             -------------
+  171          void pwm_b_an_output()
+  172          {
+  173   1      #if BLDC_USR_COMPLEMENTARY
+C251 COMPILER V5.60.0,  pwm_out                                                            06/03/26  16:59:33  PAGE 4   
+
+                   PWMA_ENO = 0x0C;
+               #else
+  176   1          PWMA_ENO = 0x04;
+  177   1      #endif
+  178   1          
+  179   1          PWM_B_L_PIN = 0;
+  180   1          PWM_C_L_PIN = 0;
+  181   1          PWM_A_L_PIN = 1;
+  182   1          
+  183   1          CMP_SELECT_C;
+  184   1      }
+  185          
+  186          //-------------------------------------------------------------------------------------------------------
+             -------------
+  187          //  @brief      开启C上A下
+  188          //  @param      void                        
+  189          //  @return     void          
+  190          //  @since      v1.0
+  191          //  Sample usage:
+  192          //-------------------------------------------------------------------------------------------------------
+             -------------
+  193          void pwm_c_an_output()
+  194          {       
+  195   1      #if BLDC_USR_COMPLEMENTARY
+                   PWMA_ENO = 0x30;
+               #else
+  198   1          PWMA_ENO = 0x10;
+  199   1      #endif
+  200   1          
+  201   1          PWM_B_L_PIN = 0;
+  202   1          PWM_C_L_PIN = 0;
+  203   1          PWM_A_L_PIN = 1;
+  204   1          
+  205   1          CMP_SELECT_B;
+  206   1      }
+  207          
+  208          //-------------------------------------------------------------------------------------------------------
+             -------------
+  209          //  @brief      开启C上B下
+  210          //  @param      void                        
+  211          //  @return     void          
+  212          //  @since      v1.0
+  213          //  Sample usage:
+  214          //-------------------------------------------------------------------------------------------------------
+             -------------
+  215          void pwm_c_bn_output()
+  216          {
+  217   1      #if BLDC_USR_COMPLEMENTARY
+                   PWMA_ENO = 0x30;
+               #else
+  220   1          PWMA_ENO = 0x10;
+  221   1      #endif
+  222   1          
+  223   1          PWM_A_L_PIN = 0;
+  224   1          PWM_C_L_PIN = 0;
+  225   1          PWM_B_L_PIN = 1;
+  226   1          
+  227   1          CMP_SELECT_A;
+  228   1      }
+  229          
+  230          
+  231          //-------------------------------------------------------------------------------------------------------
+             -------------
+  232          //  @brief      更新PWM占空比
+  233          //  @param      void                        
+  234          //  @return     void          
+C251 COMPILER V5.60.0,  pwm_out                                                            06/03/26  16:59:33  PAGE 5   
+
+  235          //  @since      v1.0
+  236          //  Sample usage:
+  237          //-------------------------------------------------------------------------------------------------------
+             -------------
+  238          void pwm_out_duty_update(uint16 duty)
+  239          {
+  240   1          uint8 temp_h, temp_l;
+  241   1      
+  242   1          temp_h = (duty >> 8) & 0xFF;
+  243   1          temp_l = (uint8)duty;
+  244   1          
+  245   1          PWMA_CCR1H = temp_h;
+  246   1          PWMA_CCR1L = temp_l;
+  247   1          
+  248   1          PWMA_CCR2H = temp_h;
+  249   1          PWMA_CCR2L = temp_l;
+  250   1          
+  251   1          PWMA_CCR3H = temp_h;
+  252   1          PWMA_CCR3L = temp_l;
+  253   1      
+  254   1      }
+  255          
+  256          //-------------------------------------------------------------------------------------------------------
+             -------------
+  257          //  @brief      PWM初始化（中心对齐方式）
+  258          //  @param      void                        
+  259          //  @return     void          
+  260          //  @since      v1.0
+  261          //  Sample usage:
+  262          //-------------------------------------------------------------------------------------------------------
+             -------------
+  263          void pwm_out_init(void)
+  264          {
+  265   1          PWM_A_H_PIN = 0;
+  266   1              PWM_A_L_PIN = 0;
+  267   1              PWM_B_H_PIN = 0;
+  268   1              PWM_B_L_PIN = 0;
+  269   1              PWM_C_H_PIN = 0;
+  270   1              PWM_C_L_PIN = 0;
+  271   1          
+  272   1              PWMA_ENO = 0;
+  273   1          
+  274   1              PWMA_CCER1  = 0;
+  275   1              PWMA_CCER2  = 0;
+  276   1              PWMA_SR1    = 0;
+  277   1              PWMA_SR2    = 0;
+  278   1          PWMA_ENO    = 0;
+  279   1              PWMA_IER    = 0;
+  280   1          
+  281   1          // 设置PWM引脚
+  282   1          PWMA_PS     = 0x55;
+  283   1          
+  284   1          PWMA_CCMR1  = 0x78;         // 通道模式配置, PWM模式2, 预装载允许
+  285   1              PWMA_CCR1H  = 0;
+  286   1          PWMA_CCR1L  = 0;
+  287   1              PWMA_CCER1 |= 0x0F;             // 开启比较输出, 低电平有效
+  288   1          
+  289   1              PWMA_CCMR2  = 0x78;             // 通道模式配置, PWM模式2, 预装载允许
+  290   1              PWMA_CCR2H  = 0;
+  291   1          PWMA_CCR2L  = 0;
+  292   1              PWMA_CCER1 |= 0xF0;             // 开启比较输出, 低电平有效
+  293   1          
+  294   1          PWMA_CCMR3  = 0x78;         // 通道模式配置, PWM模式2, 预装载允许
+  295   1              PWMA_CCR3H  = 0;
+  296   1          PWMA_CCR3L  = 0;
+  297   1              PWMA_CCER2 |= 0x0F;             // 开启比较输出, 低电平有效
+C251 COMPILER V5.60.0,  pwm_out                                                            06/03/26  16:59:33  PAGE 6   
+
+  298   1         
+  299   1      //    PWMA_IER    = 0x10;     // 开启更新中
+  300   1          //PWMA_ENO = 0xff;//0X15;
+  301   1          
+  302   1          // 预分频
+  303   1          PWMA_PSCRH = 0;
+  304   1          PWMA_PSCRL = 0;
+  305   1          
+  306   1          // 设置周期
+  307   1          PWMA_ARRH = (uint8)((BLDC_PWM_ARR_MAX-1) >> 8);
+  308   1          PWMA_ARRL = (uint8)((BLDC_PWM_ARR_MAX-1) & 0xff);
+  309   1          
+  310   1          PWMA_DTR    = BLDC_PWM_DEADTIME;
+  311   1          PWMA_BKR    = 0x80;         // 主输出使能 相当于总开关
+  312   1              PWMA_CR1    = 0x85;             // 使能计数器, 允许自动重装载寄存器缓冲, 边沿对齐, 向上计数, 只有计数器上下溢出才触
+             -发更新中断,  bit7=1:写自动重装载寄存器缓冲(本周期不会被打扰), =0:直接写自动重装载寄存器本(周期可能会乱掉)
+  313   1              PWMA_EGR    = 0x01;             // 产生一次更新事件, 清除计数器和与分频计数器, 装载预分频寄存器的值
+  314   1          
+  315   1      //    // 刚开始使用刹车将
+  316   1      //    PWM_A_L_PIN = 1;
+  317   1      //    PWM_B_L_PIN = 1;
+  318   1      //    PWM_C_L_PIN = 1;
+  319   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       538     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =        13     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        21     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

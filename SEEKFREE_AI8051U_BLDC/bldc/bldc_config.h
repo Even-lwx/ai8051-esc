@@ -39,9 +39,9 @@
 	
 #define BLDC_START_DELAY                (10000)   		// 当遇到堵转后电机停止时间，之后电机会再次尝试启动（单位0.05ms）
 
-#define BLDC_CLOSE_LOOP_WAIT        	(50 )           // 闭环等待换向次数
+#define BLDC_CLOSE_LOOP_WAIT        	(200 )          // 闭环等待换向次数
 
-#define BLDC_OPEN_LOOP_WAIT        		(50 )           // 闭环等待换向次数
+#define BLDC_OPEN_LOOP_WAIT        		(200 )          // 闭环等待换向次数
 
 #define BLDC_SPEED_INCREMENTAL      	(2)             // 加减速响应 1-20，可修改这个提高加速响应，
 														// 设置20响应速度最慢，设置1响应速度最快。

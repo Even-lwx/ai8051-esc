@@ -21,11 +21,11 @@
 #define _bldc_config_h_
 
 
-// 40000000 / 48000 = 833
+// 40000000 / 43333 = 923.08
 // 40000000 为系统频率40Mhz
-// 48000为48Khz
+// 43333为43.333Khz
 
-#define BLDC_PWM_ARR_MAX                (833)     		// PWM的最大占空比，需要自行根据PWM初始化去计算
+#define BLDC_PWM_ARR_MAX                (923)     		// PWM的最大占空比，需要自行根据PWM初始化去计算
 
 #define BLDC_MAX_DUTY                   (10)      	    // 启动最大占空比，单位百分之一
 

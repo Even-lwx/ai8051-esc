@@ -85,15 +85,17 @@ void pwmb_isr()interrupt 27
 			pwm_input_timeout_count = 0;
         }
         
-        // 更新占空比
+        // 更新占空比（BLDC_USR_DUTY>0 时为宏固定占空比，见 bldc_config.h）
+#if (BLDC_USR_DUTY == 0)
         motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000;
+#endif
 	}
     
     if(PWMB_SR1 & 0x01)
     {
         PWMB_SR1 = 0;
 				
-		
+#if (BLDC_USR_DUTY == 0)
         // 未检测到输入信号则输出油门都清零
 		if(motor.duty > 0)
 		{
@@ -105,7 +107,14 @@ void pwmb_isr()interrupt 27
 				motor.duty = 0;
 			}
 		}
+#endif
     }
+
+#if (BLDC_USR_DUTY > 0)
+    // 宏固定占空比：1~100 表示目标 1%~100%，不读外部捕获、不做无信号清零
+    motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;
+    pwm_input_timeout_count = 0;
+#endif
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -139,4 +148,8 @@ void pwm_input_init(void)
     pwmin.period = 0;
     pwmin.high_value = 0;
     pwmin.high_time = 0;
+
+#if (BLDC_USR_DUTY > 0)
+    motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;
+#endif
 }

@@ -49,10 +49,14 @@
 // 电池电压过低       	RUN熄灭，ERR常亮
 // 电机堵转        		RUN熄灭，ERR闪烁
 
-
 void main()
 {
-    clock_init(SYSTEM_CLOCK_40M);				// 务必保留
+        
+    // STC-ISP下载的时候，输入用户程序运行时的IRC频率必须设置为35MHz
+    // STC-ISP下载的时候，输入用户程序运行时的IRC频率必须设置为35MHz
+    // STC-ISP下载的时候，输入用户程序运行时的IRC频率必须设置为35MHz
+        
+    clock_init(SYSTEM_CLOCK_35M);				// 务必保留
 	debug_init();								// 务必保留
 
     // 此处编写用户代码(例如：外设初始化代码等)
@@ -68,9 +72,9 @@ void main()
     pwm_out_init();      	// PWM初始化 采用中心对齐       
 
 	pit_timer_init();       // 周期定时器初始化
+    
 
-
-    EA = 1;
+    EA = 1;                 // 开启总中断
 
             
     while(1)

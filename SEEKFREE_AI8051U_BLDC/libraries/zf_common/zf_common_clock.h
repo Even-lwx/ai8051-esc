@@ -39,7 +39,7 @@
 #include "zf_driver_uart.h"
 
 
-#define SYSTEM_CLOCK_40M       40000000UL
+#define SYSTEM_CLOCK_35M       35000000UL
 
 extern int32 system_clock;
 

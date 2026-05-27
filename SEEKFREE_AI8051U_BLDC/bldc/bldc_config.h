@@ -21,11 +21,11 @@
 #define _bldc_config_h_
 
 
-// 40000000 / 43333 = 923.08
-// 40000000 为系统频率40Mhz
+// 35000000 / 43333 = 807.69
+// 35000000 为系统频率40Mhz
 // 43333为43.333Khz
 
-#define BLDC_PWM_ARR_MAX                (923)     		// PWM的最大占空比，需要自行根据PWM初始化去计算
+#define BLDC_PWM_ARR_MAX                (807)     		// PWM的最大占空比，需要自行根据PWM初始化去计算
 
 #define BLDC_MAX_DUTY                   (10)      	    // 启动最大占空比，单位百分之一
 
@@ -43,7 +43,7 @@
 
 #define BLDC_OPEN_LOOP_WAIT        		(200 )          // 闭环等待换向次数
 
-#define BLDC_SPEED_INCREMENTAL      	(2)             // 加减速响应 1-20，可修改这个提高加速响应，
+#define BLDC_SPEED_INCREMENTAL      	(3)             // 加减速响应 1-20，可修改这个提高加速响应，
 														// 设置20响应速度最慢，设置1响应速度最快。
 														// 响应速度越快，越容易出现换相错误，所以建议从20开始，一点一点减小。
 

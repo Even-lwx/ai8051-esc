@@ -41,7 +41,7 @@
 #include "zf_driver_delay.h"
 
 //ÄÚºËÆµÂÊ
-int32 system_clock = SYSTEM_CLOCK_40M;
+int32 system_clock = SYSTEM_CLOCK_35M;
 
 
 #define T22M_ADDR CHIPID11 //22.1184MHz
@@ -64,48 +64,15 @@ int32 system_clock = SYSTEM_CLOCK_40M;
 void clock_init (uint32 clock)                                              // ºËĞÄÊ±ÖÓ³õÊ¼»¯
 {
 	P_SW2 = 0x80;           // ¿ªÆôÌØÊâµØÖ··ÃÎÊ
-    CKCON = 0x00;           // ÉèÖÃÍâ²¿Êı¾İ×ÜÏßÎª×î¿ì
     WTST = 0;               // ÉèÖÃ³ÌĞò´úÂëµÈ´ı²ÎÊı£¬¸³ÖµÎª0¿É½«CPUÖ´ĞĞ³ÌĞòµÄËÙ¶ÈÉèÖÃÎª×î¿ì
-
-
-
-//	USBCLK &= ~(3 << 5);
-//	USBCLK |= (2 << 5);
-//	USBCLK |= (1 << 7);
-//	_nop_();
-//    _nop_();
-//    _nop_();
-//    _nop_();
-//    _nop_();
-//	CLKSEL |= (1 << 7);
-//	CLKSEL |= (1 << 6);
-//	MCLKOCR = 0x01;
-//	IRC48MCR = 0x80;
-//	while (!(IRC48MCR & 1));
-//	IRCBAND &= ~(3 << 6);
-//	IRCBAND |= (2 << 6);
-//	DMAIR = 0x3F; 		//TPUÊ±ÖÓ 120M
-//	HSCLKDIV = 0x00;
-
+    CKCON = 0x00;           // ÉèÖÃÍâ²¿Êı¾İ×ÜÏßÎª×î¿ì
     
-//	// Íâ²¿¾§Õñ
-//    XOSCCR = 0xc0;          // Æô¶¯Íâ²¿¾§Õñ
-//    while (!(XOSCCR & 1));  // µÈ´ıÊ±ÖÓÎÈ¶¨
-//    CLKDIV = 0x00;          // Ê±ÖÓ²»·ÖÆµ
-//    CLKSEL = 0x01;          // Ñ¡ÔñÍâ²¿¾§Õñ
-//	CLKDIV = 0x00;          // 40MHzÖ÷Æµ£¬·ÖÆµÉèÖÃ
-//	
-
-//    // Ñ¡Ôñ44.2368Mhz
+//    // Ñ¡Ôñ35Mhz
 //    CLKDIV = 0x04;
-//    IRTRIM = T44M_ADDR;
+//    IRTRIM = T35M_ADDR;
 //    VRTRIM = VRT44M_ADDR;
 //    IRCBAND |= 0x03;
 //    CLKDIV = 0x00;
-    
-
-
-	system_clock = clock;
     
 
     
@@ -126,6 +93,8 @@ void clock_init (uint32 clock)                                              // º
 //    P7M0 = 0x00;
 //    P7M1 = 0x00;
 	
+    system_clock = clock;
+            
 	system_delay_init();    // ÑÓÊ±º¯Êı³õÊ¼»¯
     
     ADCCFG = 0x00;
@@ -145,7 +114,7 @@ void clock_init (uint32 clock)                                              // º
 	SPI_CLKDIV = 0x00;
 	
 	
-	interrupt_global_enable();
+//	interrupt_global_enable();
 }
 
 

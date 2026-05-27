@@ -102,7 +102,7 @@ void pit_motor_control()
 		{
 			uint16 sine_delay;
 			ET0 = 0; 					// 关闭定时器0中断
-			IE2 = ~0x40;			  	// 关闭定时器4中断
+			IE2 &= ~0x40;			  	// 关闭定时器4中断
 			comparator_close_isr();		// 关闭比较器中断
 			stall_time_out_check = 0;	// 堵转检测计数器设置为0
 			motor.commutation_num = 0;	// 电机换相计数器设置为0
@@ -399,7 +399,7 @@ void pit_motor_control()
 		case MOTOR_STOP_STALL:
 		{
 			motor_stop();
-			IE2 = ~0x40;				// 关闭定时器4中断
+			IE2 &= ~0x40;				// 关闭定时器4中断
 			comparator_close_isr();		// 关闭比较器中断
 			motor.run_flag = MOTOR_RESTART;
 			motor.restart_delay = BLDC_START_DELAY;
@@ -422,7 +422,7 @@ void pit_motor_control()
 		case BYTE_LOW_VOLTAGE:
 		{
 			ET0 = 0; 					// 关闭定时器0中断
-			IE2 = ~0x40;			  	// 关闭定时器4中断
+			IE2 &= ~0x40;			  	// 关闭定时器4中断
 			comparator_close_isr();		// 关闭比较器中断
 			motor_stop();
 		}

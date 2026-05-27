@@ -37,7 +37,7 @@
 
 
 
-void DMA_UART1_IRQHandler (void) interrupt 4
+void DMA_UART1_IRQHandler (void) interrupt DMA_UR1R_VECTOR
 {
     static vuint8 dwon_count = 0;
     if (DMA_UR1R_STA & 0x01)		// 接收完成
@@ -58,10 +58,10 @@ void DMA_UART1_IRQHandler (void) interrupt 4
             dwon_count = 0;
         }
         
-        if(uart1_irq_handler != NULL)
-        {
-            uart1_irq_handler(uart_rx_buff[UART_1][0]);
-        }
+//        if(uart1_irq_handler != NULL)
+//        {
+//            uart1_irq_handler(uart_rx_buff[UART_1][0]);
+//        }
     }
     
     if (DMA_UR1R_STA & 0x02)	//数据丢弃
@@ -76,83 +76,83 @@ void DMA_UART1_IRQHandler (void) interrupt 4
 
 
 
-void DMA_UART2_IRQHandler (void) interrupt 8
-{
+//void DMA_UART2_IRQHandler (void) interrupt DMA_UR2R_VECTOR
+//{
 
-    if (DMA_UR2R_STA & 0x01)		// 接收完成
-    {
-        DMA_UR2R_STA &= ~0x01;		// 清标志位
-        uart_rx_start_buff(UART_2);	// 设置下一次接收，务必保留
-        
-        if(uart2_irq_handler != NULL)
-        {
-            uart2_irq_handler(uart_rx_buff[UART_2][0]);
-        }
-    }
-    
-    if (DMA_UR2R_STA & 0x02)		//数据丢弃
-    {
-        DMA_UR2R_STA &= ~0x02;		//清标志位
-        uart_rx_start_buff(UART_2);	// 设置下一次接收，务必保留
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        
-    }
-}
+//    if (DMA_UR2R_STA & 0x01)		// 接收完成
+//    {
+//        DMA_UR2R_STA &= ~0x01;		// 清标志位
+//        uart_rx_start_buff(UART_2);	// 设置下一次接收，务必保留
+//        
+////        if(uart2_irq_handler != NULL)
+////        {
+////            uart2_irq_handler(uart_rx_buff[UART_2][0]);
+////        }
+//    }
+//    
+//    if (DMA_UR2R_STA & 0x02)		//数据丢弃
+//    {
+//        DMA_UR2R_STA &= ~0x02;		//清标志位
+//        uart_rx_start_buff(UART_2);	// 设置下一次接收，务必保留
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        
+//    }
+//}
 
-void DMA_UART3_IRQHandler (void) interrupt 17
-{
+//void DMA_UART3_IRQHandler (void) interrupt DMA_UR3R_VECTOR
+//{
 
-    if (DMA_UR3R_STA & 0x01)		// 接收完成
-    {
-        DMA_UR3R_STA &= ~0x01;		// 清标志位
-        uart_rx_start_buff(UART_3);	// 设置下一次接收，务必保留
-        
-        if(uart3_irq_handler != NULL)
-        {
-        
-            uart3_irq_handler(uart_rx_buff[UART_3][0]);
-            
-        }
-    }
-    
-    if (DMA_UR3R_STA & 0x02)		//数据丢弃
-    {
-        DMA_UR3R_STA &= ~0x02;		//清标志位
-        uart_rx_start_buff(UART_3);	// 设置下一次接收，务必保留
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        
-    }
-}
+//    if (DMA_UR3R_STA & 0x01)		// 接收完成
+//    {
+//        DMA_UR3R_STA &= ~0x01;		// 清标志位
+//        uart_rx_start_buff(UART_3);	// 设置下一次接收，务必保留
+//        
+////        if(uart3_irq_handler != NULL)
+////        {
+////        
+////            uart3_irq_handler(uart_rx_buff[UART_3][0]);
+////            
+////        }
+//    }
+//    
+//    if (DMA_UR3R_STA & 0x02)		//数据丢弃
+//    {
+//        DMA_UR3R_STA &= ~0x02;		//清标志位
+//        uart_rx_start_buff(UART_3);	// 设置下一次接收，务必保留
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        
+//    }
+//}
 
-void DMA_UART4_IRQHandler (void) interrupt 18
-{
+//void DMA_UART4_IRQHandler (void) interrupt DMA_UR4R_VECTOR
+//{
 
-    if (DMA_UR4R_STA & 0x01)		// 接收完成
-    {
-        DMA_UR4R_STA &= ~0x01;		// 清标志位
-        uart_rx_start_buff(UART_4);	// 设置下一次接收，务必保留
-        
-        if(uart4_irq_handler != NULL)
-        {
-            uart4_irq_handler(uart_rx_buff[UART_4][0]);
-            
-        }
-    }
-    
-    if (DMA_UR4R_STA & 0x02)	//数据丢弃
-    {
-        DMA_UR4R_STA &= ~0x02;	//清标志位
-        uart_rx_start_buff(UART_4);	// 设置下一次接收，务必保留
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-        
-    }
-}
+//    if (DMA_UR4R_STA & 0x01)		// 接收完成
+//    {
+//        DMA_UR4R_STA &= ~0x01;		// 清标志位
+//        uart_rx_start_buff(UART_4);	// 设置下一次接收，务必保留
+//        
+////        if(uart4_irq_handler != NULL)
+////        {
+////            uart4_irq_handler(uart_rx_buff[UART_4][0]);
+////            
+////        }
+//    }
+//    
+//    if (DMA_UR4R_STA & 0x02)	//数据丢弃
+//    {
+//        DMA_UR4R_STA &= ~0x02;	//清标志位
+//        uart_rx_start_buff(UART_4);	// 设置下一次接收，务必保留
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
+//        
+//    }
+//}
 
 
 //void TM0_IRQHandler() interrupt 1
@@ -173,24 +173,24 @@ void DMA_UART4_IRQHandler (void) interrupt 18
 //        tim1_irq_handler();
 //    }
 //}
-void TM2_IRQHandler() interrupt 12
-{
-    TIM2_CLEAR_FLAG;
-    
-    if(tim2_irq_handler != NULL)
-    {
-        tim2_irq_handler();
-    }
-}
-void TM3_IRQHandler() interrupt 19
-{
-    TIM3_CLEAR_FLAG;
-    
-    if(tim3_irq_handler != NULL)
-    {
-        tim3_irq_handler();
-    }
-}
+//void TM2_IRQHandler() interrupt 12
+//{
+//    TIM2_CLEAR_FLAG;
+//    
+//    if(tim2_irq_handler != NULL)
+//    {
+//        tim2_irq_handler();
+//    }
+//}
+//void TM3_IRQHandler() interrupt 19
+//{
+//    TIM3_CLEAR_FLAG;
+//    
+//    if(tim3_irq_handler != NULL)
+//    {
+//        tim3_irq_handler();
+//    }
+//}
 
 //void TM4_IRQHandler() interrupt 20
 //{
@@ -202,15 +202,15 @@ void TM3_IRQHandler() interrupt 19
 //    }
 //}
 
-void TM11_IRQHandler() interrupt 24
-{
-    TIM11_CLEAR_FLAG;
-    
-    if(tim11_irq_handler != NULL)
-    {
-        tim11_irq_handler();
-    }
-}
+//void TM11_IRQHandler() interrupt 24
+//{
+//    TIM11_CLEAR_FLAG;
+//    
+//    if(tim11_irq_handler != NULL)
+//    {
+//        tim11_irq_handler();
+//    }
+//}
 
 
 //#define     INT0_VECTOR             0       //0003H

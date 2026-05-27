@@ -330,11 +330,6 @@
               <FilePath>..\..\libraries\zf_common\ai8051u_32bit.h</FilePath>
             </File>
             <File>
-              <FileName>ai8051u_isr.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\libraries\zf_common\ai8051u_isr.asm</FilePath>
-            </File>
-            <File>
               <FileName>zf_common_headfile.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_common\zf_common_headfile.h</FilePath>
@@ -388,11 +383,6 @@
               <FileName>zf_common_interrupt.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_common\zf_common_interrupt.h</FilePath>
-            </File>
-            <File>
-              <FileName>START251.A51</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\libraries\zf_common\START251.A51</FilePath>
             </File>
           </Files>
         </Group>
@@ -488,20 +478,15 @@
           <GroupName>doc</GroupName>
           <Files>
             <File>
-              <FileName>version.txt</FileName>
+              <FileName>bldc_version.txt</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\libraries\doc\version.txt</FilePath>
+              <FilePath>..\..\bldc\bldc_version.txt</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>bldc</GroupName>
           <Files>
-            <File>
-              <FileName>bldc_version.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\bldc\bldc_version.txt</FilePath>
-            </File>
             <File>
               <FileName>battery.c</FileName>
               <FileType>1</FileType>

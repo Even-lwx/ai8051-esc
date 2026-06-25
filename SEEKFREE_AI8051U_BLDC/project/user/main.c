@@ -57,7 +57,6 @@ void main()
     // STC-ISP下载的时候，输入用户程序运行时的IRC频率必须设置为35MHz
         
     clock_init(SYSTEM_CLOCK_35M);				// 务必保留
-	debug_init();								// 务必保留
 
     // 此处编写用户代码(例如：外设初始化代码等)
     battery_init();         // 电池电压检测初始化

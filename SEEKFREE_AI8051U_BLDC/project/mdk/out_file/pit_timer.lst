@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 1   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pit_timer
@@ -66,7 +66,7 @@ stmt  level    source
    52          //  Sample usage:
    53          //-------------------------------------------------------------------------------------------------------
              -------------
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 2   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 2   
 
    54          void led_control(void)
    55          {
@@ -134,7 +134,7 @@ stmt  level    source
   116   3            {
   117   4                      
   118   4                      motor.duty_register = motor.duty;
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 3   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 3   
 
   119   4              
   120   4                      if (motor.duty_register < ((uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
@@ -202,7 +202,7 @@ stmt  level    source
                      motor.duty_register = motor.duty;
                                   
                            if (motor.duty_register < (BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 4   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 4   
 
                            {
                                motor.duty_register = BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100;
@@ -270,7 +270,7 @@ stmt  level    source
   246   3            {
   247   4              // ÉÏÉýÑØ
   248   4              if(gpio_state == 0xFF)
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 5   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 5   
 
   249   4              {
   250   5                motor_next_step_flag = 1;
@@ -338,7 +338,7 @@ stmt  level    source
   311   3            if(((T4H << 8) | T4L) > 20*1000)
   312   3            {
   313   4              T4T3M &= ~0x80; // Í£Ö¹¶¨Ê±Æ÷
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 6   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 6   
 
   314   4              T4L = 0;
   315   4              T4H = 0;
@@ -406,7 +406,7 @@ stmt  level    source
   377   5                          if (motor.duty_register < ((uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
   378   5                          {
   379   6                              motor.duty_register = (uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100;
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 7   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 7   
 
   380   6                          }
   381   5              }
@@ -474,7 +474,7 @@ stmt  level    source
   441          {
   442   1          pit_count++;
   443   1          //if(battery_voltage_get())
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 8   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 8   
 
   444   1          //{
   445   1          //    motor.run_flag = BYTE_LOW_VOLTAGE;
@@ -542,7 +542,7 @@ stmt  level    source
   504          //-------------------------------------------------------------------------------------------------------
              -------------
   505          void led_init(void)
-C251 COMPILER V5.60.0,  pit_timer                                                          05/08/26  18:29:31  PAGE 9   
+C251 COMPILER V5.60.0,  pit_timer                                                          07/08/26  21:04:09  PAGE 9   
 
   506          {
   507   1        gpio_init(IO_P36, GPO, 0, GPO_PUSH_PULL);

@@ -58,7 +58,7 @@
 
 #define BLDC_USE_SINE_START             (1)   			// 使用正弦启动
 
-#define BLDC_USR_COMPLEMENTARY          (0)             // 1:使能互补输出 0：禁用
+#define BLDC_USR_COMPLEMENTARY          (1)             // 1:使能互补输出 0：禁用
 
 #define BLDC_USR_DUTY                   (0)             // 目标占空比来源：0=外部 PWM 捕获；1~100=宏固定百分比
                                                         // 0        = 由输入捕获换算油门，无有效 PWM 时占空比清零

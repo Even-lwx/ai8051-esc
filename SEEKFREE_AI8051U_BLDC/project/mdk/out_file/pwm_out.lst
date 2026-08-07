@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  pwm_out                                                            05/08/26  17:23:56  PAGE 1   
+C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm_out
@@ -66,7 +66,7 @@ stmt  level    source
    51          {
    52   1        _nop_();
    53   1          _nop_();
-C251 COMPILER V5.60.0,  pwm_out                                                            05/08/26  17:23:56  PAGE 2   
+C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 2   
 
    54   1          _nop_();
    55   1          _nop_();
@@ -127,14 +127,14 @@ stmt  level    source
   104          void pwm_a_bn_output()
   105          {
   106   1      #if BLDC_USR_COMPLEMENTARY
-                   PWMA_ENO = 0x03;
-               #else
-  109   1          PWMA_ENO = 0x01;
-  110   1      #endif
+  107   1          PWMA_ENO = 0x03;
+  108   1      #else
+                   PWMA_ENO = 0x01;
+               #endif
   111   1      
   112   1          PWM_A_L_PIN = 0;
   113   1          PWM_C_L_PIN = 0;
-C251 COMPILER V5.60.0,  pwm_out                                                            05/08/26  17:23:56  PAGE 3   
+C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 3   
 
   114   1          PWM_B_L_PIN = 1;
   115   1          
@@ -153,10 +153,10 @@ stmt  level    source
   126          void pwm_a_cn_output()
   127          {
   128   1      #if BLDC_USR_COMPLEMENTARY
-                   PWMA_ENO = 0x03;
-               #else
-  131   1          PWMA_ENO = 0x01;
-  132   1      #endif
+  129   1          PWMA_ENO = 0x03;
+  130   1      #else
+                   PWMA_ENO = 0x01;
+               #endif
   133   1      
   134   1          PWM_A_L_PIN = 0;
   135   1          PWM_B_L_PIN = 0;
@@ -177,10 +177,10 @@ stmt  level    source
   148          void pwm_b_cn_output()
   149          {
   150   1      #if BLDC_USR_COMPLEMENTARY
-                   PWMA_ENO = 0x0C;
-               #else
-  153   1          PWMA_ENO = 0x04;
-  154   1      #endif
+  151   1          PWMA_ENO = 0x0C;
+  152   1      #else
+                   PWMA_ENO = 0x04;
+               #endif
   155   1          
   156   1          PWM_A_L_PIN = 0;
   157   1          PWM_B_L_PIN = 0;
@@ -202,12 +202,12 @@ stmt  level    source
   171          void pwm_b_an_output()
   172          {
   173   1      #if BLDC_USR_COMPLEMENTARY
-C251 COMPILER V5.60.0,  pwm_out                                                            05/08/26  17:23:56  PAGE 4   
+C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 4   
 
-                   PWMA_ENO = 0x0C;
-               #else
-  176   1          PWMA_ENO = 0x04;
-  177   1      #endif
+  174   1          PWMA_ENO = 0x0C;
+  175   1      #else
+                   PWMA_ENO = 0x04;
+               #endif
   178   1          
   179   1          PWM_B_L_PIN = 0;
   180   1          PWM_C_L_PIN = 0;
@@ -228,10 +228,10 @@ stmt  level    source
   193          void pwm_c_an_output()
   194          { 
   195   1      #if BLDC_USR_COMPLEMENTARY
-                   PWMA_ENO = 0x30;
-               #else
-  198   1          PWMA_ENO = 0x10;
-  199   1      #endif
+  196   1          PWMA_ENO = 0x30;
+  197   1      #else
+                   PWMA_ENO = 0x10;
+               #endif
   200   1          
   201   1          PWM_B_L_PIN = 0;
   202   1          PWM_C_L_PIN = 0;
@@ -252,10 +252,10 @@ stmt  level    source
   215          void pwm_c_bn_output()
   216          {
   217   1      #if BLDC_USR_COMPLEMENTARY
-                   PWMA_ENO = 0x30;
-               #else
-  220   1          PWMA_ENO = 0x10;
-  221   1      #endif
+  218   1          PWMA_ENO = 0x30;
+  219   1      #else
+                   PWMA_ENO = 0x10;
+               #endif
   222   1          
   223   1          PWM_A_L_PIN = 0;
   224   1          PWM_C_L_PIN = 0;
@@ -270,7 +270,7 @@ stmt  level    source
   232          //  @brief      更新PWM占空比
   233          //  @param      void                        
   234          //  @return     void          
-C251 COMPILER V5.60.0,  pwm_out                                                            05/08/26  17:23:56  PAGE 5   
+C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 5   
 
   235          //  @since      v1.0
   236          //  Sample usage:
@@ -338,7 +338,7 @@ stmt  level    source
   295   1        PWMA_CCR3H  = 0;
   296   1          PWMA_CCR3L  = 0;
   297   1        PWMA_CCER2 |= 0x0F;   // 开启比较输出, 低电平有效
-C251 COMPILER V5.60.0,  pwm_out                                                            05/08/26  17:23:56  PAGE 6   
+C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 6   
 
   298   1         
   299   1      //    PWMA_IER    = 0x10;     // 开启更新中
@@ -367,7 +367,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       538     ------
+  code size            =       540     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  signal_input                                                       05/08/26  17:23:56  PAGE 1   
+C251 COMPILER V5.60.0,  signal_input                                                       07/08/26  21:04:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE signal_input
@@ -66,7 +66,7 @@ stmt  level    source
    51   1        
    52   1        if(PWMB_SR1 & 0x04)
    53   1        {
-C251 COMPILER V5.60.0,  signal_input                                                       05/08/26  17:23:56  PAGE 2   
+C251 COMPILER V5.60.0,  signal_input                                                       07/08/26  21:04:10  PAGE 2   
 
    54   2          pwmin.high_value = (PWMB_CCR6H << 8) + PWMB_CCR6L;   // CC2捕获高电平宽度
    55   2          PWMB_SR1 = 0;
@@ -134,7 +134,7 @@ stmt  level    source
                #endif
   118   1      }
   119          
-C251 COMPILER V5.60.0,  signal_input                                                       05/08/26  17:23:56  PAGE 3   
+C251 COMPILER V5.60.0,  signal_input                                                       07/08/26  21:04:10  PAGE 3   
 
   120          //-------------------------------------------------------------------------------------------------------
              -------------

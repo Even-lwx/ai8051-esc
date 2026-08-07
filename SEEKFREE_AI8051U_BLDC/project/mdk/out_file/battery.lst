@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  battery                                                            05/08/26  17:23:55  PAGE 1   
+C251 COMPILER V5.60.0,  battery                                                            07/08/26  21:04:09  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE battery
@@ -66,7 +66,7 @@ stmt  level    source
    50   1        
    51   1        // 开启下一次ADC_DMA转换
    52   1        DMA_ADC_CR = 0xc0;
-C251 COMPILER V5.60.0,  battery                                                            05/08/26  17:23:55  PAGE 2   
+C251 COMPILER V5.60.0,  battery                                                            07/08/26  21:04:09  PAGE 2   
 
    53   1        
    54   1          if((BLDC_MIN_BATTERY > battery_voltage))
@@ -135,7 +135,7 @@ Module Information          Static   Overlayable
   huge data size       =    ------     ------
   const size           =    ------     ------
   hconst size          =         8     ------
-C251 COMPILER V5.60.0,  battery                                                            05/08/26  17:23:55  PAGE 3   
+C251 COMPILER V5.60.0,  battery                                                            07/08/26  21:04:09  PAGE 3   
 
 End of Module Information.
 

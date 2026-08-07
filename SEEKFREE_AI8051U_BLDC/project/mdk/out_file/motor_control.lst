@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  motor_control                                                      05/08/26  17:23:55  PAGE 1   
+C251 COMPILER V5.60.0,  motor_control                                                      07/08/26  21:04:09  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE motor_control
@@ -66,7 +66,7 @@ stmt  level    source
    51          void motor_next_step(void)
    52          {
    53   1          if(++motor.step >= 6) motor.step = 0;
-C251 COMPILER V5.60.0,  motor_control                                                      05/08/26  17:23:55  PAGE 2   
+C251 COMPILER V5.60.0,  motor_control                                                      07/08/26  21:04:09  PAGE 2   
 
    54   1      }
    55          
@@ -134,7 +134,7 @@ stmt  level    source
   111   3            // 换相
   112   3            pwm_x_output[motor.step]();
   113   3            xc_flag = 1;
-C251 COMPILER V5.60.0,  motor_control                                                      05/08/26  17:23:55  PAGE 3   
+C251 COMPILER V5.60.0,  motor_control                                                      07/08/26  21:04:09  PAGE 3   
 
   114   3      
   115   3            tim_com = 0xffff - (motor.filter_commutation_time_sum / 36);
@@ -202,7 +202,7 @@ stmt  level    source
   174   2          xc_flag = 2;
   175   2          
   176   2      //    // 等待消磁, 10度
-C251 COMPILER V5.60.0,  motor_control                                                      05/08/26  17:23:55  PAGE 4   
+C251 COMPILER V5.60.0,  motor_control                                                      07/08/26  21:04:09  PAGE 4   
 
   177   2      //    while(((TH0 << 8) | TL0) < (motor.filter_commutation_time_sum / 36));
   178   2      
@@ -270,7 +270,7 @@ stmt  level    source
   236          //  @since      v1.0
   237          //  Sample usage:
   238          //-------------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  motor_control                                                      05/08/26  17:23:55  PAGE 5   
+C251 COMPILER V5.60.0,  motor_control                                                      07/08/26  21:04:09  PAGE 5   
 
              -------------
   239          void motor_power_on_beep(uint16 volume)
@@ -338,7 +338,7 @@ stmt  level    source
   300          //  @param      void
   301          //  @return     void
   302          //  @since      v1.0
-C251 COMPILER V5.60.0,  motor_control                                                      05/08/26  17:23:55  PAGE 6   
+C251 COMPILER V5.60.0,  motor_control                                                      07/08/26  21:04:09  PAGE 6   
 
   303          //  Sample usage:
   304          //-------------------------------------------------------------------------------------------------------
@@ -406,7 +406,7 @@ stmt  level    source
   363   1          // 设置定时器0优先级为 3 ,最高优先级为3
   364   1          IP  |= 1<<1;
   365   1          IPH |= 1<<1;
-C251 COMPILER V5.60.0,  motor_control                                                      05/08/26  17:23:55  PAGE 7   
+C251 COMPILER V5.60.0,  motor_control                                                      07/08/26  21:04:09  PAGE 7   
 
   366   1         
   367   1        // 设置比较器优先级 为 3 ,最高优先级为3

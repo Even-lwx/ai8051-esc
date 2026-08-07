@@ -1,0 +1,143 @@
+C251 COMPILER V5.60.0,  battery                                                            05/08/26  17:23:55  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE battery
+OBJECT MODULE PLACED IN .\out_file\battery.obj
+COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\bldc\battery.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3) BROW
+                    -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
+                    -\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\battery.lst) TABS(2) OBJECT(.\out_file\battery.obj) 
+
+stmt  level    source
+
+    1          /********************************************************************************************************
+             -*************
+    2           * COPYRIGHT NOTICE
+    3           * Copyright (c) 2020,逐飞科技
+    4           * All rights reserved.
+    5           * 技术讨论QQ群：一群：179029047(已满)  二群：244861897(已满)  三群：824575535
+    6           *
+    7           * 以下所有内容版权均属逐飞科技所有，未经允许不得用于商业用途，
+    8           * 欢迎各位使用并传播本程序，修改内容时必须保留逐飞科技的版权声明。
+    9           *
+   10           * @file          pit_timer
+   11           * @company       成都逐飞科技有限公司
+   12           * @author        逐飞科技(QQ790875685)
+   13           * @version       查看doc内version文件 版本说明
+   14           * @Software    MDK FOR C251 V5.60
+   15           * @Target core   STC32G12K128
+   16           * @Taobao      https://seekfree.taobao.com/
+   17           * @date          2024-01-22
+   18           ********************************************************************************************************
+             -************/
+   19          
+   20          #include "zf_driver_adc.h"
+   21          #include "zf_driver_gpio.h"
+   22          
+   23          #include "bldc_config.h"
+   24          #include "battery.h"
+   25          
+   26          
+   27          #define ADC_CH    1           /* 1~16, ADC转换通道数, 需同步修改 DMA_ADC_CHSW 转换通道 */
+   28          #define ADC_DATA  6           /* 6~n, 每个通道ADC转换数据总数, 2*转换次数+4, 需同步修改 DMA_ADC_CFG2 转换次数 *
+             -/
+   29          #define DMA_ADDR  0x800         /* DMA数据存放地址 */
+   30          static uint8 xdata adc_dma_buff[ADC_CH][ADC_DATA] _at_ DMA_ADDR;
+   31          
+   32          uint16 battery_voltage;
+   33          
+   34          //-------------------------------------------------------------------------------------------------------
+             -------------
+   35          //  @brief      电池电压获取
+   36          //  @param      void                        
+   37          //  @return     uint8   0-正常 1-电池电压过低          
+   38          //  @since      v1.0
+   39          //  Sample usage:
+   40          //-------------------------------------------------------------------------------------------------------
+             -------------
+   41          uint8 battery_voltage_get(void)
+   42          {
+   43   1          uint16 pin_voltage;
+   44   1          static uint32 low_power_num = 0;
+   45   1          uint16 adc_reg_value;
+   46   1        
+   47   1          adc_reg_value = adc_dma_buff[0][0];
+   48   1          pin_voltage = (uint32)adc_reg_value * 5000 / 256;       // 将ADC值转换为实际的电压
+   49   1          battery_voltage = (uint32)pin_voltage * 57 / 10;      // 根据硬件分压电阻的值计算电池电压
+   50   1        
+   51   1        // 开启下一次ADC_DMA转换
+   52   1        DMA_ADC_CR = 0xc0;
+C251 COMPILER V5.60.0,  battery                                                            05/08/26  17:23:55  PAGE 2   
+
+   53   1        
+   54   1          if((BLDC_MIN_BATTERY > battery_voltage))
+   55   1          {
+   56   2              low_power_num++;
+   57   2              if((2000 ) < (low_power_num / 20))    // 2s都超过电压保护值，则进行停机保护
+   58   2              {
+   59   3                 return 1;   
+   60   3              }
+   61   2          }
+   62   1          else
+   63   1          {
+   64   2              low_power_num = 0;
+   65   2          }
+   66   1      
+   67   1        return 0;
+   68   1      }
+   69          
+   70          //-------------------------------------------------------------------------------------------------------
+             -------------
+   71          //  @brief      电池电压检测初始化
+   72          //  @param      void                        
+   73          //  @return     void          
+   74          //  @since      v1.0
+   75          //  Sample usage:
+   76          //-------------------------------------------------------------------------------------------------------
+             -------------
+   77          void battery_init(void)
+   78          {
+   79   1        
+   80   1        gpio_init(IO_P15, GPI, 0, GPI_IMPEDANCE);
+   81   1        
+   82   1        ADC_CONTR = 0x80;           // ADC使能
+   83   1        ADCTIM = 0x3f;              // 设置通道选择时间、保持时间、采样时间
+   84   1        ADCCFG = 0x0F;              // 左对齐，ADC转换时间最大
+   85   1      
+   86   1        DMA_ADC_STA = 0x00;
+   87   1        DMA_ADC_CFG = 0x0F;   
+   88   1        DMA_ADC_RXAH = (uint8)(DMA_ADDR >> 8);  //ADC转换数据存储地址
+   89   1        DMA_ADC_RXAL = (uint8)DMA_ADDR;
+   90   1        DMA_ADC_CFG2 = 0x00;          // 每个通道ADC转换次数:1
+   91   1        DMA_ADC_CHSW0 = 1<<5;           // 
+   92   1        DMA_ADC_CHSW1 = 0;              // ADC通道使能寄存器
+   93   1        DMA_ADC_CR = 0xc0;            // 使能ADC_DMA,ADC开始转换。
+   94   1        
+   95   1          // 初始化的时候先采集一次电压
+   96   1          battery_voltage_get();
+   97   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       193     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         6     ------
+  xdata-const size     =    ------     ------
+  edata size           =         6     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =         8     ------
+C251 COMPILER V5.60.0,  battery                                                            05/08/26  17:23:55  PAGE 3   
+
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

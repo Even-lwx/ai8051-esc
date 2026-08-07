@@ -59,7 +59,7 @@ void main()
     clock_init(SYSTEM_CLOCK_35M);				// 务必保留
 
     // 此处编写用户代码(例如：外设初始化代码等)
-    battery_init();         // 电池电压检测初始化
+    //battery_init();         // 电池电压检测初始化
     led_init();             // LED初始化
     pwm_input_init();       // PWM输入捕获初始化·
     comparator_init();      // 比较器初始化 

@@ -55,7 +55,7 @@ void pwmb_isr()interrupt 27
 		PWMB_SR1 = 0;
         
         // 频率在合理的范围内才计算
-        if((30 < pwmin.frequency) && (400 > pwmin.frequency))
+        if((30 < pwmin.frequency) && (500 > pwmin.frequency))
         {
             // 计算高电平时间 仅在高电平时间为1-2ms内有效 
             pwmin.high_time = pwmin.high_value;

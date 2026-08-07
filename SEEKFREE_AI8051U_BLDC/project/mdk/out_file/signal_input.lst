@@ -1,0 +1,200 @@
+C251 COMPILER V5.60.0,  signal_input                                                       05/08/26  17:23:56  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE signal_input
+OBJECT MODULE PLACED IN .\out_file\signal_input.obj
+COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\bldc\signal_input.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3)
+                    - BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driv
+                    -er;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\signal_input.lst) TABS(2) OBJECT(.\out_file\signal_input.obj) 
+
+stmt  level    source
+
+    1          /********************************************************************************************************
+             -*************
+    2           * COPYRIGHT NOTICE
+    3           * Copyright (c) 2020,逐飞科技
+    4           * All rights reserved.
+    5           * 技术讨论QQ群：一群：179029047(已满)  二群：244861897(已满)  三群：824575535
+    6           *
+    7           * 以下所有内容版权均属逐飞科技所有，未经允许不得用于商业用途，
+    8           * 欢迎各位使用并传播本程序，修改内容时必须保留逐飞科技的版权声明。
+    9           *
+   10           * @file          pit_timer
+   11           * @company       成都逐飞科技有限公司
+   12           * @author        逐飞科技(QQ790875685)
+   13           * @version       查看doc内version文件 版本说明
+   14           * @Software    MDK FOR C251 V5.60
+   15           * @Target core   STC32G12K128
+   16           * @Taobao      https://seekfree.taobao.com/
+   17           * @date          2024-01-22
+   18           ********************************************************************************************************
+             -************/
+   19          #include "zf_common_typedef.h"
+   20          #include "zf_common_clock.h"
+   21          
+   22          #include "bldc_config.h"
+   23          #include "motor_control.h"
+   24          #include "pwm_out.h"
+   25          #include "signal_input.h"
+   26          
+   27          #define PWMIN_PIN   P21
+   28          
+   29          pwmin_struct pwmin;
+   30          
+   31           
+   32          uint8 pwm_input_timeout_count = 0;
+   33          //-------------------------------------------------------------------------------------------------------
+             -------------
+   34          //  @brief      PWMB输入捕获中断
+   35          //  @param      void                        
+   36          //  @return     void          
+   37          //  @since      v1.0
+   38          //  Sample usage:
+   39          //-------------------------------------------------------------------------------------------------------
+             -------------
+   40          void pwmb_isr()interrupt 27
+   41          {
+   42   1          uint16 temp;
+   43   1        if(PWMB_SR1 & 0x02)
+   44   1        {
+   45   2          pwmin.period = (PWMB_CCR5H << 8) + PWMB_CCR5L;      // CC1捕获周期宽度
+   46   2          PWMB_SR1 = 0;
+   47   2              
+   48   2              // 计算输入PWM信号的频率
+   49   2              pwmin.frequency = system_clock / (PWMB_PSCRL + 1) / pwmin.period;
+   50   2        }
+   51   1        
+   52   1        if(PWMB_SR1 & 0x04)
+   53   1        {
+C251 COMPILER V5.60.0,  signal_input                                                       05/08/26  17:23:56  PAGE 2   
+
+   54   2          pwmin.high_value = (PWMB_CCR6H << 8) + PWMB_CCR6L;   // CC2捕获高电平宽度
+   55   2          PWMB_SR1 = 0;
+   56   2              
+   57   2              // 频率在合理的范围内才计算
+   58   2              if((30 < pwmin.frequency) && (500 > pwmin.frequency))
+   59   2              {
+   60   3                  // 计算高电平时间 仅在高电平时间为1-2ms内有效 
+   61   3                  pwmin.high_time = pwmin.high_value;
+   62   3                  
+   63   3                  if((3000 < pwmin.high_time) || (1000 > pwmin.high_time))
+   64   3                  {
+   65   4                      // 高电平时间过长或者过短，则油门设置为0
+   66   4                      pwmin.throttle = 0;
+   67   4                  }
+   68   3                  else
+   69   3                  {
+   70   4                      if(2000 < pwmin.high_time)
+   71   4                      {
+   72   5                          pwmin.high_time = 2000;
+   73   5                      }
+   74   4                      
+   75   4                      // 计算油门大小
+   76   4                      temp = pwmin.high_time - 1000;
+   77   4                      // 如果输入的油门大小 小于启动占空比则油门设置为5%
+   78   4                      if(temp < 50)
+   79   4                      {
+   80   5                          temp = 0;
+   81   5                      }
+   82   4                      pwmin.throttle = temp;
+   83   4                  }
+   84   3            
+   85   3            pwm_input_timeout_count = 0;
+   86   3              }
+   87   2              
+   88   2              // 更新占空比（BLDC_USR_DUTY>0 时为宏固定占空比，见 bldc_config.h）
+   89   2      #if (BLDC_USR_DUTY == 0)
+   90   2              motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000;
+   91   2      #endif
+   92   2        }
+   93   1          
+   94   1          if(PWMB_SR1 & 0x01)
+   95   1          {
+   96   2              PWMB_SR1 = 0;
+   97   2              
+   98   2      #if (BLDC_USR_DUTY == 0)
+   99   2              // 未检测到输入信号则输出油门都清零
+  100   2          if(motor.duty > 0)
+  101   2          {
+  102   3            if(++pwm_input_timeout_count >= 2)
+  103   3            {
+  104   4              pwm_input_timeout_count = 0;
+  105   4              
+  106   4              pwmin.throttle = 0;
+  107   4              motor.duty = 0;
+  108   4            }
+  109   3          }
+  110   2      #endif
+  111   2          }
+  112   1      
+  113   1      #if (BLDC_USR_DUTY > 0)
+                   // 宏固定占空比：1~100 表示目标 1%~100%，不读外部捕获、不做无信号清零
+                   motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;
+                   pwm_input_timeout_count = 0;
+               #endif
+  118   1      }
+  119          
+C251 COMPILER V5.60.0,  signal_input                                                       05/08/26  17:23:56  PAGE 3   
+
+  120          //-------------------------------------------------------------------------------------------------------
+             -------------
+  121          //  @brief      PWMB输入捕获初始化
+  122          //  @param      void                        
+  123          //  @return     void          
+  124          //  @since      v1.0
+  125          //  Sample usage:
+  126          //-------------------------------------------------------------------------------------------------------
+             -------------
+  127          void pwm_input_init(void)
+  128          {
+  129   1          gpio_init(IO_P21, GPI, 0, GPI_IMPEDANCE);
+  130   1          gpio_init(IO_P23, GPI, 0, GPI_IMPEDANCE);
+  131   1          
+  132   1          PWMB_PS = 0x0A;   // 通道引脚切换
+  133   1          PWMB_CCMR1 = 0x01;  // CC5为输入模式,且映射到TI5FP5上
+  134   1        PWMB_CCMR2 = 0x02;  // CC6为输入模式,且映射到TI5FP6上
+  135   1          
+  136   1        // CC5E 开启输入捕获
+  137   1        // CC5P 捕获发生在TI5F的上升沿
+  138   1        // CC6E 开启输入捕获
+  139   1        // CC6P 捕获发生在TI5F的下降沿
+  140   1          PWMB_CCER1 = 0x31;
+  141   1          
+  142   1          PWMB_PSCRH = 0;   // 分频值
+  143   1        PWMB_PSCRL = system_clock / 1000000 - 1;    // 分频值
+  144   1          PWMB_SMCR = 0x54; // TS=TI1FP1,SMS=TI1上升沿复位模式
+  145   1        PWMB_CR1 = 0x01;  // 启动PWMB，向上计数
+  146   1        PWMB_IER = 0x07;  // 使能CC1、CC2、UIE中断
+  147   1      
+  148   1          pwmin.period = 0;
+  149   1          pwmin.high_value = 0;
+  150   1          pwmin.high_time = 0;
+  151   1      
+  152   1      #if (BLDC_USR_DUTY > 0)
+                   motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;
+               #endif
+  155   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       465     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =        11     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =         5     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

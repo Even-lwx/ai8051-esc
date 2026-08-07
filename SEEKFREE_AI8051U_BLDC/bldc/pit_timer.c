@@ -440,10 +440,10 @@ void pit_motor_control()
 void TM1_Isr() interrupt 3
 {
     pit_count++;
-    if(battery_voltage_get())
-    {
-        motor.run_flag = BYTE_LOW_VOLTAGE;
-    }
+    //if(battery_voltage_get())
+    //{
+    //    motor.run_flag = BYTE_LOW_VOLTAGE;
+    //}
     // 电池电压检测为最高优先级，当电压过低，就不转
     if(motor.run_flag != BYTE_LOW_VOLTAGE)
     {

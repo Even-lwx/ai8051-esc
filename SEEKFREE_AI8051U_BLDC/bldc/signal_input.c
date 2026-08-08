@@ -26,10 +26,21 @@
 
 #define PWMIN_PIN   P21
 
+#define PWMIN_PERIOD_MIN_TICK       (2040u)
+#define PWMIN_PERIOD_MAX_TICK       (25000u)
+#define PWMIN_HIGH_MIN_TICK         (1000u)
+#define PWMIN_HIGH_MAX_TICK         (2000u)
+#define PWMIN_TIMEOUT_TICK          (1500u)
+
+#define PWMB_SR1_CC5IF              (0x02u)
+#define PWMB_SR1_CC6IF              (0x04u)
+#define PWMB_SR2_CC5OF              (0x02u)
+#define PWMB_SR2_CC6OF              (0x04u)
+
 pwmin_struct pwmin;
 
- 
-uint8 pwm_input_timeout_count = 0;
+static uint8 pwmin_period_valid = 0;
+static vuint16 pwm_input_timeout_count = 0;
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      PWMB输入捕获中断
 //  @param      void                        
@@ -39,80 +50,80 @@ uint8 pwm_input_timeout_count = 0;
 //-------------------------------------------------------------------------------------------------------------------
 void pwmb_isr()interrupt 27
 {
+    uint8 sr1 = PWMB_SR1;
+    uint8 sr2 = PWMB_SR2;
+    uint8 capture_high;
+    uint8 frame_overcapture;
     uint16 temp;
-	if(PWMB_SR1 & 0x02)
-	{
-		pwmin.period = (PWMB_CCR5H << 8) + PWMB_CCR5L;	    // CC1捕获周期宽度
-		PWMB_SR1 = 0;
-        
-        // 计算输入PWM信号的频率
-        pwmin.frequency = system_clock / (PWMB_PSCRL + 1) / pwmin.period;
-	}
-	
-	if(PWMB_SR1 & 0x04)
-	{
-		pwmin.high_value = (PWMB_CCR6H << 8) + PWMB_CCR6L;   // CC2捕获高电平宽度
-		PWMB_SR1 = 0;
-        
-        // 频率在合理的范围内才计算
-        if((30 < pwmin.frequency) && (500 > pwmin.frequency))
-        {
-            // 计算高电平时间 仅在高电平时间为1-2ms内有效 
-            pwmin.high_time = pwmin.high_value;
-            
-            if((3000 < pwmin.high_time) || (1000 > pwmin.high_time))
-            {
-                // 高电平时间过长或者过短，则油门设置为0
-                pwmin.throttle = 0;
-            }
-            else
-            {
-                if(2000 < pwmin.high_time)
-                {
-                    pwmin.high_time = 2000;
-                }
-                
-                // 计算油门大小
-                temp = pwmin.high_time - 1000;
-                // 如果输入的油门大小 小于启动占空比则油门设置为5%
-                if(temp < 50)
-                {
-                    temp = 0;
-                }
-                pwmin.throttle = temp;
-            }
-			
-			pwm_input_timeout_count = 0;
-        }
-        
-        // 更新占空比（BLDC_USR_DUTY>0 时为宏固定占空比，见 bldc_config.h）
-#if (BLDC_USR_DUTY == 0)
-        motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000;
-#endif
-	}
-    
-    if(PWMB_SR1 & 0x01)
+    frame_overcapture = sr2 & (PWMB_SR2_CC5OF | PWMB_SR2_CC6OF);
+
+    if(sr1 & PWMB_SR1_CC5IF)
     {
-        PWMB_SR1 = 0;
-				
+        // 必须先读取高字节，再单独读取低字节；读取低字节会清除 CC5 标志。
+        capture_high = PWMB_CCR5H;
+        pwmin.period = ((uint16)capture_high << 8);
+        pwmin.period |= PWMB_CCR5L;
+
+        pwmin_period_valid = 0;
+        if((0 == frame_overcapture)
+        && (PWMIN_PERIOD_MIN_TICK <= pwmin.period)
+        && (PWMIN_PERIOD_MAX_TICK >= pwmin.period))
+        {
+            pwmin_period_valid = 1;
+        }
+    }
+
+    if(sr1 & PWMB_SR1_CC6IF)
+    {
+        // 必须先读取高字节，再单独读取低字节；读取低字节会清除 CC6 标志。
+        capture_high = PWMB_CCR6H;
+        pwmin.high_value = ((uint16)capture_high << 8);
+        pwmin.high_value |= PWMB_CCR6L;
+        pwmin.high_time = pwmin.high_value;
+
+        if((0 == frame_overcapture)
+        && pwmin_period_valid
+        && (PWMIN_HIGH_MIN_TICK <= pwmin.high_time)
+        && (PWMIN_HIGH_MAX_TICK >= pwmin.high_time))
+        {
+            temp = pwmin.high_time - PWMIN_HIGH_MIN_TICK;
+            if(temp < 50u)
+            {
+                temp = 0;
+            }
+            pwmin.throttle = temp;
+            pwm_input_timeout_count = 0;
+
 #if (BLDC_USR_DUTY == 0)
-        // 未检测到输入信号则输出油门都清零
-		if(motor.duty > 0)
-		{
-			if(++pwm_input_timeout_count >= 2)
-			{
-				pwm_input_timeout_count = 0;
-				
-				pwmin.throttle = 0;
-				motor.duty = 0;
-			}
-		}
+            motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000u;
 #endif
+        }
+
+        // 一个周期只消费一次周期捕获，下一帧必须重新取得有效 CC5。
+        pwmin_period_valid = 0;
     }
 
 #if (BLDC_USR_DUTY > 0)
     // 宏固定占空比：1~100 表示目标 1%~100%，不读外部捕获、不做无信号清零
     motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;
+    pwm_input_timeout_count = 0;
+#endif
+}
+
+void pwm_input_timeout_tick(void)
+{
+#if (BLDC_USR_DUTY == 0)
+    if(pwm_input_timeout_count < PWMIN_TIMEOUT_TICK)
+    {
+        pwm_input_timeout_count++;
+    }
+
+    if(pwm_input_timeout_count >= PWMIN_TIMEOUT_TICK)
+    {
+        pwmin.throttle = 0;
+        motor.duty = 0;
+    }
+#else
     pwm_input_timeout_count = 0;
 #endif
 }
@@ -141,13 +152,20 @@ void pwm_input_init(void)
     
     PWMB_PSCRH = 0;		// 分频值
 	PWMB_PSCRL = system_clock / 1000000 - 1;    // 分频值
+    PWMB_ARRH = 0xff;
+    PWMB_ARRL = 0xff;
     PWMB_SMCR = 0x54;	// TS=TI1FP1,SMS=TI1上升沿复位模式
-	PWMB_CR1 = 0x01;	// 启动PWMB，向上计数
-	PWMB_IER = 0x07;	// 使能CC1、CC2、UIE中断
+	PWMB_CR1 = 0x04;	// URS=1，仅计数器溢出产生更新请求
+    PWMB_EGR = 0x01;	// 装载预分频和自动重装值
+	PWMB_IER = PWMB_SR1_CC5IF | PWMB_SR1_CC6IF;
+	PWMB_CR1 |= 0x01;	// 启动PWMB，向上计数
 
     pwmin.period = 0;
     pwmin.high_value = 0;
     pwmin.high_time = 0;
+    pwmin.throttle = 0;
+    pwmin_period_valid = 0;
+    pwm_input_timeout_count = 0;
 
 #if (BLDC_USR_DUTY > 0)
     motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;

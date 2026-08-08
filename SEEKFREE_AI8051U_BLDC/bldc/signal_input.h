@@ -28,7 +28,6 @@
 
 typedef struct
 {
-    uint16 frequency;   // 信号频率
     uint16 period;      // 信号周期
     uint16 high_value;  // 信号高电平计数值
     uint16 high_time;   // 信号高电平时间 us
@@ -39,5 +38,6 @@ typedef struct
 extern pwmin_struct pwmin;
 
 void pwm_input_init(void);
+void pwm_input_timeout_tick(void);
 
 #endif

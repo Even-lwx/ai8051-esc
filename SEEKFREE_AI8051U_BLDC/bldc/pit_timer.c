@@ -440,6 +440,7 @@ void pit_motor_control()
 void TM1_Isr() interrupt 3
 {
     pit_count++;
+    pwm_input_timeout_tick();
     //if(battery_voltage_get())
     //{
     //    motor.run_flag = BYTE_LOW_VOLTAGE;

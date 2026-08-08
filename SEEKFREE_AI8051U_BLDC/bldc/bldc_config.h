@@ -43,9 +43,7 @@
 
 #define BLDC_OPEN_LOOP_WAIT        		(200 )          // 闭环等待换向次数
 
-#define BLDC_SPEED_INCREMENTAL      	(3)             // 加减速响应 1-20，可修改这个提高加速响应，
-														// 设置20响应速度最慢，设置1响应速度最快。
-														// 响应速度越快，越容易出现换相错误，所以建议从20开始，一点一点减小。
+#define BLDC_SPEED_INCREMENTAL      	(1)             // 加减速响应固定为每个 50us 周期变化一个 count
 
 #define BLDC_POLES                  	(7)             // 电机极对数
 

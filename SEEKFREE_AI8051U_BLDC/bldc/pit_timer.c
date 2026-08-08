@@ -361,7 +361,7 @@ void pit_motor_control()
 			// 如果每一次进来，就修改一次duty的值，那么41.65ms就能从0%拉到100%
             // 等待稳定。
             if((BLDC_CLOSE_LOOP_WAIT) < motor.commutation_num)
-			if((motor.duty_register != motor.duty) && (pit_count % BLDC_SPEED_INCREMENTAL == 0))
+			if(motor.duty_register != motor.duty)
 			{
 				if(motor.duty > motor.duty_register)
 				{

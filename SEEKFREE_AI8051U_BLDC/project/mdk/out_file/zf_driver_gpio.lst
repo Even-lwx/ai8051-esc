@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_gpio
 OBJECT MODULE PLACED IN .\out_file\zf_driver_gpio.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_gpio.c XSMALL INTR2 NOALIA
                     -S WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\
-                    -libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_driver_gpio.lst) TABS(2) OBJECT(.\out_file\zf_
-                    -driver_gpio.obj) 
+                    -libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_driver_gpio.lst) TABS(2) OBJECT(.\out_fil
+                    -e\zf_driver_gpio.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    52   1          {
    53   2              PXPU(pin) &= ~(1 << (pin & 0x0F));
    54   2              PXPD(pin) &= ~(1 << (pin & 0x0F));
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 2   
 
    55   2          }
    56   1          else if(GPI_PULL_DOWN == mode)
@@ -134,7 +134,7 @@ stmt  level    source
   118   2          // 参数不匹配
   119   2        }
   120   1      }
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 3   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 3   
 
   121          
   122          // 内部使用，用户无需关心。
@@ -202,7 +202,7 @@ stmt  level    source
   184   3                  {
   185   4              P3SR &= ~(1<<(pin & 0x0F));
   186   4                  }
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 4   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 4   
 
   187   3                  else if(GPIO_SPEED_LOW == speed)
   188   3                  {
@@ -270,7 +270,7 @@ stmt  level    source
   250   2              {
   251   3                  if(GPIO == dir)
   252   3                  {
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 5   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 5   
 
   253   4                      P0M1 &= ~(1 << (pin & 0xF));
   254   4                      P0M0 &= ~(1 << (pin & 0xF));
@@ -338,7 +338,7 @@ stmt  level    source
   316   3                  else if(GPI == dir)
   317   3                  {
   318   4                      P2M1 |= (1 << (pin & 0xF));
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 6   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 6   
 
   319   4                      P2M0 &= ~(1 << (pin & 0xF));
   320   4                  }
@@ -406,7 +406,7 @@ stmt  level    source
   382   3      //            {
   383   3      //                P5M1 |= (1 << (pin & 0xF));
   384   3      //                P5M0 |= (1 << (pin & 0xF));
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 7   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 7   
 
   385   3      //            }
   386   3                  else if(GPO == dir)
@@ -474,7 +474,7 @@ stmt  level    source
   446   3              }
   447   2              break;
   448   2              
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 8   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 8   
 
   449   2              case IO_P50:
   450   2              {
@@ -542,7 +542,7 @@ stmt  level    source
   510   4              P2 &= ~(1 << (pin & 0x0F));
   511   4            }
   512   3              }
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 9   
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 9   
 
   513   2              break;
   514   2              
@@ -610,7 +610,7 @@ stmt  level    source
   574   2        }
   575   1        else
   576   1        {
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 10  
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 10  
 
   577   2          gpio_high(pin);
   578   2        }
@@ -678,7 +678,7 @@ stmt  level    source
   638   2          }
   639   1      }
   640          
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 11  
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 11  
 
   641          //-------------------------------------------------------------------------------------------------------
              -------------
@@ -728,6 +728,1646 @@ stmt  level    source
   682   2        }
   683   1      }
   684          
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 12  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION gpio_set_mode (BEGIN)
+                                                ; SOURCE LINE # 45
+000000 7D12           MOV      WR2,WR4
+;---- Variable 'mode' assigned to Register 'WR2' ----
+000002 7D23           MOV      WR4,WR6
+;---- Variable 'pin' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 51
+000004 BE140001       CMP      WR2,#01H
+000008 6806           JE       ?C0002
+00000A BE140020       CMP      WR2,#020H
+00000E 7840           JNE      ?C0001
+               ?C0002:
+                                                ; SOURCE LINE # 53
+000010 7CB5           MOV      R11,R5           ; A=R11
+000012 540F           ANL      A,#0FH           ; A=R11
+000014 7E340001       MOV      WR6,#01H
+000018 6005           JZ       ?C0141
+               ?C0140:
+00001A 3E34           SLL      WR6
+00001C 14             DEC      A                ; A=R11
+00001D 78FB           JNE      ?C0140
+               ?C0141:
+00001F 7CB7           MOV      R11,R7           ; A=R11
+000021 64FF           XRL      A,#0FFH          ; A=R11
+000023 7D12           MOV      WR2,WR4
+000025 0E14           SRA      WR2
+000027 0E14           SRA      WR2
+000029 0E14           SRA      WR2
+00002B 1A02           MOVS     WR0,R2
+00002D 1A00           MOVS     WR0,R0
+00002F 7F70           MOV      DR28,DR0
+000031 2EE4007E       ADD      WR28,#07EH
+000035 2E78FE10       ADD      DR28,#0FE10H
+000039 7E7BA0         MOV      R10,@DR28
+00003C 5CAB           ANL      R10,R11          ; A=R11
+00003E 7A7BA0         MOV      @DR28,R10
+                                                ; SOURCE LINE # 54
+000041 2E04007E       ADD      WR0,#07EH
+000045 2E08FE40       ADD      DR0,#0FE40H
+000049 7E0B70         MOV      R7,@DR0
+00004C 5C7B           ANL      R7,R11           ; A=R11
+                                                ; SOURCE LINE # 55
+00004E 8068           SJMP     ?C0267
+               ?C0001:
+                                                ; SOURCE LINE # 56
+000050 BE140002       CMP      WR2,#02H
+000054 782C           JNE      ?C0004
+                                                ; SOURCE LINE # 58
+000056 7CB5           MOV      R11,R5           ; A=R11
+000058 540F           ANL      A,#0FH           ; A=R11
+00005A 7E340001       MOV      WR6,#01H
+00005E 6005           JZ       ?C0143
+               ?C0142:
+000060 3E34           SLL      WR6
+000062 14             DEC      A                ; A=R11
+000063 78FB           JNE      ?C0142
+               ?C0143:
+000065 7C67           MOV      R6,R7
+000067 7D12           MOV      WR2,WR4
+000069 0E14           SRA      WR2
+00006B 0E14           SRA      WR2
+00006D 0E14           SRA      WR2
+00006F 1A02           MOVS     WR0,R2
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 13  
+
+000071 1A00           MOVS     WR0,R0
+000073 2E04007E       ADD      WR0,#07EH
+000077 2E08FE40       ADD      DR0,#0FE40H
+00007B 7E0B70         MOV      R7,@DR0
+00007E 4C76           ORL      R7,R6
+                                                ; SOURCE LINE # 59
+000080 8036           SJMP     ?C0267
+               ?C0004:
+                                                ; SOURCE LINE # 60
+000082 BE140003       CMP      WR2,#03H
+000086 6806           JE       ?C0007
+000088 BE140010       CMP      WR2,#010H
+00008C 782E           JNE      ?C0006
+               ?C0007:
+                                                ; SOURCE LINE # 62
+00008E 7CB5           MOV      R11,R5           ; A=R11
+000090 540F           ANL      A,#0FH           ; A=R11
+000092 7E340001       MOV      WR6,#01H
+000096 6005           JZ       ?C0145
+               ?C0144:
+000098 3E34           SLL      WR6
+00009A 14             DEC      A                ; A=R11
+00009B 78FB           JNE      ?C0144
+               ?C0145:
+00009D 7C67           MOV      R6,R7
+00009F 7D12           MOV      WR2,WR4
+0000A1 0E14           SRA      WR2
+0000A3 0E14           SRA      WR2
+0000A5 0E14           SRA      WR2
+0000A7 1A02           MOVS     WR0,R2
+0000A9 1A00           MOVS     WR0,R0
+0000AB 2E04007E       ADD      WR0,#07EH
+0000AF 2E08FE10       ADD      DR0,#0FE10H
+0000B3 7E0B70         MOV      R7,@DR0
+0000B6 4C76           ORL      R7,R6
+               ?C0267:
+0000B8 7A0B70         MOV      @DR0,R7
+                                                ; SOURCE LINE # 63
+0000BB 22             RET      
+               ?C0006:
+                                                ; SOURCE LINE # 64
+0000BC BE140011       CMP      WR2,#011H
+0000C0 6803        R  JE       $ + 5H
+0000C2 020000      R  LJMP     ?C0003
+                                                ; SOURCE LINE # 66
+0000C5 7D32           MOV      WR6,WR4
+0000C7 5E3400F0       ANL      WR6,#0F0H
+0000CB 2E34FFE0       ADD      WR6,#0FFE0H
+0000CF 6837           JE       ?C0013
+0000D1 2E34FFF0       ADD      WR6,#0FFF0H
+0000D5 6847           JE       ?C0014
+0000D7 2E34FFF0       ADD      WR6,#0FFF0H
+0000DB 6857           JE       ?C0015
+0000DD 2E34FFF0       ADD      WR6,#0FFF0H
+0000E1 6867           JE       ?C0016
+0000E3 2E34FFF0       ADD      WR6,#0FFF0H
+0000E7 6877           JE       ?C0017
+0000E9 2E340050       ADD      WR6,#050H
+0000ED 6803        R  JE       $ + 5H
+0000EF 020000      R  LJMP     ?C0003
+                                                ; SOURCE LINE # 68
+               ?C0011:
+                                                ; SOURCE LINE # 70
+0000F2 7CB5           MOV      R11,R5           ; A=R11
+0000F4 540F           ANL      A,#0FH           ; A=R11
+0000F6 7E340001       MOV      WR6,#01H
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 14  
+
+0000FA 6005           JZ       ?C0147
+               ?C0146:
+0000FC 3E34           SLL      WR6
+0000FE 14             DEC      A                ; A=R11
+0000FF 78FB           JNE      ?C0146
+               ?C0147:
+000101 7CB7           MOV      R11,R7           ; A=R11
+000103 4293           ORL      P0M1,A           ; A=R11
+                                                ; SOURCE LINE # 71
+000105 4294           ORL      P0M0,A           ; A=R11
+                                                ; SOURCE LINE # 73
+000107 22             RET      
+                                                ; SOURCE LINE # 75
+               ?C0013:
+                                                ; SOURCE LINE # 77
+000108 7CB5           MOV      R11,R5           ; A=R11
+00010A 540F           ANL      A,#0FH           ; A=R11
+00010C 7E340001       MOV      WR6,#01H
+000110 6005           JZ       ?C0149
+               ?C0148:
+000112 3E34           SLL      WR6
+000114 14             DEC      A                ; A=R11
+000115 78FB           JNE      ?C0148
+               ?C0149:
+000117 7CB7           MOV      R11,R7           ; A=R11
+000119 4291           ORL      P1M1,A           ; A=R11
+                                                ; SOURCE LINE # 78
+00011B 4292           ORL      P1M0,A           ; A=R11
+                                                ; SOURCE LINE # 80
+00011D 22             RET      
+                                                ; SOURCE LINE # 82
+               ?C0014:
+                                                ; SOURCE LINE # 84
+00011E 7CB5           MOV      R11,R5           ; A=R11
+000120 540F           ANL      A,#0FH           ; A=R11
+000122 7E340001       MOV      WR6,#01H
+000126 6005           JZ       ?C0151
+               ?C0150:
+000128 3E34           SLL      WR6
+00012A 14             DEC      A                ; A=R11
+00012B 78FB           JNE      ?C0150
+               ?C0151:
+00012D 7CB7           MOV      R11,R7           ; A=R11
+00012F 4295           ORL      P2M1,A           ; A=R11
+                                                ; SOURCE LINE # 85
+000131 4296           ORL      P2M0,A           ; A=R11
+                                                ; SOURCE LINE # 87
+000133 22             RET      
+                                                ; SOURCE LINE # 89
+               ?C0015:
+                                                ; SOURCE LINE # 91
+000134 7CB5           MOV      R11,R5           ; A=R11
+000136 540F           ANL      A,#0FH           ; A=R11
+000138 7E340001       MOV      WR6,#01H
+00013C 6005           JZ       ?C0153
+               ?C0152:
+00013E 3E34           SLL      WR6
+000140 14             DEC      A                ; A=R11
+000141 78FB           JNE      ?C0152
+               ?C0153:
+000143 7CB7           MOV      R11,R7           ; A=R11
+000145 42B1           ORL      P3M1,A           ; A=R11
+                                                ; SOURCE LINE # 92
+000147 42B2           ORL      P3M0,A           ; A=R11
+                                                ; SOURCE LINE # 94
+000149 22             RET      
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 15  
+
+                                                ; SOURCE LINE # 96
+               ?C0016:
+                                                ; SOURCE LINE # 98
+00014A 7CB5           MOV      R11,R5           ; A=R11
+00014C 540F           ANL      A,#0FH           ; A=R11
+00014E 7E340001       MOV      WR6,#01H
+000152 6005           JZ       ?C0155
+               ?C0154:
+000154 3E34           SLL      WR6
+000156 14             DEC      A                ; A=R11
+000157 78FB           JNE      ?C0154
+               ?C0155:
+000159 7CB7           MOV      R11,R7           ; A=R11
+00015B 42B3           ORL      P4M1,A           ; A=R11
+                                                ; SOURCE LINE # 99
+00015D 42B4           ORL      P4M0,A           ; A=R11
+                                                ; SOURCE LINE # 101
+00015F 22             RET      
+                                                ; SOURCE LINE # 103
+               ?C0017:
+                                                ; SOURCE LINE # 105
+000160 7CB5           MOV      R11,R5           ; A=R11
+000162 540F           ANL      A,#0FH           ; A=R11
+000164 7E340001       MOV      WR6,#01H
+000168 6005           JZ       ?C0157
+               ?C0156:
+00016A 3E34           SLL      WR6
+00016C 14             DEC      A                ; A=R11
+00016D 78FB           JNE      ?C0156
+               ?C0157:
+00016F 7CB7           MOV      R11,R7           ; A=R11
+000171 42C9           ORL      P5M1,A           ; A=R11
+                                                ; SOURCE LINE # 106
+000173 42CA           ORL      P5M0,A           ; A=R11
+                                                ; SOURCE LINE # 108
+                                                ; SOURCE LINE # 109
+                                                ; SOURCE LINE # 112
+                                                ; SOURCE LINE # 113
+                                                ; SOURCE LINE # 114
+                                                ; SOURCE LINE # 119
+               ?C0003:
+                                                ; SOURCE LINE # 120
+000175 22             RET      
+;       FUNCTION gpio_set_mode (END)
+
+;       FUNCTION gpio_set_level_speed (BEGIN)
+                                                ; SOURCE LINE # 123
+000000 7D12           MOV      WR2,WR4
+;---- Variable 'speed' assigned to Register 'WR2' ----
+000002 7D23           MOV      WR4,WR6
+;---- Variable 'pin' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 125
+000004 5E3400F0       ANL      WR6,#0F0H
+000008 2E34FFE0       ADD      WR6,#0FFE0H
+00000C 686C           JE       ?C0022
+00000E 2E34FFF0       ADD      WR6,#0FFF0H
+000012 7803        R  JNE      $ + 5H
+000014 020000      R  LJMP     ?C0023
+000017 2E34FFF0       ADD      WR6,#0FFF0H
+00001B 7803        R  JNE      $ + 5H
+00001D 020000      R  LJMP     ?C0024
+000020 2E34FFF0       ADD      WR6,#0FFF0H
+000024 7803        R  JNE      $ + 5H
+000026 020000      R  LJMP     ?C0025
+000029 2E34FFF0       ADD      WR6,#0FFF0H
+00002D 7803        R  JNE      $ + 5H
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 16  
+
+00002F 020000      R  LJMP     ?C0026
+000032 2E340050       ADD      WR6,#050H
+000036 6803        R  JE       $ + 5H
+000038 020000      R  LJMP     ?C0019
+                                                ; SOURCE LINE # 127
+               ?C0020:
+                                                ; SOURCE LINE # 129
+00003B 4D11           ORL      WR2,WR2
+00003D 781A           JNE      ?C0027
+                                                ; SOURCE LINE # 131
+00003F 7CB5           MOV      R11,R5           ; A=R11
+000041 540F           ANL      A,#0FH           ; A=R11
+000043 7E340001       MOV      WR6,#01H
+000047 6005           JZ       ?C0159
+               ?C0158:
+000049 3E34           SLL      WR6
+00004B 14             DEC      A                ; A=R11
+00004C 78FB           JNE      ?C0158
+               ?C0159:
+00004E 7CB7           MOV      R11,R7           ; A=R11
+000050 64FF           XRL      A,#0FFH          ; A=R11
+000052 7E14FE20       MOV      WR2,#0FE20H
+                                                ; SOURCE LINE # 132
+000056 020000      R  LJMP     ?C0276
+               ?C0027:
+                                                ; SOURCE LINE # 133
+000059 BE140001       CMP      WR2,#01H
+00005D 6803        R  JE       $ + 5H
+00005F 020000      R  LJMP     ?C0019
+                                                ; SOURCE LINE # 135
+000062 7CB5           MOV      R11,R5           ; A=R11
+000064 540F           ANL      A,#0FH           ; A=R11
+000066 7E340001       MOV      WR6,#01H
+00006A 6005           JZ       ?C0161
+               ?C0160:
+00006C 3E34           SLL      WR6
+00006E 14             DEC      A                ; A=R11
+00006F 78FB           JNE      ?C0160
+               ?C0161:
+000071 7C67           MOV      R6,R7
+000073 7E14FE20       MOV      WR2,#0FE20H
+                                                ; SOURCE LINE # 136
+000077 020000      R  LJMP     ?C0277
+                                                ; SOURCE LINE # 141
+                                                ; SOURCE LINE # 143
+                                                ; SOURCE LINE # 145
+               ?C0022:
+                                                ; SOURCE LINE # 147
+00007A 4D11           ORL      WR2,WR2
+00007C 781A           JNE      ?C0031
+                                                ; SOURCE LINE # 149
+00007E 7CB5           MOV      R11,R5           ; A=R11
+000080 540F           ANL      A,#0FH           ; A=R11
+000082 7E340001       MOV      WR6,#01H
+000086 6005           JZ       ?C0163
+               ?C0162:
+000088 3E34           SLL      WR6
+00008A 14             DEC      A                ; A=R11
+00008B 78FB           JNE      ?C0162
+               ?C0163:
+00008D 7CB7           MOV      R11,R7           ; A=R11
+00008F 64FF           XRL      A,#0FFH          ; A=R11
+000091 7E14FE21       MOV      WR2,#0FE21H
+                                                ; SOURCE LINE # 150
+000095 020000      R  LJMP     ?C0276
+               ?C0031:
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 17  
+
+                                                ; SOURCE LINE # 151
+000098 BE140001       CMP      WR2,#01H
+00009C 6803        R  JE       $ + 5H
+00009E 020000      R  LJMP     ?C0019
+                                                ; SOURCE LINE # 153
+0000A1 7CB5           MOV      R11,R5           ; A=R11
+0000A3 540F           ANL      A,#0FH           ; A=R11
+0000A5 7E340001       MOV      WR6,#01H
+0000A9 6005           JZ       ?C0165
+               ?C0164:
+0000AB 3E34           SLL      WR6
+0000AD 14             DEC      A                ; A=R11
+0000AE 78FB           JNE      ?C0164
+               ?C0165:
+0000B0 7C67           MOV      R6,R7
+0000B2 7E14FE21       MOV      WR2,#0FE21H
+                                                ; SOURCE LINE # 154
+0000B6 020000      R  LJMP     ?C0277
+                                                ; SOURCE LINE # 159
+                                                ; SOURCE LINE # 161
+                                                ; SOURCE LINE # 163
+               ?C0023:
+                                                ; SOURCE LINE # 165
+0000B9 4D11           ORL      WR2,WR2
+0000BB 781A           JNE      ?C0035
+                                                ; SOURCE LINE # 167
+0000BD 7CB5           MOV      R11,R5           ; A=R11
+0000BF 540F           ANL      A,#0FH           ; A=R11
+0000C1 7E340001       MOV      WR6,#01H
+0000C5 6005           JZ       ?C0167
+               ?C0166:
+0000C7 3E34           SLL      WR6
+0000C9 14             DEC      A                ; A=R11
+0000CA 78FB           JNE      ?C0166
+               ?C0167:
+0000CC 7CB7           MOV      R11,R7           ; A=R11
+0000CE 64FF           XRL      A,#0FFH          ; A=R11
+0000D0 7E14FE22       MOV      WR2,#0FE22H
+                                                ; SOURCE LINE # 168
+0000D4 020000      R  LJMP     ?C0276
+               ?C0035:
+                                                ; SOURCE LINE # 169
+0000D7 BE140001       CMP      WR2,#01H
+0000DB 6803        R  JE       $ + 5H
+0000DD 020000      R  LJMP     ?C0019
+                                                ; SOURCE LINE # 171
+0000E0 7CB5           MOV      R11,R5           ; A=R11
+0000E2 540F           ANL      A,#0FH           ; A=R11
+0000E4 7E340001       MOV      WR6,#01H
+0000E8 6005           JZ       ?C0169
+               ?C0168:
+0000EA 3E34           SLL      WR6
+0000EC 14             DEC      A                ; A=R11
+0000ED 78FB           JNE      ?C0168
+               ?C0169:
+0000EF 7C67           MOV      R6,R7
+0000F1 7E14FE22       MOV      WR2,#0FE22H
+                                                ; SOURCE LINE # 172
+0000F5 020000      R  LJMP     ?C0277
+                                                ; SOURCE LINE # 177
+                                                ; SOURCE LINE # 179
+                                                ; SOURCE LINE # 181
+               ?C0024:
+                                                ; SOURCE LINE # 183
+0000F8 4D11           ORL      WR2,WR2
+0000FA 7819           JNE      ?C0039
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 18  
+
+                                                ; SOURCE LINE # 185
+0000FC 7CB5           MOV      R11,R5           ; A=R11
+0000FE 540F           ANL      A,#0FH           ; A=R11
+000100 7E340001       MOV      WR6,#01H
+000104 6005           JZ       ?C0171
+               ?C0170:
+000106 3E34           SLL      WR6
+000108 14             DEC      A                ; A=R11
+000109 78FB           JNE      ?C0170
+               ?C0171:
+00010B 7CB7           MOV      R11,R7           ; A=R11
+00010D 64FF           XRL      A,#0FFH          ; A=R11
+00010F 7E14FE23       MOV      WR2,#0FE23H
+                                                ; SOURCE LINE # 186
+000113 8075           SJMP     ?C0276
+               ?C0039:
+                                                ; SOURCE LINE # 187
+000115 BE140001       CMP      WR2,#01H
+000119 6803        R  JE       $ + 5H
+00011B 020000      R  LJMP     ?C0019
+                                                ; SOURCE LINE # 189
+00011E 7CB5           MOV      R11,R5           ; A=R11
+000120 540F           ANL      A,#0FH           ; A=R11
+000122 7E340001       MOV      WR6,#01H
+000126 6005           JZ       ?C0173
+               ?C0172:
+000128 3E34           SLL      WR6
+00012A 14             DEC      A                ; A=R11
+00012B 78FB           JNE      ?C0172
+               ?C0173:
+00012D 7C67           MOV      R6,R7
+00012F 7E14FE23       MOV      WR2,#0FE23H
+                                                ; SOURCE LINE # 190
+000133 807B           SJMP     ?C0277
+                                                ; SOURCE LINE # 195
+                                                ; SOURCE LINE # 197
+                                                ; SOURCE LINE # 199
+               ?C0025:
+                                                ; SOURCE LINE # 201
+000135 4D11           ORL      WR2,WR2
+000137 7819           JNE      ?C0043
+                                                ; SOURCE LINE # 203
+000139 7CB5           MOV      R11,R5           ; A=R11
+00013B 540F           ANL      A,#0FH           ; A=R11
+00013D 7E340001       MOV      WR6,#01H
+000141 6005           JZ       ?C0175
+               ?C0174:
+000143 3E34           SLL      WR6
+000145 14             DEC      A                ; A=R11
+000146 78FB           JNE      ?C0174
+               ?C0175:
+000148 7CB7           MOV      R11,R7           ; A=R11
+00014A 64FF           XRL      A,#0FFH          ; A=R11
+00014C 7E14FE24       MOV      WR2,#0FE24H
+                                                ; SOURCE LINE # 204
+000150 8038           SJMP     ?C0276
+               ?C0043:
+                                                ; SOURCE LINE # 205
+000152 BE140001       CMP      WR2,#01H
+000156 7864           JNE      ?C0019
+                                                ; SOURCE LINE # 207
+000158 7CB5           MOV      R11,R5           ; A=R11
+00015A 540F           ANL      A,#0FH           ; A=R11
+00015C 7E340001       MOV      WR6,#01H
+000160 6005           JZ       ?C0177
+               ?C0176:
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 19  
+
+000162 3E34           SLL      WR6
+000164 14             DEC      A                ; A=R11
+000165 78FB           JNE      ?C0176
+               ?C0177:
+000167 7C67           MOV      R6,R7
+000169 7E14FE24       MOV      WR2,#0FE24H
+                                                ; SOURCE LINE # 208
+00016D 8041           SJMP     ?C0277
+                                                ; SOURCE LINE # 213
+                                                ; SOURCE LINE # 215
+                                                ; SOURCE LINE # 217
+               ?C0026:
+                                                ; SOURCE LINE # 219
+00016F 4D11           ORL      WR2,WR2
+000171 7822           JNE      ?C0047
+                                                ; SOURCE LINE # 221
+000173 7CB5           MOV      R11,R5           ; A=R11
+000175 540F           ANL      A,#0FH           ; A=R11
+000177 7E340001       MOV      WR6,#01H
+00017B 6005           JZ       ?C0179
+               ?C0178:
+00017D 3E34           SLL      WR6
+00017F 14             DEC      A                ; A=R11
+000180 78FB           JNE      ?C0178
+               ?C0179:
+000182 7CB7           MOV      R11,R7           ; A=R11
+000184 64FF           XRL      A,#0FFH          ; A=R11
+000186 7E14FE25       MOV      WR2,#0FE25H
+               ?C0276:
+00018A 7E04007E       MOV      WR0,#07EH
+00018E 7E0B70         MOV      R7,@DR0
+000191 5C7B           ANL      R7,R11           ; A=R11
+                                                ; SOURCE LINE # 222
+000193 8024           SJMP     ?C0278
+               ?C0047:
+                                                ; SOURCE LINE # 223
+000195 BE140001       CMP      WR2,#01H
+000199 7821           JNE      ?C0019
+                                                ; SOURCE LINE # 225
+00019B 7CB5           MOV      R11,R5           ; A=R11
+00019D 540F           ANL      A,#0FH           ; A=R11
+00019F 7E340001       MOV      WR6,#01H
+0001A3 6005           JZ       ?C0181
+               ?C0180:
+0001A5 3E34           SLL      WR6
+0001A7 14             DEC      A                ; A=R11
+0001A8 78FB           JNE      ?C0180
+               ?C0181:
+0001AA 7C67           MOV      R6,R7
+0001AC 7E14FE25       MOV      WR2,#0FE25H
+               ?C0277:
+0001B0 7E04007E       MOV      WR0,#07EH
+0001B4 7E0B70         MOV      R7,@DR0
+0001B7 4C76           ORL      R7,R6
+               ?C0278:
+0001B9 7A0B70         MOV      @DR0,R7
+                                                ; SOURCE LINE # 226
+                                                ; SOURCE LINE # 231
+                                                ; SOURCE LINE # 233
+                                                ; SOURCE LINE # 235
+                                                ; SOURCE LINE # 239
+                                                ; SOURCE LINE # 240
+               ?C0019:
+                                                ; SOURCE LINE # 241
+0001BC 22             RET      
+;       FUNCTION gpio_set_level_speed (END)
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 20  
+
+
+;       FUNCTION gpio_set_dir (BEGIN)
+                                                ; SOURCE LINE # 245
+000000 7D12           MOV      WR2,WR4
+;---- Variable 'dir' assigned to Register 'WR2' ----
+000002 7D23           MOV      WR4,WR6
+;---- Variable 'pin' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 247
+000004 5E3400F0       ANL      WR6,#0F0H
+000008 2E34FFE0       ADD      WR6,#0FFE0H
+00000C 7803        R  JNE      $ + 5H
+00000E 020000      R  LJMP     ?C0054
+000011 2E34FFF0       ADD      WR6,#0FFF0H
+000015 7803        R  JNE      $ + 5H
+000017 020000      R  LJMP     ?C0055
+00001A 2E34FFF0       ADD      WR6,#0FFF0H
+00001E 7803        R  JNE      $ + 5H
+000020 020000      R  LJMP     ?C0056
+000023 2E34FFF0       ADD      WR6,#0FFF0H
+000027 7803        R  JNE      $ + 5H
+000029 020000      R  LJMP     ?C0057
+00002C 2E34FFF0       ADD      WR6,#0FFF0H
+000030 7803        R  JNE      $ + 5H
+000032 020000      R  LJMP     ?C0058
+000035 2E340050       ADD      WR6,#050H
+000039 6803        R  JE       $ + 5H
+00003B 020000      R  LJMP     ?C0051
+                                                ; SOURCE LINE # 249
+               ?C0052:
+                                                ; SOURCE LINE # 251
+00003E BE140002       CMP      WR2,#02H
+000042 781B           JNE      ?C0059
+                                                ; SOURCE LINE # 253
+000044 7CB5           MOV      R11,R5           ; A=R11
+000046 540F           ANL      A,#0FH           ; A=R11
+000048 7E340001       MOV      WR6,#01H
+00004C 6005           JZ       ?C0183
+               ?C0182:
+00004E 3E34           SLL      WR6
+000050 14             DEC      A                ; A=R11
+000051 78FB           JNE      ?C0182
+               ?C0183:
+000053 7CA7           MOV      R10,R7
+000055 6EA0FF         XRL      R10,#0FFH
+000058 7CBA           MOV      R11,R10          ; A=R11
+00005A 5293           ANL      P0M1,A           ; A=R11
+                                                ; SOURCE LINE # 254
+00005C 5294           ANL      P0M0,A           ; A=R11
+                                                ; SOURCE LINE # 255
+00005E 22             RET      
+               ?C0059:
+                                                ; SOURCE LINE # 261
+00005F BE140001       CMP      WR2,#01H
+000063 781A           JNE      ?C0061
+                                                ; SOURCE LINE # 263
+000065 7CB5           MOV      R11,R5           ; A=R11
+000067 540F           ANL      A,#0FH           ; A=R11
+000069 7E340001       MOV      WR6,#01H
+00006D 6005           JZ       ?C0185
+               ?C0184:
+00006F 3E34           SLL      WR6
+000071 14             DEC      A                ; A=R11
+000072 78FB           JNE      ?C0184
+               ?C0185:
+000074 7CB7           MOV      R11,R7           ; A=R11
+000076 64FF           XRL      A,#0FFH          ; A=R11
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 21  
+
+000078 5293           ANL      P0M1,A           ; A=R11
+                                                ; SOURCE LINE # 264
+00007A 7CB7           MOV      R11,R7           ; A=R11
+00007C 4294           ORL      P0M0,A           ; A=R11
+                                                ; SOURCE LINE # 265
+00007E 22             RET      
+               ?C0061:
+                                                ; SOURCE LINE # 266
+00007F 4D11           ORL      WR2,WR2
+000081 6803        R  JE       $ + 5H
+000083 020000      R  LJMP     ?C0051
+                                                ; SOURCE LINE # 268
+000086 7CB5           MOV      R11,R5           ; A=R11
+000088 540F           ANL      A,#0FH           ; A=R11
+00008A 7E340001       MOV      WR6,#01H
+00008E 6005           JZ       ?C0187
+               ?C0186:
+000090 3E34           SLL      WR6
+000092 14             DEC      A                ; A=R11
+000093 78FB           JNE      ?C0186
+               ?C0187:
+000095 7CB7           MOV      R11,R7           ; A=R11
+000097 4293           ORL      P0M1,A           ; A=R11
+                                                ; SOURCE LINE # 269
+000099 64FF           XRL      A,#0FFH          ; A=R11
+00009B 5294           ANL      P0M0,A           ; A=R11
+                                                ; SOURCE LINE # 270
+                                                ; SOURCE LINE # 272
+00009D 22             RET      
+                                                ; SOURCE LINE # 274
+               ?C0054:
+                                                ; SOURCE LINE # 276
+00009E BE140002       CMP      WR2,#02H
+0000A2 781B           JNE      ?C0064
+                                                ; SOURCE LINE # 278
+0000A4 7CB5           MOV      R11,R5           ; A=R11
+0000A6 540F           ANL      A,#0FH           ; A=R11
+0000A8 7E340001       MOV      WR6,#01H
+0000AC 6005           JZ       ?C0189
+               ?C0188:
+0000AE 3E34           SLL      WR6
+0000B0 14             DEC      A                ; A=R11
+0000B1 78FB           JNE      ?C0188
+               ?C0189:
+0000B3 7CA7           MOV      R10,R7
+0000B5 6EA0FF         XRL      R10,#0FFH
+0000B8 7CBA           MOV      R11,R10          ; A=R11
+0000BA 5291           ANL      P1M1,A           ; A=R11
+                                                ; SOURCE LINE # 279
+0000BC 5292           ANL      P1M0,A           ; A=R11
+                                                ; SOURCE LINE # 280
+0000BE 22             RET      
+               ?C0064:
+                                                ; SOURCE LINE # 286
+0000BF BE140001       CMP      WR2,#01H
+0000C3 781A           JNE      ?C0066
+                                                ; SOURCE LINE # 288
+0000C5 7CB5           MOV      R11,R5           ; A=R11
+0000C7 540F           ANL      A,#0FH           ; A=R11
+0000C9 7E340001       MOV      WR6,#01H
+0000CD 6005           JZ       ?C0191
+               ?C0190:
+0000CF 3E34           SLL      WR6
+0000D1 14             DEC      A                ; A=R11
+0000D2 78FB           JNE      ?C0190
+               ?C0191:
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 22  
+
+0000D4 7CB7           MOV      R11,R7           ; A=R11
+0000D6 64FF           XRL      A,#0FFH          ; A=R11
+0000D8 5291           ANL      P1M1,A           ; A=R11
+                                                ; SOURCE LINE # 289
+0000DA 7CB7           MOV      R11,R7           ; A=R11
+0000DC 4292           ORL      P1M0,A           ; A=R11
+                                                ; SOURCE LINE # 290
+0000DE 22             RET      
+               ?C0066:
+                                                ; SOURCE LINE # 291
+0000DF 4D11           ORL      WR2,WR2
+0000E1 6803        R  JE       $ + 5H
+0000E3 020000      R  LJMP     ?C0051
+                                                ; SOURCE LINE # 293
+0000E6 7CB5           MOV      R11,R5           ; A=R11
+0000E8 540F           ANL      A,#0FH           ; A=R11
+0000EA 7E340001       MOV      WR6,#01H
+0000EE 6005           JZ       ?C0193
+               ?C0192:
+0000F0 3E34           SLL      WR6
+0000F2 14             DEC      A                ; A=R11
+0000F3 78FB           JNE      ?C0192
+               ?C0193:
+0000F5 7CB7           MOV      R11,R7           ; A=R11
+0000F7 4291           ORL      P1M1,A           ; A=R11
+                                                ; SOURCE LINE # 294
+0000F9 64FF           XRL      A,#0FFH          ; A=R11
+0000FB 5292           ANL      P1M0,A           ; A=R11
+                                                ; SOURCE LINE # 295
+                                                ; SOURCE LINE # 297
+0000FD 22             RET      
+                                                ; SOURCE LINE # 299
+               ?C0055:
+                                                ; SOURCE LINE # 301
+0000FE BE140002       CMP      WR2,#02H
+000102 781B           JNE      ?C0069
+                                                ; SOURCE LINE # 303
+000104 7CB5           MOV      R11,R5           ; A=R11
+000106 540F           ANL      A,#0FH           ; A=R11
+000108 7E340001       MOV      WR6,#01H
+00010C 6005           JZ       ?C0195
+               ?C0194:
+00010E 3E34           SLL      WR6
+000110 14             DEC      A                ; A=R11
+000111 78FB           JNE      ?C0194
+               ?C0195:
+000113 7CA7           MOV      R10,R7
+000115 6EA0FF         XRL      R10,#0FFH
+000118 7CBA           MOV      R11,R10          ; A=R11
+00011A 5295           ANL      P2M1,A           ; A=R11
+                                                ; SOURCE LINE # 304
+00011C 5296           ANL      P2M0,A           ; A=R11
+                                                ; SOURCE LINE # 305
+00011E 22             RET      
+               ?C0069:
+                                                ; SOURCE LINE # 311
+00011F BE140001       CMP      WR2,#01H
+000123 781A           JNE      ?C0071
+                                                ; SOURCE LINE # 313
+000125 7CB5           MOV      R11,R5           ; A=R11
+000127 540F           ANL      A,#0FH           ; A=R11
+000129 7E340001       MOV      WR6,#01H
+00012D 6005           JZ       ?C0197
+               ?C0196:
+00012F 3E34           SLL      WR6
+000131 14             DEC      A                ; A=R11
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 23  
+
+000132 78FB           JNE      ?C0196
+               ?C0197:
+000134 7CB7           MOV      R11,R7           ; A=R11
+000136 64FF           XRL      A,#0FFH          ; A=R11
+000138 5295           ANL      P2M1,A           ; A=R11
+                                                ; SOURCE LINE # 314
+00013A 7CB7           MOV      R11,R7           ; A=R11
+00013C 4296           ORL      P2M0,A           ; A=R11
+                                                ; SOURCE LINE # 315
+00013E 22             RET      
+               ?C0071:
+                                                ; SOURCE LINE # 316
+00013F 4D11           ORL      WR2,WR2
+000141 6803        R  JE       $ + 5H
+000143 020000      R  LJMP     ?C0051
+                                                ; SOURCE LINE # 318
+000146 7CB5           MOV      R11,R5           ; A=R11
+000148 540F           ANL      A,#0FH           ; A=R11
+00014A 7E340001       MOV      WR6,#01H
+00014E 6005           JZ       ?C0199
+               ?C0198:
+000150 3E34           SLL      WR6
+000152 14             DEC      A                ; A=R11
+000153 78FB           JNE      ?C0198
+               ?C0199:
+000155 7CB7           MOV      R11,R7           ; A=R11
+000157 4295           ORL      P2M1,A           ; A=R11
+                                                ; SOURCE LINE # 319
+000159 64FF           XRL      A,#0FFH          ; A=R11
+00015B 5296           ANL      P2M0,A           ; A=R11
+                                                ; SOURCE LINE # 320
+                                                ; SOURCE LINE # 322
+00015D 22             RET      
+                                                ; SOURCE LINE # 324
+               ?C0056:
+                                                ; SOURCE LINE # 326
+00015E BE140002       CMP      WR2,#02H
+000162 781B           JNE      ?C0074
+                                                ; SOURCE LINE # 328
+000164 7CB5           MOV      R11,R5           ; A=R11
+000166 540F           ANL      A,#0FH           ; A=R11
+000168 7E340001       MOV      WR6,#01H
+00016C 6005           JZ       ?C0201
+               ?C0200:
+00016E 3E34           SLL      WR6
+000170 14             DEC      A                ; A=R11
+000171 78FB           JNE      ?C0200
+               ?C0201:
+000173 7CA7           MOV      R10,R7
+000175 6EA0FF         XRL      R10,#0FFH
+000178 7CBA           MOV      R11,R10          ; A=R11
+00017A 52B1           ANL      P3M1,A           ; A=R11
+                                                ; SOURCE LINE # 329
+00017C 52B2           ANL      P3M0,A           ; A=R11
+                                                ; SOURCE LINE # 330
+00017E 22             RET      
+               ?C0074:
+                                                ; SOURCE LINE # 336
+00017F BE140001       CMP      WR2,#01H
+000183 781A           JNE      ?C0076
+                                                ; SOURCE LINE # 338
+000185 7CB5           MOV      R11,R5           ; A=R11
+000187 540F           ANL      A,#0FH           ; A=R11
+000189 7E340001       MOV      WR6,#01H
+00018D 6005           JZ       ?C0203
+               ?C0202:
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 24  
+
+00018F 3E34           SLL      WR6
+000191 14             DEC      A                ; A=R11
+000192 78FB           JNE      ?C0202
+               ?C0203:
+000194 7CB7           MOV      R11,R7           ; A=R11
+000196 64FF           XRL      A,#0FFH          ; A=R11
+000198 52B1           ANL      P3M1,A           ; A=R11
+                                                ; SOURCE LINE # 339
+00019A 7CB7           MOV      R11,R7           ; A=R11
+00019C 42B2           ORL      P3M0,A           ; A=R11
+                                                ; SOURCE LINE # 340
+00019E 22             RET      
+               ?C0076:
+                                                ; SOURCE LINE # 341
+00019F 4D11           ORL      WR2,WR2
+0001A1 6803        R  JE       $ + 5H
+0001A3 020000      R  LJMP     ?C0051
+                                                ; SOURCE LINE # 343
+0001A6 7CB5           MOV      R11,R5           ; A=R11
+0001A8 540F           ANL      A,#0FH           ; A=R11
+0001AA 7E340001       MOV      WR6,#01H
+0001AE 6005           JZ       ?C0205
+               ?C0204:
+0001B0 3E34           SLL      WR6
+0001B2 14             DEC      A                ; A=R11
+0001B3 78FB           JNE      ?C0204
+               ?C0205:
+0001B5 7CB7           MOV      R11,R7           ; A=R11
+0001B7 42B1           ORL      P3M1,A           ; A=R11
+                                                ; SOURCE LINE # 344
+0001B9 64FF           XRL      A,#0FFH          ; A=R11
+0001BB 52B2           ANL      P3M0,A           ; A=R11
+                                                ; SOURCE LINE # 345
+                                                ; SOURCE LINE # 347
+0001BD 22             RET      
+                                                ; SOURCE LINE # 349
+               ?C0057:
+                                                ; SOURCE LINE # 351
+0001BE BE140002       CMP      WR2,#02H
+0001C2 781B           JNE      ?C0079
+                                                ; SOURCE LINE # 353
+0001C4 7CB5           MOV      R11,R5           ; A=R11
+0001C6 540F           ANL      A,#0FH           ; A=R11
+0001C8 7E340001       MOV      WR6,#01H
+0001CC 6005           JZ       ?C0207
+               ?C0206:
+0001CE 3E34           SLL      WR6
+0001D0 14             DEC      A                ; A=R11
+0001D1 78FB           JNE      ?C0206
+               ?C0207:
+0001D3 7CA7           MOV      R10,R7
+0001D5 6EA0FF         XRL      R10,#0FFH
+0001D8 7CBA           MOV      R11,R10          ; A=R11
+0001DA 52B3           ANL      P4M1,A           ; A=R11
+                                                ; SOURCE LINE # 354
+0001DC 52B4           ANL      P4M0,A           ; A=R11
+                                                ; SOURCE LINE # 355
+0001DE 22             RET      
+               ?C0079:
+                                                ; SOURCE LINE # 361
+0001DF BE140001       CMP      WR2,#01H
+0001E3 781A           JNE      ?C0081
+                                                ; SOURCE LINE # 363
+0001E5 7CB5           MOV      R11,R5           ; A=R11
+0001E7 540F           ANL      A,#0FH           ; A=R11
+0001E9 7E340001       MOV      WR6,#01H
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 25  
+
+0001ED 6005           JZ       ?C0209
+               ?C0208:
+0001EF 3E34           SLL      WR6
+0001F1 14             DEC      A                ; A=R11
+0001F2 78FB           JNE      ?C0208
+               ?C0209:
+0001F4 7CB7           MOV      R11,R7           ; A=R11
+0001F6 64FF           XRL      A,#0FFH          ; A=R11
+0001F8 52B3           ANL      P4M1,A           ; A=R11
+                                                ; SOURCE LINE # 364
+0001FA 7CB7           MOV      R11,R7           ; A=R11
+0001FC 42B4           ORL      P4M0,A           ; A=R11
+                                                ; SOURCE LINE # 365
+0001FE 22             RET      
+               ?C0081:
+                                                ; SOURCE LINE # 366
+0001FF 4D11           ORL      WR2,WR2
+000201 7874           JNE      ?C0051
+                                                ; SOURCE LINE # 368
+000203 7CB5           MOV      R11,R5           ; A=R11
+000205 540F           ANL      A,#0FH           ; A=R11
+000207 7E340001       MOV      WR6,#01H
+00020B 6005           JZ       ?C0211
+               ?C0210:
+00020D 3E34           SLL      WR6
+00020F 14             DEC      A                ; A=R11
+000210 78FB           JNE      ?C0210
+               ?C0211:
+000212 7CB7           MOV      R11,R7           ; A=R11
+000214 42B3           ORL      P4M1,A           ; A=R11
+                                                ; SOURCE LINE # 369
+000216 64FF           XRL      A,#0FFH          ; A=R11
+000218 52B4           ANL      P4M0,A           ; A=R11
+                                                ; SOURCE LINE # 370
+                                                ; SOURCE LINE # 372
+00021A 22             RET      
+                                                ; SOURCE LINE # 374
+               ?C0058:
+                                                ; SOURCE LINE # 376
+00021B BE140002       CMP      WR2,#02H
+00021F 781B           JNE      ?C0084
+                                                ; SOURCE LINE # 378
+000221 7CB5           MOV      R11,R5           ; A=R11
+000223 540F           ANL      A,#0FH           ; A=R11
+000225 7E340001       MOV      WR6,#01H
+000229 6005           JZ       ?C0213
+               ?C0212:
+00022B 3E34           SLL      WR6
+00022D 14             DEC      A                ; A=R11
+00022E 78FB           JNE      ?C0212
+               ?C0213:
+000230 7CA7           MOV      R10,R7
+000232 6EA0FF         XRL      R10,#0FFH
+000235 7CBA           MOV      R11,R10          ; A=R11
+000237 52C9           ANL      P5M1,A           ; A=R11
+                                                ; SOURCE LINE # 379
+000239 52CA           ANL      P5M0,A           ; A=R11
+                                                ; SOURCE LINE # 380
+00023B 22             RET      
+               ?C0084:
+                                                ; SOURCE LINE # 386
+00023C BE140001       CMP      WR2,#01H
+000240 781A           JNE      ?C0086
+                                                ; SOURCE LINE # 388
+000242 7CB5           MOV      R11,R5           ; A=R11
+000244 540F           ANL      A,#0FH           ; A=R11
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 26  
+
+000246 7E340001       MOV      WR6,#01H
+00024A 6005           JZ       ?C0215
+               ?C0214:
+00024C 3E34           SLL      WR6
+00024E 14             DEC      A                ; A=R11
+00024F 78FB           JNE      ?C0214
+               ?C0215:
+000251 7CB7           MOV      R11,R7           ; A=R11
+000253 64FF           XRL      A,#0FFH          ; A=R11
+000255 52C9           ANL      P5M1,A           ; A=R11
+                                                ; SOURCE LINE # 389
+000257 7CB7           MOV      R11,R7           ; A=R11
+000259 42CA           ORL      P5M0,A           ; A=R11
+                                                ; SOURCE LINE # 390
+00025B 22             RET      
+               ?C0086:
+                                                ; SOURCE LINE # 391
+00025C 4D11           ORL      WR2,WR2
+00025E 7817           JNE      ?C0051
+                                                ; SOURCE LINE # 393
+000260 7CB5           MOV      R11,R5           ; A=R11
+000262 540F           ANL      A,#0FH           ; A=R11
+000264 7E340001       MOV      WR6,#01H
+000268 6005           JZ       ?C0217
+               ?C0216:
+00026A 3E34           SLL      WR6
+00026C 14             DEC      A                ; A=R11
+00026D 78FB           JNE      ?C0216
+               ?C0217:
+00026F 7CB7           MOV      R11,R7           ; A=R11
+000271 42C9           ORL      P5M1,A           ; A=R11
+                                                ; SOURCE LINE # 394
+000273 64FF           XRL      A,#0FFH          ; A=R11
+000275 52CA           ANL      P5M0,A           ; A=R11
+                                                ; SOURCE LINE # 395
+                                                ; SOURCE LINE # 397
+                                                ; SOURCE LINE # 399
+                                                ; SOURCE LINE # 403
+                                                ; SOURCE LINE # 404
+               ?C0051:
+                                                ; SOURCE LINE # 405
+000277 22             RET      
+;       FUNCTION gpio_set_dir (END)
+
+;       FUNCTION gpio_get_level (BEGIN)
+                                                ; SOURCE LINE # 413
+000000 7D23           MOV      WR4,WR6
+;---- Variable 'pin' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 414
+                                                ; SOURCE LINE # 415
+000002 E4             CLR      A                ; A=R11
+;---- Variable 'status' assigned to Register 'R11' ----
+                                                ; SOURCE LINE # 417
+000003 5E3400F0       ANL      WR6,#0F0H
+000007 2E34FFE0       ADD      WR6,#0FFE0H
+00000B 6836           JE       ?C0092
+00000D 2E34FFF0       ADD      WR6,#0FFF0H
+000011 6845           JE       ?C0093
+000013 2E34FFF0       ADD      WR6,#0FFF0H
+000017 6854           JE       ?C0094
+000019 2E34FFF0       ADD      WR6,#0FFF0H
+00001D 6863           JE       ?C0095
+00001F 2E34FFF0       ADD      WR6,#0FFF0H
+000023 6872           JE       ?C0096
+000025 2E340050       ADD      WR6,#050H
+000029 6803        R  JE       $ + 5H
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 27  
+
+00002B 020000      R  LJMP     ?C0089
+                                                ; SOURCE LINE # 419
+               ?C0090:
+                                                ; SOURCE LINE # 421
+00002E 7CB5           MOV      R11,R5           ; A=R11
+000030 540F           ANL      A,#0FH           ; A=R11
+000032 7E340001       MOV      WR6,#01H
+000036 6005           JZ       ?C0219
+               ?C0218:
+000038 3E34           SLL      WR6
+00003A 14             DEC      A                ; A=R11
+00003B 78FB           JNE      ?C0218
+               ?C0219:
+00003D E580           MOV      A,P0             ; A=R11
+00003F 5CB7           ANL      R11,R7           ; A=R11
+                                                ; SOURCE LINE # 423
+000041 8067           SJMP     ?C0089
+                                                ; SOURCE LINE # 425
+               ?C0092:
+                                                ; SOURCE LINE # 427
+000043 7CB5           MOV      R11,R5           ; A=R11
+000045 540F           ANL      A,#0FH           ; A=R11
+000047 7E340001       MOV      WR6,#01H
+00004B 6005           JZ       ?C0221
+               ?C0220:
+00004D 3E34           SLL      WR6
+00004F 14             DEC      A                ; A=R11
+000050 78FB           JNE      ?C0220
+               ?C0221:
+000052 E590           MOV      A,P1             ; A=R11
+000054 5CB7           ANL      R11,R7           ; A=R11
+                                                ; SOURCE LINE # 429
+000056 8052           SJMP     ?C0089
+                                                ; SOURCE LINE # 431
+               ?C0093:
+                                                ; SOURCE LINE # 433
+000058 7CB5           MOV      R11,R5           ; A=R11
+00005A 540F           ANL      A,#0FH           ; A=R11
+00005C 7E340001       MOV      WR6,#01H
+000060 6005           JZ       ?C0223
+               ?C0222:
+000062 3E34           SLL      WR6
+000064 14             DEC      A                ; A=R11
+000065 78FB           JNE      ?C0222
+               ?C0223:
+000067 E5A0           MOV      A,P2             ; A=R11
+000069 5CB7           ANL      R11,R7           ; A=R11
+                                                ; SOURCE LINE # 435
+00006B 803D           SJMP     ?C0089
+                                                ; SOURCE LINE # 437
+               ?C0094:
+                                                ; SOURCE LINE # 439
+00006D 7CB5           MOV      R11,R5           ; A=R11
+00006F 540F           ANL      A,#0FH           ; A=R11
+000071 7E340001       MOV      WR6,#01H
+000075 6005           JZ       ?C0225
+               ?C0224:
+000077 3E34           SLL      WR6
+000079 14             DEC      A                ; A=R11
+00007A 78FB           JNE      ?C0224
+               ?C0225:
+00007C E5B0           MOV      A,P3             ; A=R11
+00007E 5CB7           ANL      R11,R7           ; A=R11
+                                                ; SOURCE LINE # 441
+000080 8028           SJMP     ?C0089
+                                                ; SOURCE LINE # 443
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 28  
+
+               ?C0095:
+                                                ; SOURCE LINE # 445
+000082 7CB5           MOV      R11,R5           ; A=R11
+000084 540F           ANL      A,#0FH           ; A=R11
+000086 7E340001       MOV      WR6,#01H
+00008A 6005           JZ       ?C0227
+               ?C0226:
+00008C 3E34           SLL      WR6
+00008E 14             DEC      A                ; A=R11
+00008F 78FB           JNE      ?C0226
+               ?C0227:
+000091 E5C0           MOV      A,P4             ; A=R11
+000093 5CB7           ANL      R11,R7           ; A=R11
+                                                ; SOURCE LINE # 447
+000095 8013           SJMP     ?C0089
+                                                ; SOURCE LINE # 449
+               ?C0096:
+                                                ; SOURCE LINE # 451
+000097 7CB5           MOV      R11,R5           ; A=R11
+000099 540F           ANL      A,#0FH           ; A=R11
+00009B 7E340001       MOV      WR6,#01H
+00009F 6005           JZ       ?C0229
+               ?C0228:
+0000A1 3E34           SLL      WR6
+0000A3 14             DEC      A                ; A=R11
+0000A4 78FB           JNE      ?C0228
+               ?C0229:
+0000A6 E5C8           MOV      A,P5             ; A=R11
+0000A8 5CB7           ANL      R11,R7           ; A=R11
+                                                ; SOURCE LINE # 453
+                                                ; SOURCE LINE # 455
+                                                ; SOURCE LINE # 459
+                                                ; SOURCE LINE # 460
+               ?C0089:
+                                                ; SOURCE LINE # 462
+0000AA 6003           JZ       ?C0098
+0000AC 7401           MOV      A,#01H           ; A=R11
+0000AE 22             RET      
+               ?C0098:
+0000AF E4             CLR      A                ; A=R11
+                                                ; SOURCE LINE # 463
+0000B0 22             RET      
+;       FUNCTION gpio_get_level (END)
+
+;       FUNCTION gpio_set_level (BEGIN)
+                                                ; SOURCE LINE # 472
+000000 7C3B           MOV      R3,R11           ; A=R11
+;---- Variable 'dat' assigned to Register 'R3' ----
+000002 7D23           MOV      WR4,WR6
+;---- Variable 'pin' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 474
+000004 5E3400F0       ANL      WR6,#0F0H
+000008 2E34FFE0       ADD      WR6,#0FFE0H
+00000C 685B           JE       ?C0103
+00000E 2E34FFF0       ADD      WR6,#0FFF0H
+000012 7803        R  JNE      $ + 5H
+000014 020000      R  LJMP     ?C0104
+000017 2E34FFF0       ADD      WR6,#0FFF0H
+00001B 7803        R  JNE      $ + 5H
+00001D 020000      R  LJMP     ?C0105
+000020 2E34FFF0       ADD      WR6,#0FFF0H
+000024 7803        R  JNE      $ + 5H
+000026 020000      R  LJMP     ?C0106
+000029 2E34FFF0       ADD      WR6,#0FFF0H
+00002D 7803        R  JNE      $ + 5H
+00002F 020000      R  LJMP     ?C0107
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 29  
+
+000032 2E340050       ADD      WR6,#050H
+000036 6803        R  JE       $ + 5H
+000038 020000      R  LJMP     ?C0100
+                                                ; SOURCE LINE # 476
+               ?C0101:
+                                                ; SOURCE LINE # 478
+00003B 4C33           ORL      R3,R3
+00003D 6814           JE       ?C0108
+                                                ; SOURCE LINE # 480
+00003F 7CB5           MOV      R11,R5           ; A=R11
+000041 540F           ANL      A,#0FH           ; A=R11
+000043 7E340001       MOV      WR6,#01H
+000047 6005           JZ       ?C0231
+               ?C0230:
+000049 3E34           SLL      WR6
+00004B 14             DEC      A                ; A=R11
+00004C 78FB           JNE      ?C0230
+               ?C0231:
+00004E 7CB7           MOV      R11,R7           ; A=R11
+000050 4280           ORL      P0,A             ; A=R11
+                                                ; SOURCE LINE # 481
+000052 22             RET      
+               ?C0108:
+                                                ; SOURCE LINE # 484
+000053 7CB5           MOV      R11,R5           ; A=R11
+000055 540F           ANL      A,#0FH           ; A=R11
+000057 7E340001       MOV      WR6,#01H
+00005B 6005           JZ       ?C0233
+               ?C0232:
+00005D 3E34           SLL      WR6
+00005F 14             DEC      A                ; A=R11
+000060 78FB           JNE      ?C0232
+               ?C0233:
+000062 7CB7           MOV      R11,R7           ; A=R11
+000064 64FF           XRL      A,#0FFH          ; A=R11
+000066 5280           ANL      P0,A             ; A=R11
+                                                ; SOURCE LINE # 485
+                                                ; SOURCE LINE # 487
+000068 22             RET      
+                                                ; SOURCE LINE # 489
+               ?C0103:
+                                                ; SOURCE LINE # 491
+000069 4C33           ORL      R3,R3
+00006B 6814           JE       ?C0110
+                                                ; SOURCE LINE # 493
+00006D 7CB5           MOV      R11,R5           ; A=R11
+00006F 540F           ANL      A,#0FH           ; A=R11
+000071 7E340001       MOV      WR6,#01H
+000075 6005           JZ       ?C0235
+               ?C0234:
+000077 3E34           SLL      WR6
+000079 14             DEC      A                ; A=R11
+00007A 78FB           JNE      ?C0234
+               ?C0235:
+00007C 7CB7           MOV      R11,R7           ; A=R11
+00007E 4290           ORL      P1,A             ; A=R11
+                                                ; SOURCE LINE # 494
+000080 22             RET      
+               ?C0110:
+                                                ; SOURCE LINE # 497
+000081 7CB5           MOV      R11,R5           ; A=R11
+000083 540F           ANL      A,#0FH           ; A=R11
+000085 7E340001       MOV      WR6,#01H
+000089 6005           JZ       ?C0237
+               ?C0236:
+00008B 3E34           SLL      WR6
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 30  
+
+00008D 14             DEC      A                ; A=R11
+00008E 78FB           JNE      ?C0236
+               ?C0237:
+000090 7CB7           MOV      R11,R7           ; A=R11
+000092 64FF           XRL      A,#0FFH          ; A=R11
+000094 5290           ANL      P1,A             ; A=R11
+                                                ; SOURCE LINE # 498
+                                                ; SOURCE LINE # 500
+000096 22             RET      
+                                                ; SOURCE LINE # 502
+               ?C0104:
+                                                ; SOURCE LINE # 504
+000097 4C33           ORL      R3,R3
+000099 6814           JE       ?C0112
+                                                ; SOURCE LINE # 506
+00009B 7CB5           MOV      R11,R5           ; A=R11
+00009D 540F           ANL      A,#0FH           ; A=R11
+00009F 7E340001       MOV      WR6,#01H
+0000A3 6005           JZ       ?C0239
+               ?C0238:
+0000A5 3E34           SLL      WR6
+0000A7 14             DEC      A                ; A=R11
+0000A8 78FB           JNE      ?C0238
+               ?C0239:
+0000AA 7CB7           MOV      R11,R7           ; A=R11
+0000AC 42A0           ORL      P2,A             ; A=R11
+                                                ; SOURCE LINE # 507
+0000AE 22             RET      
+               ?C0112:
+                                                ; SOURCE LINE # 510
+0000AF 7CB5           MOV      R11,R5           ; A=R11
+0000B1 540F           ANL      A,#0FH           ; A=R11
+0000B3 7E340001       MOV      WR6,#01H
+0000B7 6005           JZ       ?C0241
+               ?C0240:
+0000B9 3E34           SLL      WR6
+0000BB 14             DEC      A                ; A=R11
+0000BC 78FB           JNE      ?C0240
+               ?C0241:
+0000BE 7CB7           MOV      R11,R7           ; A=R11
+0000C0 64FF           XRL      A,#0FFH          ; A=R11
+0000C2 52A0           ANL      P2,A             ; A=R11
+                                                ; SOURCE LINE # 511
+                                                ; SOURCE LINE # 513
+0000C4 22             RET      
+                                                ; SOURCE LINE # 515
+               ?C0105:
+                                                ; SOURCE LINE # 517
+0000C5 4C33           ORL      R3,R3
+0000C7 6814           JE       ?C0114
+                                                ; SOURCE LINE # 519
+0000C9 7CB5           MOV      R11,R5           ; A=R11
+0000CB 540F           ANL      A,#0FH           ; A=R11
+0000CD 7E340001       MOV      WR6,#01H
+0000D1 6005           JZ       ?C0243
+               ?C0242:
+0000D3 3E34           SLL      WR6
+0000D5 14             DEC      A                ; A=R11
+0000D6 78FB           JNE      ?C0242
+               ?C0243:
+0000D8 7CB7           MOV      R11,R7           ; A=R11
+0000DA 42B0           ORL      P3,A             ; A=R11
+                                                ; SOURCE LINE # 520
+0000DC 22             RET      
+               ?C0114:
+                                                ; SOURCE LINE # 523
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 31  
+
+0000DD 7CB5           MOV      R11,R5           ; A=R11
+0000DF 540F           ANL      A,#0FH           ; A=R11
+0000E1 7E340001       MOV      WR6,#01H
+0000E5 6005           JZ       ?C0245
+               ?C0244:
+0000E7 3E34           SLL      WR6
+0000E9 14             DEC      A                ; A=R11
+0000EA 78FB           JNE      ?C0244
+               ?C0245:
+0000EC 7CB7           MOV      R11,R7           ; A=R11
+0000EE 64FF           XRL      A,#0FFH          ; A=R11
+0000F0 52B0           ANL      P3,A             ; A=R11
+                                                ; SOURCE LINE # 524
+                                                ; SOURCE LINE # 526
+0000F2 22             RET      
+                                                ; SOURCE LINE # 528
+               ?C0106:
+                                                ; SOURCE LINE # 530
+0000F3 4C33           ORL      R3,R3
+0000F5 6814           JE       ?C0116
+                                                ; SOURCE LINE # 532
+0000F7 7CB5           MOV      R11,R5           ; A=R11
+0000F9 540F           ANL      A,#0FH           ; A=R11
+0000FB 7E340001       MOV      WR6,#01H
+0000FF 6005           JZ       ?C0247
+               ?C0246:
+000101 3E34           SLL      WR6
+000103 14             DEC      A                ; A=R11
+000104 78FB           JNE      ?C0246
+               ?C0247:
+000106 7CB7           MOV      R11,R7           ; A=R11
+000108 42C0           ORL      P4,A             ; A=R11
+                                                ; SOURCE LINE # 533
+00010A 22             RET      
+               ?C0116:
+                                                ; SOURCE LINE # 536
+00010B 7CB5           MOV      R11,R5           ; A=R11
+00010D 540F           ANL      A,#0FH           ; A=R11
+00010F 7E340001       MOV      WR6,#01H
+000113 6005           JZ       ?C0249
+               ?C0248:
+000115 3E34           SLL      WR6
+000117 14             DEC      A                ; A=R11
+000118 78FB           JNE      ?C0248
+               ?C0249:
+00011A 7CB7           MOV      R11,R7           ; A=R11
+00011C 64FF           XRL      A,#0FFH          ; A=R11
+00011E 52C0           ANL      P4,A             ; A=R11
+                                                ; SOURCE LINE # 537
+                                                ; SOURCE LINE # 539
+000120 22             RET      
+                                                ; SOURCE LINE # 541
+               ?C0107:
+                                                ; SOURCE LINE # 543
+000121 4C33           ORL      R3,R3
+000123 6814           JE       ?C0118
+                                                ; SOURCE LINE # 545
+000125 7CB5           MOV      R11,R5           ; A=R11
+000127 540F           ANL      A,#0FH           ; A=R11
+000129 7E340001       MOV      WR6,#01H
+00012D 6005           JZ       ?C0251
+               ?C0250:
+00012F 3E34           SLL      WR6
+000131 14             DEC      A                ; A=R11
+000132 78FB           JNE      ?C0250
+               ?C0251:
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 32  
+
+000134 7CB7           MOV      R11,R7           ; A=R11
+000136 42C8           ORL      P5,A             ; A=R11
+                                                ; SOURCE LINE # 546
+000138 22             RET      
+               ?C0118:
+                                                ; SOURCE LINE # 549
+000139 7CB5           MOV      R11,R5           ; A=R11
+00013B 540F           ANL      A,#0FH           ; A=R11
+00013D 7E340001       MOV      WR6,#01H
+000141 6005           JZ       ?C0253
+               ?C0252:
+000143 3E34           SLL      WR6
+000145 14             DEC      A                ; A=R11
+000146 78FB           JNE      ?C0252
+               ?C0253:
+000148 7CB7           MOV      R11,R7           ; A=R11
+00014A 64FF           XRL      A,#0FFH          ; A=R11
+00014C 52C8           ANL      P5,A             ; A=R11
+                                                ; SOURCE LINE # 550
+                                                ; SOURCE LINE # 552
+                                                ; SOURCE LINE # 554
+                                                ; SOURCE LINE # 558
+                                                ; SOURCE LINE # 559
+               ?C0100:
+                                                ; SOURCE LINE # 560
+00014E 22             RET      
+;       FUNCTION gpio_set_level (END)
+
+;       FUNCTION gpio_toggle_level (BEGIN)
+                                                ; SOURCE LINE # 569
+000000 CA79           PUSH     WR14
+000002 7D73           MOV      WR14,WR6
+;---- Variable 'pin' assigned to Register 'WR14' ----
+                                                ; SOURCE LINE # 571
+000004 120000      R  LCALL    gpio_get_level
+000007 6005           JZ       ?C0120
+                                                ; SOURCE LINE # 573
+000009 7D37           MOV      WR6,WR14
+00000B E4             CLR      A                ; A=R11
+                                                ; SOURCE LINE # 574
+00000C 8004           SJMP     ?C0279
+               ?C0120:
+                                                ; SOURCE LINE # 577
+00000E 7D37           MOV      WR6,WR14
+000010 7401           MOV      A,#01H           ; A=R11
+               ?C0279:
+000012 120000      R  LCALL    gpio_set_level
+                                                ; SOURCE LINE # 578
+                                                ; SOURCE LINE # 579
+000015 DA79           POP      WR14
+000017 22             RET      
+;       FUNCTION gpio_toggle_level (END)
+
+;       FUNCTION gpio_set_impedance (BEGIN)
+                                                ; SOURCE LINE # 587
+000000 7D23           MOV      WR4,WR6
+;---- Variable 'pin' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 589
+000002 5E3400F0       ANL      WR6,#0F0H
+000006 2E34FFE0       ADD      WR6,#0FFE0H
+00000A 683C           JE       ?C0125
+00000C 2E34FFF0       ADD      WR6,#0FFF0H
+000010 684E           JE       ?C0126
+000012 2E34FFF0       ADD      WR6,#0FFF0H
+000016 6860           JE       ?C0127
+000018 2E34FFF0       ADD      WR6,#0FFF0H
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 33  
+
+00001C 6872           JE       ?C0128
+00001E 2E34FFF0       ADD      WR6,#0FFF0H
+000022 7803        R  JNE      $ + 5H
+000024 020000      R  LJMP     ?C0129
+000027 2E340050       ADD      WR6,#050H
+00002B 6803        R  JE       $ + 5H
+00002D 020000      R  LJMP     ?C0122
+                                                ; SOURCE LINE # 591
+               ?C0123:
+                                                ; SOURCE LINE # 593
+000030 7CB5           MOV      R11,R5           ; A=R11
+000032 540F           ANL      A,#0FH           ; A=R11
+000034 7E340001       MOV      WR6,#01H
+000038 6005           JZ       ?C0255
+               ?C0254:
+00003A 3E34           SLL      WR6
+00003C 14             DEC      A                ; A=R11
+00003D 78FB           JNE      ?C0254
+               ?C0255:
+00003F 7CB7           MOV      R11,R7           ; A=R11
+000041 4293           ORL      P0M1,A           ; A=R11
+                                                ; SOURCE LINE # 594
+000043 64FF           XRL      A,#0FFH          ; A=R11
+000045 5294           ANL      P0M0,A           ; A=R11
+                                                ; SOURCE LINE # 596
+000047 22             RET      
+                                                ; SOURCE LINE # 598
+               ?C0125:
+                                                ; SOURCE LINE # 600
+000048 7CB5           MOV      R11,R5           ; A=R11
+00004A 540F           ANL      A,#0FH           ; A=R11
+00004C 7E340001       MOV      WR6,#01H
+000050 6005           JZ       ?C0257
+               ?C0256:
+000052 3E34           SLL      WR6
+000054 14             DEC      A                ; A=R11
+000055 78FB           JNE      ?C0256
+               ?C0257:
+000057 7CB7           MOV      R11,R7           ; A=R11
+000059 4291           ORL      P1M1,A           ; A=R11
+                                                ; SOURCE LINE # 601
+00005B 64FF           XRL      A,#0FFH          ; A=R11
+00005D 5292           ANL      P1M0,A           ; A=R11
+                                                ; SOURCE LINE # 603
+00005F 22             RET      
+                                                ; SOURCE LINE # 605
+               ?C0126:
+                                                ; SOURCE LINE # 607
+000060 7CB5           MOV      R11,R5           ; A=R11
+000062 540F           ANL      A,#0FH           ; A=R11
+000064 7E340001       MOV      WR6,#01H
+000068 6005           JZ       ?C0259
+               ?C0258:
+00006A 3E34           SLL      WR6
+00006C 14             DEC      A                ; A=R11
+00006D 78FB           JNE      ?C0258
+               ?C0259:
+00006F 7CB7           MOV      R11,R7           ; A=R11
+000071 4295           ORL      P2M1,A           ; A=R11
+                                                ; SOURCE LINE # 608
+000073 64FF           XRL      A,#0FFH          ; A=R11
+000075 5296           ANL      P2M0,A           ; A=R11
+                                                ; SOURCE LINE # 610
+000077 22             RET      
+                                                ; SOURCE LINE # 612
+               ?C0127:
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 34  
+
+                                                ; SOURCE LINE # 614
+000078 7CB5           MOV      R11,R5           ; A=R11
+00007A 540F           ANL      A,#0FH           ; A=R11
+00007C 7E340001       MOV      WR6,#01H
+000080 6005           JZ       ?C0261
+               ?C0260:
+000082 3E34           SLL      WR6
+000084 14             DEC      A                ; A=R11
+000085 78FB           JNE      ?C0260
+               ?C0261:
+000087 7CB7           MOV      R11,R7           ; A=R11
+000089 42B1           ORL      P3M1,A           ; A=R11
+                                                ; SOURCE LINE # 615
+00008B 64FF           XRL      A,#0FFH          ; A=R11
+00008D 52B2           ANL      P3M0,A           ; A=R11
+                                                ; SOURCE LINE # 617
+00008F 22             RET      
+                                                ; SOURCE LINE # 619
+               ?C0128:
+                                                ; SOURCE LINE # 621
+000090 7CB5           MOV      R11,R5           ; A=R11
+000092 540F           ANL      A,#0FH           ; A=R11
+000094 7E340001       MOV      WR6,#01H
+000098 6005           JZ       ?C0263
+               ?C0262:
+00009A 3E34           SLL      WR6
+00009C 14             DEC      A                ; A=R11
+00009D 78FB           JNE      ?C0262
+               ?C0263:
+00009F 7CB7           MOV      R11,R7           ; A=R11
+0000A1 42B3           ORL      P4M1,A           ; A=R11
+                                                ; SOURCE LINE # 622
+0000A3 64FF           XRL      A,#0FFH          ; A=R11
+0000A5 52B4           ANL      P4M0,A           ; A=R11
+                                                ; SOURCE LINE # 624
+0000A7 22             RET      
+                                                ; SOURCE LINE # 626
+               ?C0129:
+                                                ; SOURCE LINE # 628
+0000A8 7CB5           MOV      R11,R5           ; A=R11
+0000AA 540F           ANL      A,#0FH           ; A=R11
+0000AC 7E340001       MOV      WR6,#01H
+0000B0 6005           JZ       ?C0265
+               ?C0264:
+0000B2 3E34           SLL      WR6
+0000B4 14             DEC      A                ; A=R11
+0000B5 78FB           JNE      ?C0264
+               ?C0265:
+0000B7 7CB7           MOV      R11,R7           ; A=R11
+0000B9 42C9           ORL      P5M1,A           ; A=R11
+                                                ; SOURCE LINE # 629
+0000BB 64FF           XRL      A,#0FFH          ; A=R11
+0000BD 52CA           ANL      P5M0,A           ; A=R11
+                                                ; SOURCE LINE # 631
+                                                ; SOURCE LINE # 633
+                                                ; SOURCE LINE # 637
+                                                ; SOURCE LINE # 638
+               ?C0122:
+                                                ; SOURCE LINE # 639
+0000BF 22             RET      
+;       FUNCTION gpio_set_impedance (END)
+
+;       FUNCTION gpio_init (BEGIN)
+                                                ; SOURCE LINE # 650
+000000 CA3B           PUSH     DR12
+000002 7D61           MOV      WR12,WR2
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 35  
+
+;---- Variable 'mode' assigned to Register 'WR12' ----
+;---- Variable 'dat' assigned to Register 'R3' ----
+000004 7A270000    R  MOV      dir,WR4
+000008 7D73           MOV      WR14,WR6
+;---- Variable 'pin' assigned to Register 'WR14' ----
+                                                ; SOURCE LINE # 653
+00000A 120000      R  LCALL    gpio_set_level
+                                                ; SOURCE LINE # 654
+00000D 7E370000    R  MOV      WR6,dir
+000011 BE340002       CMP      WR6,#02H
+000015 7808           JNE      ?C0130
+                                                ; SOURCE LINE # 656
+000017 7D37           MOV      WR6,WR14
+000019 7E240002       MOV      WR4,#02H
+                                                ; SOURCE LINE # 657
+                                                ; SOURCE LINE # 658
+00001D 8017           SJMP     ?C0280
+               ?C0130:
+                                                ; SOURCE LINE # 659
+00001F 7E370000    R  MOV      WR6,dir
+000023 4D33           ORL      WR6,WR6
+000025 7818           JNE      ?C0132
+                                                ; SOURCE LINE # 661
+000027 4D66           ORL      WR12,WR12
+000029 7807           JNE      ?C0133
+                                                ; SOURCE LINE # 663
+00002B 7D37           MOV      WR6,WR14
+00002D 120000      R  LCALL    gpio_set_impedance
+                                                ; SOURCE LINE # 664
+000030 8037           SJMP     ?C0131
+               ?C0133:
+                                                ; SOURCE LINE # 667
+000032 7D37           MOV      WR6,WR14
+000034 6D22           XRL      WR4,WR4
+               ?C0280:
+000036 120000      R  LCALL    gpio_set_dir
+                                                ; SOURCE LINE # 668
+000039 7D37           MOV      WR6,WR14
+00003B 7D26           MOV      WR4,WR12
+                                                ; SOURCE LINE # 669
+                                                ; SOURCE LINE # 670
+00003D 8027           SJMP     ?C0281
+               ?C0132:
+                                                ; SOURCE LINE # 671
+00003F 7E370000    R  MOV      WR6,dir
+000043 BE340001       CMP      WR6,#01H
+000047 7820           JNE      ?C0131
+                                                ; SOURCE LINE # 673
+000049 BE640010       CMP      WR12,#010H
+00004D 780B           JNE      ?C0137
+                                                ; SOURCE LINE # 675
+00004F 7D37           MOV      WR6,WR14
+000051 7E240001       MOV      WR4,#01H
+000055 120000      R  LCALL    gpio_set_dir
+                                                ; SOURCE LINE # 677
+000058 800F           SJMP     ?C0131
+               ?C0137:
+                                                ; SOURCE LINE # 678
+00005A BE640011       CMP      WR12,#011H
+00005E 7809           JNE      ?C0131
+                                                ; SOURCE LINE # 680
+000060 7D37           MOV      WR6,WR14
+000062 7E240011       MOV      WR4,#011H
+               ?C0281:
+000066 120000      R  LCALL    gpio_set_mode
+                                                ; SOURCE LINE # 681
+C251 COMPILER V5.60.0,  zf_driver_gpio                                                     08/08/26  11:10:18  PAGE 36  
+
+               ?C0131:
+                                                ; SOURCE LINE # 683
+000069 DA3B           POP      DR12
+00006B 22             RET      
+;       FUNCTION gpio_init (END)
+
 
 
 Module Information          Static   Overlayable
@@ -747,8 +2387,6 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-C251 COMPILER V5.60.0,  zf_driver_gpio                                                     05/08/26  17:23:54  PAGE 12  
-
   hconst size          =    ------     ------
 End of Module Information.
 

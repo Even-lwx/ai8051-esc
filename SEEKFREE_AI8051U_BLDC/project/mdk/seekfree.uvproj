@@ -523,6 +523,11 @@
               <FilePath>..\..\bldc\motor_control.h</FilePath>
             </File>
             <File>
+              <FileName>mdu32_div.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\bldc\mdu32_div.asm</FilePath>
+            </File>
+            <File>
               <FileName>pit_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\bldc\pit_timer.c</FilePath>

@@ -1,0 +1,43 @@
+A251 MACRO ASSEMBLER  mdu32_div                                                             08/08/26 11:10:19 PAGE     1
+
+
+MACRO ASSEMBLER A251 V4.69.13.0
+OBJECT MODULE PLACED IN .\out_file\mdu32_div.obj
+ASSEMBLER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\A251.EXE ..\..\bldc\mdu32_div.asm MODSRC INTR2 INCDIR(..\..\libraries\
+                      zf_common) SET(XSMALL) DEBUG PRINT(.\out_file\mdu32_div.lst) OBJECT(.\out_file\mdu32_div.obj) EP
+
+LOC    OBJ             LINE     SOURCE
+
+                          1     $nomacro 
+                          2     $modsrc 
+                          3     $model (6)
+                          4     $case 
+                          5     NAME bldc_mdu32_div
+ 00ED                     6     DMAIR DATA 0EDH
+------                    7     ?PR?BLDC_MDU32_DIV_U32?BLDC_MDU32_DIV SEGMENT CODE
+                          8     PUBLIC bldc_mdu32_div_u32
+------                    9     RSEG ?PR?BLDC_MDU32_DIV_U32?BLDC_MDU32_DIV
+                         10     bldc_mdu32_div_u32 PROC
+                         11         ; AI8051U MDU32 无符号 32 位撤ㄈ肟冢问和返回值遵循 C251 ULDIV ABI。
+000000 75ED04            12         MOV DMAIR,#04H
+000003 22                13         RET
+                         14         ENDP
+                         15     END
+A251 MACRO ASSEMBLER  mdu32_div                                                             08/08/26 11:10:19 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                                T Y P E  V A L U E     ATTRIBUTES
+
+?PR?BLDC_MDU32_DIV_U32?BLDC_MDU32_DIV  C  SEG   000004H       REL=UNIT, ALN=BYTE
+DMAIR . . . . . . . . . . . . . . . .  D  ADDR  00EDH     A   
+bldc_mdu32_div. . . . . . . . . . . .  -- ----  -------       
+bldc_mdu32_div_u32. . . . . . . . . .  C  ADDR  0000H     R   SEG=?PR?BLDC_MDU32_DIV_U32?BLDC_MDU32_DIV
+
+
+REGISTER BANK(S) USED: 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S).

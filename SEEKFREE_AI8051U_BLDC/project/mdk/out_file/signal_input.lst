@@ -1,11 +1,12 @@
-C251 COMPILER V5.60.0,  signal_input                                                       07/08/26  21:04:10  PAGE 1   
+C251 COMPILER V5.60.0,  signal_input                                                       08/08/26  11:10:19  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE signal_input
 OBJECT MODULE PLACED IN .\out_file\signal_input.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\bldc\signal_input.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3)
                     - BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driv
-                    -er;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\signal_input.lst) TABS(2) OBJECT(.\out_file\signal_input.obj) 
+                    -er;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\signal_input.lst) TABS(2) OBJECT(.\out_file\signal_input.obj)
+                    - 
 
 stmt  level    source
 
@@ -39,146 +40,413 @@ stmt  level    source
    26          
    27          #define PWMIN_PIN   P21
    28          
-   29          pwmin_struct pwmin;
-   30          
-   31           
-   32          uint8 pwm_input_timeout_count = 0;
-   33          //-------------------------------------------------------------------------------------------------------
+   29          #define PWMIN_PERIOD_MIN_TICK       (2040u)
+   30          #define PWMIN_PERIOD_MAX_TICK       (25000u)
+   31          #define PWMIN_HIGH_MIN_TICK         (1000u)
+   32          #define PWMIN_HIGH_MAX_TICK         (2000u)
+   33          #define PWMIN_TIMEOUT_TICK          (1500u)
+   34          
+   35          #define PWMB_SR1_CC5IF              (0x02u)
+   36          #define PWMB_SR1_CC6IF              (0x04u)
+   37          #define PWMB_SR2_CC5OF              (0x02u)
+   38          #define PWMB_SR2_CC6OF              (0x04u)
+   39          
+   40          pwmin_struct pwmin;
+   41          
+   42          static uint8 pwmin_period_valid = 0;
+   43          static vuint16 pwm_input_timeout_count = 0;
+   44          //-------------------------------------------------------------------------------------------------------
              -------------
-   34          //  @brief      PWMB输入捕获中断
-   35          //  @param      void                        
-   36          //  @return     void          
-   37          //  @since      v1.0
-   38          //  Sample usage:
-   39          //-------------------------------------------------------------------------------------------------------
+   45          //  @brief      PWMB输入捕获中断
+   46          //  @param      void                        
+   47          //  @return     void          
+   48          //  @since      v1.0
+   49          //  Sample usage:
+   50          //-------------------------------------------------------------------------------------------------------
              -------------
-   40          void pwmb_isr()interrupt 27
-   41          {
-   42   1          uint16 temp;
-   43   1        if(PWMB_SR1 & 0x02)
-   44   1        {
-   45   2          pwmin.period = (PWMB_CCR5H << 8) + PWMB_CCR5L;      // CC1捕获周期宽度
-   46   2          PWMB_SR1 = 0;
-   47   2              
-   48   2              // 计算输入PWM信号的频率
-   49   2              pwmin.frequency = system_clock / (PWMB_PSCRL + 1) / pwmin.period;
-   50   2        }
-   51   1        
-   52   1        if(PWMB_SR1 & 0x04)
-   53   1        {
-C251 COMPILER V5.60.0,  signal_input                                                       07/08/26  21:04:10  PAGE 2   
+   51          void pwmb_isr()interrupt 27
+   52          {
+C251 COMPILER V5.60.0,  signal_input                                                       08/08/26  11:10:19  PAGE 2   
 
-   54   2          pwmin.high_value = (PWMB_CCR6H << 8) + PWMB_CCR6L;   // CC2捕获高电平宽度
-   55   2          PWMB_SR1 = 0;
-   56   2              
-   57   2              // 频率在合理的范围内才计算
-   58   2              if((30 < pwmin.frequency) && (500 > pwmin.frequency))
-   59   2              {
-   60   3                  // 计算高电平时间 仅在高电平时间为1-2ms内有效 
-   61   3                  pwmin.high_time = pwmin.high_value;
-   62   3                  
-   63   3                  if((3000 < pwmin.high_time) || (1000 > pwmin.high_time))
-   64   3                  {
-   65   4                      // 高电平时间过长或者过短，则油门设置为0
-   66   4                      pwmin.throttle = 0;
-   67   4                  }
-   68   3                  else
-   69   3                  {
-   70   4                      if(2000 < pwmin.high_time)
-   71   4                      {
-   72   5                          pwmin.high_time = 2000;
-   73   5                      }
-   74   4                      
-   75   4                      // 计算油门大小
-   76   4                      temp = pwmin.high_time - 1000;
-   77   4                      // 如果输入的油门大小 小于启动占空比则油门设置为5%
-   78   4                      if(temp < 50)
-   79   4                      {
-   80   5                          temp = 0;
-   81   5                      }
-   82   4                      pwmin.throttle = temp;
-   83   4                  }
-   84   3            
-   85   3            pwm_input_timeout_count = 0;
-   86   3              }
-   87   2              
-   88   2              // 更新占空比（BLDC_USR_DUTY>0 时为宏固定占空比，见 bldc_config.h）
-   89   2      #if (BLDC_USR_DUTY == 0)
-   90   2              motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000;
-   91   2      #endif
-   92   2        }
-   93   1          
-   94   1          if(PWMB_SR1 & 0x01)
-   95   1          {
-   96   2              PWMB_SR1 = 0;
-   97   2              
-   98   2      #if (BLDC_USR_DUTY == 0)
-   99   2              // 未检测到输入信号则输出油门都清零
-  100   2          if(motor.duty > 0)
-  101   2          {
-  102   3            if(++pwm_input_timeout_count >= 2)
-  103   3            {
-  104   4              pwm_input_timeout_count = 0;
-  105   4              
-  106   4              pwmin.throttle = 0;
-  107   4              motor.duty = 0;
-  108   4            }
-  109   3          }
-  110   2      #endif
-  111   2          }
-  112   1      
-  113   1      #if (BLDC_USR_DUTY > 0)
+   53   1          uint8 sr1 = PWMB_SR1;
+   54   1          uint8 sr2 = PWMB_SR2;
+   55   1          uint8 capture_high;
+   56   1          uint8 frame_overcapture;
+   57   1          uint16 temp;
+   58   1          frame_overcapture = sr2 & (PWMB_SR2_CC5OF | PWMB_SR2_CC6OF);
+   59   1      
+   60   1          if(sr1 & PWMB_SR1_CC5IF)
+   61   1          {
+   62   2              // 必须先读取高字节，再单独读取低字节；读取低字节会清除 CC5 标志。
+   63   2              capture_high = PWMB_CCR5H;
+   64   2              pwmin.period = ((uint16)capture_high << 8);
+   65   2              pwmin.period |= PWMB_CCR5L;
+   66   2      
+   67   2              pwmin_period_valid = 0;
+   68   2              if((0 == frame_overcapture)
+   69   2              && (PWMIN_PERIOD_MIN_TICK <= pwmin.period)
+   70   2              && (PWMIN_PERIOD_MAX_TICK >= pwmin.period))
+   71   2              {
+   72   3                  pwmin_period_valid = 1;
+   73   3              }
+   74   2          }
+   75   1      
+   76   1          if(sr1 & PWMB_SR1_CC6IF)
+   77   1          {
+   78   2              // 必须先读取高字节，再单独读取低字节；读取低字节会清除 CC6 标志。
+   79   2              capture_high = PWMB_CCR6H;
+   80   2              pwmin.high_value = ((uint16)capture_high << 8);
+   81   2              pwmin.high_value |= PWMB_CCR6L;
+   82   2              pwmin.high_time = pwmin.high_value;
+   83   2      
+   84   2              if((0 == frame_overcapture)
+   85   2              && pwmin_period_valid
+   86   2              && (PWMIN_HIGH_MIN_TICK <= pwmin.high_time)
+   87   2              && (PWMIN_HIGH_MAX_TICK >= pwmin.high_time))
+   88   2              {
+   89   3                  temp = pwmin.high_time - PWMIN_HIGH_MIN_TICK;
+   90   3                  if(temp < 50u)
+   91   3                  {
+   92   4                      temp = 0;
+   93   4                  }
+   94   3                  pwmin.throttle = temp;
+   95   3                  pwm_input_timeout_count = 0;
+   96   3      
+   97   3      #if (BLDC_USR_DUTY == 0)
+   98   3                  motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000u;
+   99   3      #endif
+  100   3              }
+  101   2      
+  102   2              // 一个周期只消费一次周期捕获，下一帧必须重新取得有效 CC5。
+  103   2              pwmin_period_valid = 0;
+  104   2          }
+  105   1      
+  106   1      #if (BLDC_USR_DUTY > 0)
                    // 宏固定占空比：1~100 表示目标 1%~100%，不读外部捕获、不做无信号清零
                    motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;
                    pwm_input_timeout_count = 0;
                #endif
-  118   1      }
-  119          
-C251 COMPILER V5.60.0,  signal_input                                                       07/08/26  21:04:10  PAGE 3   
+  111   1      }
+  112          
+  113          void pwm_input_timeout_tick(void)
+  114          {
+  115   1      #if (BLDC_USR_DUTY == 0)
+  116   1          if(pwm_input_timeout_count < PWMIN_TIMEOUT_TICK)
+  117   1          {
+  118   2              pwm_input_timeout_count++;
+C251 COMPILER V5.60.0,  signal_input                                                       08/08/26  11:10:19  PAGE 3   
 
-  120          //-------------------------------------------------------------------------------------------------------
+  119   2          }
+  120   1      
+  121   1          if(pwm_input_timeout_count >= PWMIN_TIMEOUT_TICK)
+  122   1          {
+  123   2              pwmin.throttle = 0;
+  124   2              motor.duty = 0;
+  125   2          }
+  126   1      #else
+                   pwm_input_timeout_count = 0;
+               #endif
+  129   1      }
+  130          
+  131          //-------------------------------------------------------------------------------------------------------
              -------------
-  121          //  @brief      PWMB输入捕获初始化
-  122          //  @param      void                        
-  123          //  @return     void          
-  124          //  @since      v1.0
-  125          //  Sample usage:
-  126          //-------------------------------------------------------------------------------------------------------
+  132          //  @brief      PWMB输入捕获初始化
+  133          //  @param      void                        
+  134          //  @return     void          
+  135          //  @since      v1.0
+  136          //  Sample usage:
+  137          //-------------------------------------------------------------------------------------------------------
              -------------
-  127          void pwm_input_init(void)
-  128          {
-  129   1          gpio_init(IO_P21, GPI, 0, GPI_IMPEDANCE);
-  130   1          gpio_init(IO_P23, GPI, 0, GPI_IMPEDANCE);
-  131   1          
-  132   1          PWMB_PS = 0x0A;   // 通道引脚切换
-  133   1          PWMB_CCMR1 = 0x01;  // CC5为输入模式,且映射到TI5FP5上
-  134   1        PWMB_CCMR2 = 0x02;  // CC6为输入模式,且映射到TI5FP6上
-  135   1          
-  136   1        // CC5E 开启输入捕获
-  137   1        // CC5P 捕获发生在TI5F的上升沿
-  138   1        // CC6E 开启输入捕获
-  139   1        // CC6P 捕获发生在TI5F的下降沿
-  140   1          PWMB_CCER1 = 0x31;
-  141   1          
-  142   1          PWMB_PSCRH = 0;   // 分频值
-  143   1        PWMB_PSCRL = system_clock / 1000000 - 1;    // 分频值
-  144   1          PWMB_SMCR = 0x54; // TS=TI1FP1,SMS=TI1上升沿复位模式
-  145   1        PWMB_CR1 = 0x01;  // 启动PWMB，向上计数
-  146   1        PWMB_IER = 0x07;  // 使能CC1、CC2、UIE中断
-  147   1      
-  148   1          pwmin.period = 0;
-  149   1          pwmin.high_value = 0;
-  150   1          pwmin.high_time = 0;
-  151   1      
-  152   1      #if (BLDC_USR_DUTY > 0)
+  138          void pwm_input_init(void)
+  139          {
+  140   1          gpio_init(IO_P21, GPI, 0, GPI_IMPEDANCE);
+  141   1          gpio_init(IO_P23, GPI, 0, GPI_IMPEDANCE);
+  142   1          
+  143   1          PWMB_PS = 0x0A;   // 通道引脚切换
+  144   1          PWMB_CCMR1 = 0x01;  // CC5为输入模式,且映射到TI5FP5上
+  145   1        PWMB_CCMR2 = 0x02;  // CC6为输入模式,且映射到TI5FP6上
+  146   1          
+  147   1        // CC5E 开启输入捕获
+  148   1        // CC5P 捕获发生在TI5F的上升沿
+  149   1        // CC6E 开启输入捕获
+  150   1        // CC6P 捕获发生在TI5F的下降沿
+  151   1          PWMB_CCER1 = 0x31;
+  152   1          
+  153   1          PWMB_PSCRH = 0;   // 分频值
+  154   1        PWMB_PSCRL = system_clock / 1000000 - 1;    // 分频值
+  155   1          PWMB_ARRH = 0xff;
+  156   1          PWMB_ARRL = 0xff;
+  157   1          PWMB_SMCR = 0x54; // TS=TI1FP1,SMS=TI1上升沿复位模式
+  158   1        PWMB_CR1 = 0x04;  // URS=1，仅计数器溢出产生更新请求
+  159   1          PWMB_EGR = 0x01;  // 装载预分频和自动重装值
+  160   1        PWMB_IER = PWMB_SR1_CC5IF | PWMB_SR1_CC6IF;
+  161   1        PWMB_CR1 |= 0x01; // 启动PWMB，向上计数
+  162   1      
+  163   1          pwmin.period = 0;
+  164   1          pwmin.high_value = 0;
+  165   1          pwmin.high_time = 0;
+  166   1          pwmin.throttle = 0;
+  167   1          pwmin_period_valid = 0;
+  168   1          pwm_input_timeout_count = 0;
+  169   1      
+  170   1      #if (BLDC_USR_DUTY > 0)
                    motor.duty = (uint32)BLDC_USR_DUTY * (uint32)BLDC_PWM_ARR_MAX / 100u;
                #endif
-  155   1      }
+  173   1      }
+C251 COMPILER V5.60.0,  signal_input                                                       08/08/26  11:10:19  PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION pwmb_isr (BEGIN)
+                                                ; SOURCE LINE # 51
+000000 CAF8           PUSH     R15
+000002 CA2B           PUSH     DR8
+000004 CA1B           PUSH     DR4
+000006 CA0B           PUSH     DR0
+000008 C0D1           PUSH     PSW1
+;---- Variable 'capture_high' assigned to Register 'R15' ----
+                                                ; SOURCE LINE # 52
+                                                ; SOURCE LINE # 53
+00000A 7E34FEE5       MOV      WR6,#0FEE5H
+00000E 7E24007E       MOV      WR4,#07EH
+000012 7E1B70         MOV      R7,@DR4
+;---- Variable 'sr1' assigned to Register 'R7' ----
+                                                ; SOURCE LINE # 54
+000015 7E14FEE6       MOV      WR2,#0FEE6H
+000019 7E04007E       MOV      WR0,#07EH
+00001D 7E0BA0         MOV      R10,@DR0
+;---- Variable 'sr2' assigned to Register 'R10' ----
+                                                ; SOURCE LINE # 58
+000020 5EA006         ANL      R10,#06H
+;---- Variable 'frame_overcapture' assigned to Register 'R10' ----
+                                                ; SOURCE LINE # 60
+000023 7CB7           MOV      R11,R7           ; A=R11
+000025 30E143         JNB      ACC.1,?C0001
+                                                ; SOURCE LINE # 63
+000028 7E14FEF5       MOV      WR2,#0FEF5H
+00002C 7E04007E       MOV      WR0,#07EH
+000030 7E0BF0         MOV      R15,@DR0
+                                                ; SOURCE LINE # 64
+000033 7C4F           MOV      R4,R15
+000035 6C55           XRL      R5,R5
+000037 7A270000    R  MOV      pwmin,WR4
+                                                ; SOURCE LINE # 65
+00003B 7E14FEF6       MOV      WR2,#0FEF6H
+00003F 7E0B60         MOV      R6,@DR0
+000042 0A26           MOVZ     WR4,R6
+000044 4E270000    R  ORL      WR4,pwmin
+000048 7A270000    R  MOV      pwmin,WR4
+                                                ; SOURCE LINE # 67
+00004C E4             CLR      A                ; A=R11
+00004D 7AB30000    R  MOV      pwmin_period_valid,R11
+                                                ; SOURCE LINE # 68
+000051 4CAA           ORL      R10,R10
+000053 7816           JNE      ?C0001
+000055 7E270000    R  MOV      WR4,pwmin
+000059 BE2407F8       CMP      WR4,#07F8H
+00005D 400C           JC       ?C0001
+00005F BE2461A8       CMP      WR4,#061A8H
+000063 3806           JG       ?C0001
+                                                ; SOURCE LINE # 72
+000065 7401           MOV      A,#01H           ; A=R11
+000067 7AB30000    R  MOV      pwmin_period_valid,R11
+                                                ; SOURCE LINE # 73
+               ?C0001:
+                                                ; SOURCE LINE # 76
+00006B 7CB7           MOV      R11,R7           ; A=R11
+00006D 30E272         JNB      ACC.2,?C0003
+                                                ; SOURCE LINE # 79
+000070 7E34FEF7       MOV      WR6,#0FEF7H
+000074 7E24007E       MOV      WR4,#07EH
+000078 7E1BF0         MOV      R15,@DR4
+                                                ; SOURCE LINE # 80
+C251 COMPILER V5.60.0,  signal_input                                                       08/08/26  11:10:19  PAGE 5   
+
+00007B 7C6F           MOV      R6,R15
+00007D 6C77           XRL      R7,R7
+00007F 7A370000    R  MOV      pwmin+2,WR6
+                                                ; SOURCE LINE # 81
+000083 7E34FEF8       MOV      WR6,#0FEF8H
+000087 7E1BB0         MOV      R11,@DR4         ; A=R11
+00008A 0A3B           MOVZ     WR6,R11          ; A=R11
+00008C 4E370000    R  ORL      WR6,pwmin+2
+000090 7A370000    R  MOV      pwmin+2,WR6
+                                                ; SOURCE LINE # 82
+000094 7E370000    R  MOV      WR6,pwmin+2
+000098 7A370000    R  MOV      pwmin+4,WR6
+                                                ; SOURCE LINE # 84
+00009C 4CAA           ORL      R10,R10
+00009E 783D           JNE      ?C0004
+0000A0 7EB30000    R  MOV      R11,pwmin_period_valid
+0000A4 6037           JZ       ?C0004
+0000A6 7E270000    R  MOV      WR4,pwmin+4
+0000AA BE2403E8       CMP      WR4,#03E8H
+0000AE 402D           JC       ?C0004
+0000B0 BE2407D0       CMP      WR4,#07D0H
+0000B4 3827           JG       ?C0004
+                                                ; SOURCE LINE # 89
+0000B6 9E2403E8       SUB      WR4,#03E8H
+;---- Variable 'temp' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 90
+0000BA BE240032       CMP      WR4,#032H
+0000BE 5002           JNC      ?C0005
+                                                ; SOURCE LINE # 92
+0000C0 6D22           XRL      WR4,WR4
+                                                ; SOURCE LINE # 93
+               ?C0005:
+                                                ; SOURCE LINE # 94
+0000C2 7A270000    R  MOV      pwmin+6,WR4
+                                                ; SOURCE LINE # 95
+0000C6 6D33           XRL      WR6,WR6
+0000C8 7A370000    R  MOV      pwm_input_timeout_count,WR6
+                                                ; SOURCE LINE # 98
+0000CC 7E340327       MOV      WR6,#0327H
+0000D0 AD23           MUL      WR4,WR6
+0000D2 7E1403E8       MOV      WR2,#03E8H
+0000D6 120000      E  LCALL    ?C?ULIDIV
+0000D9 7A370000    E  MOV      motor+1,WR6
+                                                ; SOURCE LINE # 100
+               ?C0004:
+                                                ; SOURCE LINE # 103
+0000DD E4             CLR      A                ; A=R11
+0000DE 7AB30000    R  MOV      pwmin_period_valid,R11
+                                                ; SOURCE LINE # 104
+               ?C0003:
+0000E2 D0D1           POP      PSW1
+0000E4 DA0B           POP      DR0
+0000E6 DA1B           POP      DR4
+0000E8 DA2B           POP      DR8
+0000EA DAF8           POP      R15
+0000EC 32             RETI     
+;       FUNCTION pwmb_isr (END)
+
+;       FUNCTION pwm_input_timeout_tick (BEGIN)
+                                                ; SOURCE LINE # 113
+                                                ; SOURCE LINE # 116
+000000 7E370000    R  MOV      WR6,pwm_input_timeout_count
+000004 BE3405DC       CMP      WR6,#05DCH
+000008 500A           JNC      ?C0006
+                                                ; SOURCE LINE # 118
+00000A 7E370000    R  MOV      WR6,pwm_input_timeout_count
+C251 COMPILER V5.60.0,  signal_input                                                       08/08/26  11:10:19  PAGE 6   
+
+00000E 0B34           INC      WR6,#01H
+000010 7A370000    R  MOV      pwm_input_timeout_count,WR6
+                                                ; SOURCE LINE # 119
+               ?C0006:
+                                                ; SOURCE LINE # 121
+000014 7E370000    R  MOV      WR6,pwm_input_timeout_count
+000018 BE3405DC       CMP      WR6,#05DCH
+00001C 400A           JC       ?C0007
+                                                ; SOURCE LINE # 123
+00001E 6D33           XRL      WR6,WR6
+000020 7A370000    R  MOV      pwmin+6,WR6
+                                                ; SOURCE LINE # 124
+000024 7A370000    E  MOV      motor+1,WR6
+                                                ; SOURCE LINE # 125
+               ?C0007:
+000028 22             RET      
+;       FUNCTION pwm_input_timeout_tick (END)
+
+;       FUNCTION pwm_input_init (BEGIN)
+                                                ; SOURCE LINE # 138
+                                                ; SOURCE LINE # 140
+000000 7E340031       MOV      WR6,#031H
+000004 6D11           XRL      WR2,WR2
+000006 6D22           XRL      WR4,WR4
+000008 E4             CLR      A                ; A=R11
+000009 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 141
+00000C 7E340033       MOV      WR6,#033H
+000010 6D11           XRL      WR2,WR2
+000012 6D22           XRL      WR4,WR4
+000014 E4             CLR      A                ; A=R11
+000015 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 143
+000018 740A           MOV      A,#0AH           ; A=R11
+00001A 7E34FEB6       MOV      WR6,#0FEB6H
+00001E 7E24007E       MOV      WR4,#07EH
+000022 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 144
+000025 7401           MOV      A,#01H           ; A=R11
+000027 7E34FEE8       MOV      WR6,#0FEE8H
+00002B 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 145
+00002E 7402           MOV      A,#02H           ; A=R11
+000030 7E34FEE9       MOV      WR6,#0FEE9H
+000034 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 151
+000037 7431           MOV      A,#031H          ; A=R11
+000039 7E34FEEC       MOV      WR6,#0FEECH
+00003D 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 153
+000040 E4             CLR      A                ; A=R11
+000041 7E34FEF0       MOV      WR6,#0FEF0H
+000045 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 154
+000048 7E144240       MOV      WR2,#04240H
+00004C 7E04000F       MOV      WR0,#0FH
+000050 7E1F0000    E  MOV      DR4,system_clock
+000054 120000      E  LCALL    ?C?SLDIV
+000057 7F01           MOV      DR0,DR4
+000059 1B0C           DEC      DR0,#01H
+00005B 7E34FEF1       MOV      WR6,#0FEF1H
+00005F 7E24007E       MOV      WR4,#07EH
+000063 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 155
+000066 74FF           MOV      A,#0FFH          ; A=R11
+000068 7E34FEF2       MOV      WR6,#0FEF2H
+C251 COMPILER V5.60.0,  signal_input                                                       08/08/26  11:10:19  PAGE 7   
+
+00006C 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 156
+00006F 7E34FEF3       MOV      WR6,#0FEF3H
+000073 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 157
+000076 7454           MOV      A,#054H          ; A=R11
+000078 7E34FEE2       MOV      WR6,#0FEE2H
+00007C 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 158
+00007F 7404           MOV      A,#04H           ; A=R11
+000081 7E34FEE0       MOV      WR6,#0FEE0H
+000085 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 159
+000088 7401           MOV      A,#01H           ; A=R11
+00008A 7E14FEE7       MOV      WR2,#0FEE7H
+00008E 7E04007E       MOV      WR0,#07EH
+000092 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 160
+000095 7406           MOV      A,#06H           ; A=R11
+000097 7E14FEE4       MOV      WR2,#0FEE4H
+00009B 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 161
+00009E 7E1BB0         MOV      R11,@DR4         ; A=R11
+0000A1 4401           ORL      A,#01H           ; A=R11
+0000A3 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 163
+0000A6 6D33           XRL      WR6,WR6
+0000A8 7A370000    R  MOV      pwmin,WR6
+                                                ; SOURCE LINE # 164
+0000AC 7A370000    R  MOV      pwmin+2,WR6
+                                                ; SOURCE LINE # 165
+0000B0 7A370000    R  MOV      pwmin+4,WR6
+                                                ; SOURCE LINE # 166
+0000B4 7A370000    R  MOV      pwmin+6,WR6
+                                                ; SOURCE LINE # 167
+0000B8 E4             CLR      A                ; A=R11
+0000B9 7AB30000    R  MOV      pwmin_period_valid,R11
+                                                ; SOURCE LINE # 168
+0000BD 7A370000    R  MOV      pwm_input_timeout_count,WR6
+                                                ; SOURCE LINE # 173
+0000C1 22             RET      
+;       FUNCTION pwm_input_init (END)
+
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       465     ------
+  code size            =       475     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -193,7 +461,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =         5     ------
+  hconst size          =        11     ------
 End of Module Information.
 
 

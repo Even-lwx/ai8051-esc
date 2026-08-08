@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_driver_timer                                                    05/08/26  17:23:54  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_timer                                                    08/08/26  11:10:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_timer
 OBJECT MODULE PLACED IN .\out_file\zf_driver_timer.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_timer.c XSMALL INTR2 NOALI
                     -AS WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..
-                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_driver_timer.lst) TABS(2) OBJECT(.\out_file\z
-                    -f_driver_timer.obj) 
+                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_driver_timer.lst) TABS(2) OBJECT(.\out_f
+                    -ile\zf_driver_timer.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
              -------------
    52          // 函数简介      TIMER 外设确认功能状态 库内部调用
    53          // 参数说明     index           TIMER 外设模块号
-C251 COMPILER V5.60.0,  zf_driver_timer                                                    05/08/26  17:23:54  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_timer                                                    08/08/26  11:10:18  PAGE 2   
 
    54          // 参数说明     mode            需要确的功能模块
    55          // 返回参数     uint8           1-可以使用 0-不可以使用
@@ -90,6 +90,46 @@ stmt  level    source
    72   2          }
    73   1          return return_state;
    74   1      }
+C251 COMPILER V5.60.0,  zf_driver_timer                                                    08/08/26  11:10:18  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION timer_funciton_check (BEGIN)
+                                                ; SOURCE LINE # 58
+000000 7D12           MOV      WR2,WR4
+;---- Variable 'mode' assigned to Register 'WR2' ----
+;---- Variable 'index' assigned to Register 'WR6' ----
+                                                ; SOURCE LINE # 59
+                                                ; SOURCE LINE # 60
+000002 7401           MOV      A,#01H           ; A=R11
+;---- Variable 'return_state' assigned to Register 'R11' ----
+                                                ; SOURCE LINE # 61
+000004 3E34           SLL      WR6
+000006 49030000    R  MOV      WR0,@WR6+timer_function_state
+00000A 4D00           ORL      WR0,WR0
+00000C 7805           JNE      ?C0001
+                                                ; SOURCE LINE # 63
+00000E 59130000    R  MOV      @WR6+timer_function_state,WR2
+                                                ; SOURCE LINE # 64
+000012 22             RET      
+               ?C0001:
+                                                ; SOURCE LINE # 65
+000013 BD01           CMP      WR0,WR2
+000015 7803           JNE      ?C0003
+                                                ; SOURCE LINE # 67
+000017 7401           MOV      A,#01H           ; A=R11
+                                                ; SOURCE LINE # 68
+000019 22             RET      
+               ?C0003:
+                                                ; SOURCE LINE # 71
+00001A E4             CLR      A                ; A=R11
+                                                ; SOURCE LINE # 72
+                                                ; SOURCE LINE # 73
+                                                ; SOURCE LINE # 74
+00001B 22             RET      
+;       FUNCTION timer_funciton_check (END)
+
 
 
 Module Information          Static   Overlayable

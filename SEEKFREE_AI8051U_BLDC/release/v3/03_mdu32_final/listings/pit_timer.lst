@@ -1,0 +1,1314 @@
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE pit_timer
+OBJECT MODULE PLACED IN .\out_file\pit_timer.obj
+COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\bldc\pit_timer.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3) BR
+                    -OWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;
+                    -..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\pit_timer.lst) TABS(2) OBJECT(.\out_file\pit_timer.obj) 
+
+stmt  level    source
+
+    1          /********************************************************************************************************
+             -*************
+    2           * COPYRIGHT NOTICE
+    3           * Copyright (c) 2020,逐飞科技
+    4           * All rights reserved.
+    5           * 技术讨论QQ群：一群：179029047(已满)  二群：244861897(已满)  三群：824575535
+    6           *
+    7           * 以下所有内容版权均属逐飞科技所有，未经允许不得用于商业用途，
+    8           * 欢迎各位使用并传播本程序，修改内容时必须保留逐飞科技的版权声明。
+    9           *
+   10           * @file          pit_timer
+   11           * @company       成都逐飞科技有限公司
+   12           * @author        逐飞科技(QQ790875685)
+   13           * @version       查看doc内version文件 版本说明
+   14           * @Software    MDK FOR C251 V5.60
+   15           * @Target core   STC32G12K128
+   16           * @Taobao      https://seekfree.taobao.com/
+   17           * @date          2024-01-22
+   18           ********************************************************************************************************
+             -************/
+   19          
+   20          #include "zf_common_typedef.h"
+   21          
+   22          #include "zf_driver_timer.h"
+   23          #include "zf_driver_gpio.h"
+   24          #include "zf_driver_delay.h"
+   25          #include "zf_driver_pit.h"
+   26          
+   27          #include "bldc_config.h"
+   28          #include "pwm_out.h"
+   29          #include "signal_input.h"
+   30          #include "motor_control.h"
+   31          #include "battery.h"
+   32          #include "pit_timer.h"
+   33          #include "comparator.h"
+   34          #include "motor_control.h"
+   35          
+   36          #include "sine_control.h"
+   37          
+   38          
+   39          #pragma warning disable = 183
+   40          
+   41          
+   42          #define ERR_LED P37
+   43          #define RUN_LED P36
+   44          
+   45          static uint32 pit_count = 0;
+   46          
+   47          //-------------------------------------------------------------------------------------------------------
+             -------------
+   48          //  @brief      LED灯光控制
+   49          //  @param      void
+   50          //  @return     void
+   51          //  @since      v1.0
+   52          //  Sample usage:
+   53          //-------------------------------------------------------------------------------------------------------
+             -------------
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 2   
+
+   54          void led_control(void)
+   55          {
+   56   1          #define TICK_TO_MS(ms)  (ms * 20)
+   57   1          // 50us进一次该函数
+   58   1          // LED状态显示
+   59   1          if(BYTE_LOW_VOLTAGE == motor.run_flag)
+   60   1          {
+   61   2              // 电池电压过低，ERROR LED慢闪
+   62   2              ERR_LED = 0;
+   63   2              RUN_LED = 1;
+   64   2          }
+   65   1          else if(MOTOR_RESTART == motor.run_flag)
+   66   1          {
+   67   2              // 由于堵转造成的停止
+   68   2              if(0 == (pit_count%TICK_TO_MS(50)))
+   69   2              {
+   70   3                  ERR_LED = !ERR_LED;
+   71   3                  RUN_LED = 1;
+   72   3              }
+   73   2          }
+   74   1          else if(MOTOR_IDLE == motor.run_flag)
+   75   1          {
+   76   2              // 空闲状态
+   77   2              if(0 == (pit_count%TICK_TO_MS(200)))
+   78   2              {
+   79   3                  RUN_LED = !RUN_LED;
+   80   3                  ERR_LED = 1;
+   81   3              }
+   82   2          }
+   83   1          else if(MOTOR_START == motor.run_flag || MOTOR_OPEN_LOOP == motor.run_flag || MOTOR_CLOSE_LOOP == mot
+             -or.run_flag)
+   84   1          {
+   85   2              // 电机转动状态
+   86   2              ERR_LED = 1;
+   87   2              RUN_LED = 0;
+   88   2          }
+   89   1        
+   90   1      }
+   91          
+   92          void pit_motor_control()
+   93          {
+   94   1          static uint16 stall_time_out_check = 0;
+   95   1        static uint8 gpio_state = 0;
+   96   1          uint8 pin_state = 0;
+   97   1        static uint8 oled_pin_state = 0;
+   98   1        
+   99   1          switch(motor.run_flag)
+  100   1          {
+  101   2          case MOTOR_START:
+  102   2          {
+  103   3            uint16 sine_delay;
+  104   3            ET0 = 0;          // 关闭定时器0中断
+  105   3            IE2 &= ~0x40;         // 关闭定时器4中断
+  106   3            comparator_close_isr();   // 关闭比较器中断
+  107   3            stall_time_out_check = 0; // 堵转检测计数器设置为0
+  108   3            motor.commutation_num = 0;  // 电机换相计数器设置为0
+  109   3            
+  110   3                  PWMA_ENO = 0x3F;            // 打开所有PWM通道
+  111   3                  
+  112   3            #if BLDC_USE_SINE_START
+  113   3      
+  114   3            sine_init();
+  115   3            do
+  116   3            {
+  117   4                      
+  118   4                      motor.duty_register = motor.duty;
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 3   
+
+  119   4              
+  120   4                      if (motor.duty_register < ((uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
+  121   4                      {
+  122   5                          motor.duty_register = (uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100;
+  123   5                      }
+  124   4                      else if (motor.duty_register > ((uint32)BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100))
+  125   4                      {
+  126   5                          motor.duty_register = ((uint32)BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100);
+  127   5                      }
+  128   4      
+  129   4              sine_start(motor.duty_register);
+  130   4              
+  131   4              T4T3M &= ~0x80; // 停止定时器
+  132   4              T4L = 0;
+  133   4              T4H = 0;
+  134   4              T4T3M |= 0x80;  // 开启定时器
+  135   4              
+  136   4              sine_delay = 420 / BLDC_POLES;
+  137   4              while(((T4H << 8) | T4L) < sine_delay);
+  138   4            }while(motor_a_position != 0);
+  139   3            
+  140   3            motor.step = 2;
+  141   3            motor.commutation_time[0] = 6000;
+  142   3            motor.commutation_time[1] = 6000;
+  143   3            motor.commutation_time[2] = 6000;
+  144   3            motor.commutation_time[3] = 6000;
+  145   3            motor.commutation_time[4] = 6000;
+  146   3            motor.commutation_time[5] = 6000;
+  147   3            motor.commutation_time_sum = motor.commutation_time[0] + motor.commutation_time[1] + motor.commutation
+             -_time[2] + \
+  148   3                           motor.commutation_time[3] + motor.commutation_time[4] + motor.commutation_time[5] ;
+  149   3            motor.filter_commutation_time_sum = motor.commutation_time_sum;
+  150   3            // 清空定时器计数器值
+  151   3            T4T3M &= ~0x80; // 停止定时器
+  152   3            T4L = 0;
+  153   3            T4H = 0;
+  154   3            T4T3M |= 0x80;  // 开启定时器
+  155   3            
+  156   3            IE2 &= ~0x20;   // 关闭定时器3中断
+  157   3      
+  158   3            motor.run_flag = MOTOR_OPEN_LOOP;
+  159   3      
+  160   3            // 设置占空比
+  161   3            motor.duty_register = motor.duty;
+  162   3                  
+  163   3                  if (motor.duty_register < ((uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
+  164   3                  {
+  165   4                      motor.duty_register = (uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100;
+  166   4                  }
+  167   3                  else if (motor.duty_register > ((uint32)BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100))
+  168   3                  {
+  169   4                      motor.duty_register = ((uint32)BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100);
+  170   4                  }
+  171   3                  
+  172   3            pwm_out_duty_update(motor.duty_register);
+  173   3            
+  174   3                  // 换相
+  175   3            motor_next_step();
+  176   3            pwm_x_output[motor.step]();
+  177   3                  
+  178   3            #else
+               
+                     // 设置启动占空比
+                     motor.duty_register = motor.duty;
+                                  
+                           if (motor.duty_register < (BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 4   
+
+                           {
+                               motor.duty_register = BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100;
+                           }
+                           else if (motor.duty_register > (BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100))
+                           {
+                               motor.duty_register = (BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100);
+                           }
+                           
+                     pwm_out_duty_update(motor.duty_register);
+                     if(((T4H << 8) | T4L) > 20*1000)
+                     {
+                       motor.commutation_time[0] = 6000;
+                       motor.commutation_time[1] = 6000;
+                       motor.commutation_time[2] = 6000;
+                       motor.commutation_time[3] = 6000;
+                       motor.commutation_time[4] = 6000;
+                       motor.commutation_time[5] = 6000;
+                       motor.commutation_time_sum = motor.commutation_time[0] + motor.commutation_time[1] + motor.commutatio
+             -n_time[2] + \
+                                      motor.commutation_time[3] + motor.commutation_time[4] + motor.commutation_time[5] ;
+                       motor.filter_commutation_time_sum = motor.commutation_time_sum;
+                       // 清空定时器计数器值
+                       T4T3M &= ~0x80; // 停止定时器
+                       T4L = 0;
+                       T4H = 0;
+                       T4T3M |= 0x80;  // 开启定时器
+                       
+                       IE2 &= ~0x20;   // 关闭定时器3中断
+                       
+                       motor_next_step();
+                       pwm_x_output[motor.step]();
+                       motor.run_flag = MOTOR_OPEN_LOOP;
+                     }
+                     #endif
+  217   3          }
+  218   2          break;
+  219   2          case MOTOR_OPEN_LOOP:
+  220   2          {
+  221   3            uint8 motor_next_step_flag = 0;
+  222   3            uint16 temp_commutation_time = (T4H << 8) | T4L;
+  223   3                  
+  224   3                  if (motor.duty_register < ((uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
+  225   3                  {
+  226   4                      motor.duty_register = (uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100;
+  227   4                  }
+  228   3                  else if (motor.duty_register > ((uint32)BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100))
+  229   3                  {
+  230   4                      motor.duty_register = ((uint32)BLDC_MAX_DUTY * BLDC_PWM_ARR_MAX / 100);
+  231   4                  }
+  232   3                  
+  233   3                  
+  234   3            // 通过位移的方式，将电平数据存入变量中
+  235   3            gpio_state = (gpio_state << 1) | (CMPCR1 & 0x01);
+  236   3            if (!(motor.step % 2))
+  237   3            {
+  238   4              //下降沿
+  239   4              if(gpio_state == 0)
+  240   4              {
+  241   5                motor_next_step_flag = 1;
+  242   5                gpio_state = 0x0F;
+  243   5              }
+  244   4            }
+  245   3            else
+  246   3            {
+  247   4              // 上升沿
+  248   4              if(gpio_state == 0xFF)
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 5   
+
+  249   4              {
+  250   5                motor_next_step_flag = 1;
+  251   5                gpio_state = 0xF0;
+  252   5              }
+  253   4            }
+  254   3            
+  255   3            if(motor_next_step_flag)
+  256   3            {
+  257   4              T4T3M &= ~0x80; // 停止定时器
+  258   4              T4L = 0;
+  259   4              T4H = 0;
+  260   4              T4T3M |= 0x80;  // 开启定时器
+  261   4              // 堵转计数清空
+  262   4              stall_time_out_check = 0;
+  263   4              // 去掉最早的数据
+  264   4              motor.commutation_time_sum -= motor.commutation_time[motor.step];
+  265   4              // 保存换相时间
+  266   4              motor.commutation_time[motor.step] = temp_commutation_time;
+  267   4              // 叠加新的换相时间，求6次换相总时长
+  268   4              motor.commutation_time_sum += motor.commutation_time[motor.step];
+  269   4              // 换相次数增加一
+  270   4              motor.commutation_num++;
+  271   4              // 一阶低通滤波
+  272   4              motor.filter_commutation_time_sum = (motor.filter_commutation_time_sum * 3 + motor.commutation_time_s
+             -um * 1) >> 2;
+  273   4              // 等待15度
+  274   4              while(((T4H << 8) | T4L) < (motor.filter_commutation_time_sum / 24));
+  275   4              // 电机step加一
+  276   4              motor_next_step();
+  277   4              // 电机换相
+  278   4              pwm_x_output[motor.step]();
+  279   4            }
+  280   3            else
+  281   3            {
+  282   4              // 堵转检测
+  283   4              if((10 * 200) < stall_time_out_check++)
+  284   4              {
+  285   5                stall_time_out_check = 0;
+  286   5                motor.commutation_num = 0;
+  287   5                motor.run_flag = MOTOR_STOP_STALL;
+  288   5              }
+  289   4            }
+  290   3            
+  291   3            // 闭环状态切换
+  292   3            //if((motor.commutation_num > (BLDC_OPEN_LOOP_WAIT)) && (motor.filter_commutation_time_sum < 30000))
+  293   3            if(motor.commutation_num > BLDC_OPEN_LOOP_WAIT)
+  294   3            {
+  295   4              // 清空计数器
+  296   4              motor.commutation_failed_num = 0;
+  297   4              // 清除一些变量
+  298   4              motor.commutation_num = 0;
+  299   4              stall_time_out_check = 0;
+  300   4              // 使能定时器4中断
+  301   4              IE2 |= 0x40;
+  302   4              // 使能定时器4
+  303   4              T4T3M |= 0x80;
+  304   4              // 切换为闭环状态
+  305   4              motor.run_flag = MOTOR_CLOSE_LOOP;
+  306   4              // Timer0 初始化换相延时缓存，完成后再打开比较器中断。
+  307   4              motor_close_loop_init();
+  308   4            }
+  309   3            
+  310   3            // 超过20ms没有检测到跳变，则从进入电机开始状态
+  311   3            if(((T4H << 8) | T4L) > 20*1000)
+  312   3            {
+  313   4              T4T3M &= ~0x80; // 停止定时器
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 6   
+
+  314   4              T4L = 0;
+  315   4              T4H = 0;
+  316   4              T4T3M |= 0x80;  // 开启定时器
+  317   4              // 电机step加一
+  318   4              motor_next_step();
+  319   4              // 电机换相
+  320   4              pwm_x_output[motor.step]();
+  321   4              motor.run_flag = MOTOR_START;
+  322   4            }
+  323   3          }
+  324   2          break;
+  325   2          case MOTOR_CLOSE_LOOP:
+  326   2          {
+  327   3            pin_state = (CMPCR1 & 0x01);
+  328   3            // 通过PA2引脚的电平状态，进行堵转检测
+  329   3            if(oled_pin_state != pin_state)
+  330   3            {
+  331   4              stall_time_out_check = 0;
+  332   4              oled_pin_state = pin_state;
+  333   4            }
+  334   3            else
+  335   3            {
+  336   4              // 如果引脚一直是一个状态，且超过了 BLDC_STALL_TIME_OUT ms 则认为堵转了
+  337   4              if(stall_time_out_check++ > (10 * 200))          // 10KHZ，0.1ms计数一次
+  338   4              {
+  339   5                stall_time_out_check = 0;
+  340   5                motor.run_flag = MOTOR_STOP_STALL;
+  341   5              }
+  342   4            }
+  343   3            
+  344   3      //      // 闭环缓慢加速   
+  345   3      //      if(motor.commutation_num < (BLDC_CLOSE_LOOP_WAIT))
+  346   3      //            {
+  347   3      //                 if (motor.duty_register < BLDC_MIN_DUTY)
+  348   3      //                 {
+  349   3      //                     motor.duty_register = BLDC_MIN_DUTY;
+  350   3      //                 }
+  351   3      //                 if (motor.duty_register > (BLDC_PWM_ARR_MAX / 10 + BLDC_MIN_DUTY))
+  352   3      //                 {
+  353   3      //                     motor.duty_register = BLDC_PWM_ARR_MAX / 10 + BLDC_MIN_DUTY;
+  354   3      //                 }
+  355   3      //            }
+  356   3            
+  357   3      
+  358   3            // 闭环加减速
+  359   3            // BLDC_PWM_ARR_MAX = 807
+  360   3            // 50us进一次PIT中断，一毫秒进20次。
+  361   3            // 每次中断修改一个 count，40.35ms 能从 0 拉到 807。
+  362   3                  // 等待稳定。
+  363   3                  if((BLDC_CLOSE_LOOP_WAIT) < motor.commutation_num)
+  364   3            if(motor.duty_register != motor.duty)
+  365   3            {
+  366   4              if(motor.duty > motor.duty_register)
+  367   4              {
+  368   5                motor.duty_register ++;
+  369   5                if(BLDC_PWM_ARR_MAX < motor.duty_register)
+  370   5                {
+  371   6                  motor.duty_register = BLDC_PWM_ARR_MAX;
+  372   6                }
+  373   5              }
+  374   4              else
+  375   4              {
+  376   5                motor.duty_register--;
+  377   5                          if (motor.duty_register < ((uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100))
+  378   5                          {
+  379   6                              motor.duty_register = (uint32)BLDC_MIN_DUTY * BLDC_PWM_ARR_MAX / 100;
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 7   
+
+  380   6                          }
+  381   5              }
+  382   4              
+  383   4      //        // 只有在减速的时候打开互补PWM
+  384   4      //        if((int16)((int16)motor.duty_register - (int16)motor.duty) >= (BLDC_PWM_ARR_MAX >> 4))
+  385   4      //        {
+  386   4      //          g_use_complementary = 1;
+  387   4      //        }
+  388   4      //        else
+  389   4      //        {
+  390   4      //          g_use_complementary = 0;
+  391   4      //        }
+  392   4              
+  393   4              pwm_out_duty_update(motor.duty_register);
+  394   4            }
+  395   3            
+  396   3        
+  397   3          }
+  398   2          break;
+  399   2          case MOTOR_STOP_STALL:
+  400   2          {
+  401   3            motor_stop();
+  402   3            IE2 &= ~0x40;       // 关闭定时器4中断
+  403   3            comparator_close_isr();   // 关闭比较器中断
+  404   3            motor.run_flag = MOTOR_RESTART;
+  405   3            motor.restart_delay = BLDC_START_DELAY;
+  406   3          }
+  407   2          break;
+  408   2          case MOTOR_RESTART:
+  409   2          {
+  410   3            if(motor.restart_delay)
+  411   3            {
+  412   4              // 延时启动时间减减
+  413   4              motor.restart_delay--;
+  414   4            }
+  415   3            else
+  416   3            {
+  417   4              motor.run_flag = MOTOR_IDLE;
+  418   4            }
+  419   3          }
+  420   2          break;
+  421   2          case MOTOR_IDLE:
+  422   2          case BYTE_LOW_VOLTAGE:
+  423   2          {
+  424   3            ET0 = 0;          // 关闭定时器0中断
+  425   3            IE2 &= ~0x40;         // 关闭定时器4中断
+  426   3            comparator_close_isr();   // 关闭比较器中断
+  427   3            motor_stop();
+  428   3          }
+  429   2          break;
+  430   2          }
+  431   1      }
+  432          
+  433          //-------------------------------------------------------------------------------------------------------
+             -------------
+  434          //  @brief      定时器1中断
+  435          //  @param      void
+  436          //  @return     void
+  437          //  @since      v1.0
+  438          //  Sample usage:
+  439          //-------------------------------------------------------------------------------------------------------
+             -------------
+  440          void TM1_Isr() interrupt 3
+  441          {
+  442   1          pit_count++;
+  443   1          pwm_input_timeout_tick();
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 8   
+
+  444   1          //if(battery_voltage_get())
+  445   1          //{
+  446   1          //    motor.run_flag = BYTE_LOW_VOLTAGE;
+  447   1          //}
+  448   1          // 电池电压检测为最高优先级，当电压过低，就不转
+  449   1          if(motor.run_flag != BYTE_LOW_VOLTAGE)
+  450   1          {
+  451   2              // 输入的占空比为0，则为空闲状态
+  452   2              if(motor.duty == 0)
+  453   2              {
+  454   3                  motor.run_flag = MOTOR_IDLE;
+  455   3              }
+  456   2              else
+  457   2              {
+  458   3                  // 输入的占空比不为0，则从空闲状态转为电机开始
+  459   3                  if(motor.run_flag == MOTOR_IDLE)
+  460   3                  {
+  461   4                      motor.run_flag = MOTOR_START;
+  462   4                  }
+  463   3              }
+  464   2          }
+  465   1          led_control();
+  466   1          pit_motor_control();
+  467   1      }
+  468          
+  469          //-------------------------------------------------------------------------------------------------------
+             -------------
+  470          //  @brief      周期定时器初始化
+  471          //  @param      void
+  472          //  @return     void
+  473          //  @since      v1.0
+  474          //  Sample usage:
+  475          //-------------------------------------------------------------------------------------------------------
+             -------------
+  476             void pit_timer_init(void)
+  477          {
+  478   1      //  uint8 freq_div = 0;                
+  479   1      //    uint16 period_temp = 0;               
+  480   1      //    uint16 temp = 0;
+  481   1      //  uint16 tim_us = 50;   // 设置为0.5ms中断一次,200hz频率
+  482   1      
+  483   1      //  AUXR |= 0x40;                         // 设置为1T模式
+  484   1      //  freq_div = ((tim_us * system_clock / 1000000) / (1 << 16));          // 计算预分频
+  485   1      //  period_temp = ((tim_us * system_clock / 1000000) / (freq_div));  // 计算自动重装载值
+  486   1      //  temp = (uint16)65536 - period_temp;
+  487   1      
+  488   1      //  TM1PS = freq_div; // 设置分频值
+  489   1      //  TMOD |= 0x00;     // 模式 0
+  490   1      //  TL1 = temp;
+  491   1      //  TH1 = temp >> 8;
+  492   1      //  TR1 = 1;      // 启动定时器
+  493   1      //  ET1 = 1;      // 使能定时器中断
+  494   1        pit_us_init(TIM1_PIT, 50);
+  495   1        pit_count = 0;
+  496   1          motor.run_flag = MOTOR_IDLE;
+  497   1      }
+  498          
+  499          //-------------------------------------------------------------------------------------------------------
+             -------------
+  500          //  @brief      LED初始化
+  501          //  @param      void
+  502          //  @return     void
+  503          //  @since      v1.0
+  504          //  Sample usage:
+  505          //-------------------------------------------------------------------------------------------------------
+             -------------
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 9   
+
+  506          void led_init(void)
+  507          {
+  508   1        gpio_init(IO_P36, GPO, 0, GPO_PUSH_PULL);
+  509   1        gpio_init(IO_P37, GPO, 0, GPO_PUSH_PULL);
+  510   1          
+  511   1          system_delay_ms(20);
+  512   1          
+  513   1          RUN_LED = 1;
+  514   1          ERR_LED = 1;
+  515   1      }
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 10  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION led_control (BEGIN)
+                                                ; SOURCE LINE # 54
+                                                ; SOURCE LINE # 59
+000000 7EB30000    E  MOV      R11,motor+5      ; A=R11
+000004 B40605         CJNE     A,#06H,?C0001    ; A=R11
+                                                ; SOURCE LINE # 62
+000007 C2B7           CLR      P37
+                                                ; SOURCE LINE # 63
+000009 D2B6           SETB     P36
+                                                ; SOURCE LINE # 64
+00000B 22             RET      
+               ?C0001:
+                                                ; SOURCE LINE # 65
+00000C 7EB30000    E  MOV      R11,motor+5      ; A=R11
+000010 B4051B         CJNE     A,#05H,?C0003    ; A=R11
+                                                ; SOURCE LINE # 68
+000013 7E1403E8       MOV      WR2,#03E8H
+000017 7E1F0000    R  MOV      DR4,pit_count
+00001B 120000      E  LCALL    ?C?ULIDIV
+00001E 4D01           ORL      WR0,WR2
+000020 784A           JNE      ?C0002
+                                                ; SOURCE LINE # 70
+000022 20B703         JB       P37,?C0005
+000025 D3             SETB     C
+000026 8001           SJMP     ?C0006
+               ?C0005:
+000028 C3             CLR      C
+               ?C0006:
+000029 92B7           MOV      P37,C
+                                                ; SOURCE LINE # 71
+00002B D2B6           SETB     P36
+                                                ; SOURCE LINE # 72
+00002D 22             RET      
+               ?C0003:
+                                                ; SOURCE LINE # 74
+00002E 7EB30000    E  MOV      R11,motor+5      ; A=R11
+000032 701B           JNZ      ?C0008
+                                                ; SOURCE LINE # 77
+000034 7E140FA0       MOV      WR2,#0FA0H
+000038 7E1F0000    R  MOV      DR4,pit_count
+00003C 120000      E  LCALL    ?C?ULIDIV
+00003F 4D01           ORL      WR0,WR2
+000041 7829           JNE      ?C0002
+                                                ; SOURCE LINE # 79
+000043 20B603         JB       P36,?C0010
+000046 D3             SETB     C
+000047 8001           SJMP     ?C0011
+               ?C0010:
+000049 C3             CLR      C
+               ?C0011:
+00004A 92B6           MOV      P36,C
+                                                ; SOURCE LINE # 80
+00004C D2B7           SETB     P37
+                                                ; SOURCE LINE # 81
+00004E 22             RET      
+               ?C0008:
+                                                ; SOURCE LINE # 83
+00004F 7EB30000    E  MOV      R11,motor+5      ; A=R11
+000053 BEB001         CMP      R11,#01H         ; A=R11
+000056 6810           JE       ?C0014
+000058 7EB30000    E  MOV      R11,motor+5      ; A=R11
+00005C BEB002         CMP      R11,#02H         ; A=R11
+00005F 6807           JE       ?C0014
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 11  
+
+000061 7EB30000    E  MOV      R11,motor+5      ; A=R11
+000065 B40304         CJNE     A,#03H,?C0002    ; A=R11
+               ?C0014:
+                                                ; SOURCE LINE # 86
+000068 D2B7           SETB     P37
+                                                ; SOURCE LINE # 87
+00006A C2B6           CLR      P36
+                                                ; SOURCE LINE # 88
+               ?C0002:
+00006C 22             RET      
+;       FUNCTION led_control (END)
+
+;       FUNCTION pit_motor_control (BEGIN)
+                                                ; SOURCE LINE # 92
+000000 CAF8           PUSH     R15
+                                                ; SOURCE LINE # 93
+                                                ; SOURCE LINE # 96
+;---- Variable 'pin_state' assigned to Register 'R15' ----
+                                                ; SOURCE LINE # 99
+000002 7EB30000    E  MOV      R11,motor+5      ; A=R11
+000006 2400           ADD      A,#00H           ; A=R11
+000008 7803        R  JNE      $ + 5H
+00000A 020000      R  LJMP     ?C0022
+00000D 1BB1           DEC      R11,#02H         ; A=R11
+00000F 7803        R  JNE      $ + 5H
+000011 020000      R  LJMP     ?C0018
+000014 14             DEC      A                ; A=R11
+000015 7803        R  JNE      $ + 5H
+000017 020000      R  LJMP     ?C0019
+00001A 14             DEC      A                ; A=R11
+00001B 7803        R  JNE      $ + 5H
+00001D 020000      R  LJMP     ?C0020
+000020 14             DEC      A                ; A=R11
+000021 7803        R  JNE      $ + 5H
+000023 020000      R  LJMP     ?C0021
+000026 14             DEC      A                ; A=R11
+000027 7803        R  JNE      $ + 5H
+000029 020000      R  LJMP     ?C0022
+00002C 2405           ADD      A,#05H           ; A=R11
+00002E 6803        R  JE       $ + 5H
+000030 020000      R  LJMP     ?C0015
+                                                ; SOURCE LINE # 101
+               ?C0017:
+                                                ; SOURCE LINE # 102
+                                                ; SOURCE LINE # 104
+000033 C2A9           CLR      ET0
+                                                ; SOURCE LINE # 105
+000035 53AFBF         ANL      IE2,#0BFH
+                                                ; SOURCE LINE # 106
+000038 120000      E  LCALL    comparator_close_isr
+                                                ; SOURCE LINE # 107
+00003B 6D33           XRL      WR6,WR6
+00003D 7A370000    R  MOV      stall_time_out_check,WR6
+                                                ; SOURCE LINE # 108
+000041 9F11           SUB      DR4,DR4
+000043 7A1F0000    E  MOV      motor+32,DR4
+                                                ; SOURCE LINE # 110
+000047 743F           MOV      A,#03FH          ; A=R11
+000049 7E34FEB1       MOV      WR6,#0FEB1H
+00004D 7E24007E       MOV      WR4,#07EH
+000051 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 114
+000054 120000      E  LCALL    sine_init
+                                                ; SOURCE LINE # 115
+               ?C0023:
+                                                ; SOURCE LINE # 118
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 12  
+
+000057 7E370000    E  MOV      WR6,motor+1
+00005B 7A370000    E  MOV      motor+3,WR6
+                                                ; SOURCE LINE # 120
+00005F BE340028       CMP      WR6,#028H
+000063 5006           JNC      ?C0027
+                                                ; SOURCE LINE # 122
+000065 7E340028       MOV      WR6,#028H
+                                                ; SOURCE LINE # 123
+000069 800E           SJMP     ?C0070
+               ?C0027:
+                                                ; SOURCE LINE # 124
+00006B 7E370000    E  MOV      WR6,motor+3
+00006F BE340050       CMP      WR6,#050H
+000073 2808           JLE      ?C0028
+                                                ; SOURCE LINE # 126
+000075 7E340050       MOV      WR6,#050H
+               ?C0070:
+000079 7A370000    E  MOV      motor+3,WR6
+                                                ; SOURCE LINE # 127
+               ?C0028:
+                                                ; SOURCE LINE # 129
+00007D 7E370000    E  MOV      WR6,motor+3
+000081 120000      E  LCALL    sine_start
+                                                ; SOURCE LINE # 131
+000084 53DD7F         ANL      T4T3M,#07FH
+                                                ; SOURCE LINE # 132
+000087 75D300         MOV      T4L,#00H
+                                                ; SOURCE LINE # 133
+00008A 75D200         MOV      T4H,#00H
+                                                ; SOURCE LINE # 134
+00008D 43DD80         ORL      T4T3M,#080H
+                                                ; SOURCE LINE # 136
+                                                ; SOURCE LINE # 137
+               ?C0030:
+000090 E5D2           MOV      A,T4H            ; A=R11
+000092 7C4B           MOV      R4,R11           ; A=R11
+000094 6C55           XRL      R5,R5
+000096 E5D3           MOV      A,T4L            ; A=R11
+000098 0A3B           MOVZ     WR6,R11          ; A=R11
+00009A 4D32           ORL      WR6,WR4
+00009C BE34003C       CMP      WR6,#03CH
+0000A0 40EE           JC       ?C0030
+                                                ; SOURCE LINE # 138
+0000A2 7E370000    E  MOV      WR6,motor_a_position
+0000A6 4D33           ORL      WR6,WR6
+0000A8 78AD           JNE      ?C0023
+                                                ; SOURCE LINE # 140
+0000AA 7402           MOV      A,#02H           ; A=R11
+0000AC 7AB30000    E  MOV      motor,R11        ; A=R11
+                                                ; SOURCE LINE # 141
+0000B0 7E341770       MOV      WR6,#01770H
+0000B4 7A370000    E  MOV      motor+16,WR6
+                                                ; SOURCE LINE # 142
+0000B8 7A370000    E  MOV      motor+18,WR6
+                                                ; SOURCE LINE # 143
+0000BC 7A370000    E  MOV      motor+20,WR6
+                                                ; SOURCE LINE # 144
+0000C0 7A370000    E  MOV      motor+22,WR6
+                                                ; SOURCE LINE # 145
+0000C4 7A370000    E  MOV      motor+24,WR6
+                                                ; SOURCE LINE # 146
+0000C8 7A370000    E  MOV      motor+26,WR6
+                                                ; SOURCE LINE # 147
+0000CC 7E370000    E  MOV      WR6,motor+18
+0000D0 2E370000    E  ADD      WR6,motor+16
+0000D4 2E370000    E  ADD      WR6,motor+20
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 13  
+
+0000D8 2E370000    E  ADD      WR6,motor+22
+0000DC 2E370000    E  ADD      WR6,motor+24
+0000E0 2E370000    E  ADD      WR6,motor+26
+0000E4 6D22           XRL      WR4,WR4
+0000E6 7A1F0000    E  MOV      motor+28,DR4
+                                                ; SOURCE LINE # 149
+0000EA 7A1F0000    E  MOV      motor+36,DR4
+                                                ; SOURCE LINE # 151
+0000EE 53DD7F         ANL      T4T3M,#07FH
+                                                ; SOURCE LINE # 152
+0000F1 75D300         MOV      T4L,#00H
+                                                ; SOURCE LINE # 153
+0000F4 75D200         MOV      T4H,#00H
+                                                ; SOURCE LINE # 154
+0000F7 43DD80         ORL      T4T3M,#080H
+                                                ; SOURCE LINE # 156
+0000FA 53AFDF         ANL      IE2,#0DFH
+                                                ; SOURCE LINE # 158
+0000FD 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 161
+000101 7E370000    E  MOV      WR6,motor+1
+000105 7A370000    E  MOV      motor+3,WR6
+                                                ; SOURCE LINE # 163
+000109 BE340028       CMP      WR6,#028H
+00010D 5006           JNC      ?C0034
+                                                ; SOURCE LINE # 165
+00010F 7E340028       MOV      WR6,#028H
+                                                ; SOURCE LINE # 166
+000113 800E           SJMP     ?C0071
+               ?C0034:
+                                                ; SOURCE LINE # 167
+000115 7E370000    E  MOV      WR6,motor+3
+000119 BE340050       CMP      WR6,#050H
+00011D 2808           JLE      ?C0035
+                                                ; SOURCE LINE # 169
+00011F 7E340050       MOV      WR6,#050H
+               ?C0071:
+000123 7A370000    E  MOV      motor+3,WR6
+                                                ; SOURCE LINE # 170
+               ?C0035:
+                                                ; SOURCE LINE # 172
+000127 7E370000    E  MOV      WR6,motor+3
+00012B 120000      E  LCALL    pwm_out_duty_update
+                                                ; SOURCE LINE # 175
+00012E 120000      E  LCALL    motor_next_step
+                                                ; SOURCE LINE # 176
+000131 7EB30000    E  MOV      R11,motor        ; A=R11
+000135 7E7002         MOV      R7,#02H
+000138 ACB7           MUL      R11,R7           ; A=R11
+00013A 49350000    E  MOV      WR6,@WR10+pwm_x_output
+00013E 9934           CALL     @WR6
+                                                ; SOURCE LINE # 218
+000140 020000      R  LJMP     ?C0015
+                                                ; SOURCE LINE # 219
+               ?C0018:
+                                                ; SOURCE LINE # 220
+                                                ; SOURCE LINE # 221
+000143 6CAA           XRL      R10,R10
+;---- Variable 'motor_next_step_flag' assigned to Register 'R10' ----
+                                                ; SOURCE LINE # 222
+000145 E5D2           MOV      A,T4H            ; A=R11
+000147 7C6B           MOV      R6,R11           ; A=R11
+000149 6C77           XRL      R7,R7
+00014B E5D3           MOV      A,T4L            ; A=R11
+00014D 0A4B           MOVZ     WR8,R11          ; A=R11
+00014F 4D43           ORL      WR8,WR6
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 14  
+
+;---- Variable 'temp_commutation_time' assigned to Register 'WR8' ----
+                                                ; SOURCE LINE # 224
+000151 7E370000    E  MOV      WR6,motor+3
+000155 BE340028       CMP      WR6,#028H
+000159 500A           JNC      ?C0037
+                                                ; SOURCE LINE # 226
+00015B 7E240028       MOV      WR4,#028H
+00015F 7A270000    E  MOV      motor+3,WR4
+                                                ; SOURCE LINE # 227
+000163 800E           SJMP     ?C0038
+               ?C0037:
+                                                ; SOURCE LINE # 228
+000165 BE340050       CMP      WR6,#050H
+000169 2808           JLE      ?C0038
+                                                ; SOURCE LINE # 230
+00016B 7E340050       MOV      WR6,#050H
+00016F 7A370000    E  MOV      motor+3,WR6
+                                                ; SOURCE LINE # 231
+               ?C0038:
+                                                ; SOURCE LINE # 235
+000173 7E730000    R  MOV      R7,gpio_state
+000177 3E70           SLL      R7
+000179 E5E6           MOV      A,CMPCR1         ; A=R11
+00017B 5401           ANL      A,#01H           ; A=R11
+00017D 4CB7           ORL      R11,R7           ; A=R11
+00017F 7AB30000    R  MOV      gpio_state,R11   ; A=R11
+                                                ; SOURCE LINE # 236
+000183 7EB30000    E  MOV      R11,motor        ; A=R11
+000187 0A3B           MOVZ     WR6,R11          ; A=R11
+000189 7E240002       MOV      WR4,#02H
+00018D 120000      E  LCALL    ?C?SIDIV
+000190 4D22           ORL      WR4,WR4
+000192 780D           JNE      ?C0040
+                                                ; SOURCE LINE # 239
+000194 7EB30000    R  MOV      R11,gpio_state   ; A=R11
+000198 7017           JNZ      ?C0042
+                                                ; SOURCE LINE # 241
+00019A 7EA001         MOV      R10,#01H
+                                                ; SOURCE LINE # 242
+00019D 740F           MOV      A,#0FH           ; A=R11
+                                                ; SOURCE LINE # 243
+00019F 800C           SJMP     ?C0072
+               ?C0040:
+                                                ; SOURCE LINE # 248
+0001A1 7EB30000    R  MOV      R11,gpio_state   ; A=R11
+0001A5 B4FF09         CJNE     A,#0FFH,?C0042   ; A=R11
+                                                ; SOURCE LINE # 250
+0001A8 7EA001         MOV      R10,#01H
+                                                ; SOURCE LINE # 251
+0001AB 74F0           MOV      A,#0F0H          ; A=R11
+               ?C0072:
+0001AD 7AB30000    R  MOV      gpio_state,R11   ; A=R11
+                                                ; SOURCE LINE # 252
+               ?C0042:
+                                                ; SOURCE LINE # 255
+0001B1 4CAA           ORL      R10,R10
+0001B3 7803        R  JNE      $ + 5H
+0001B5 020000      R  LJMP     ?C0044
+                                                ; SOURCE LINE # 257
+0001B8 53DD7F         ANL      T4T3M,#07FH
+                                                ; SOURCE LINE # 258
+0001BB 75D300         MOV      T4L,#00H
+                                                ; SOURCE LINE # 259
+0001BE 75D200         MOV      T4H,#00H
+                                                ; SOURCE LINE # 260
+0001C1 43DD80         ORL      T4T3M,#080H
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 15  
+
+                                                ; SOURCE LINE # 262
+0001C4 6D55           XRL      WR10,WR10
+0001C6 7A570000    R  MOV      stall_time_out_check,WR10
+                                                ; SOURCE LINE # 264
+0001CA 7EB30000    E  MOV      R11,motor        ; A=R11
+0001CE 7E7002         MOV      R7,#02H
+0001D1 ACB7           MUL      R11,R7           ; A=R11
+0001D3 49150000    E  MOV      WR2,@WR10+motor+0x10
+0001D7 6D00           XRL      WR0,WR0
+0001D9 7E1F0000    E  MOV      DR4,motor+28
+0001DD 9F10           SUB      DR4,DR0
+0001DF 7A1F0000    E  MOV      motor+28,DR4
+                                                ; SOURCE LINE # 266
+0001E3 7EB30000    E  MOV      R11,motor        ; A=R11
+0001E7 7E7002         MOV      R7,#02H
+0001EA ACB7           MUL      R11,R7           ; A=R11
+0001EC 59450000    E  MOV      @WR10+motor+0x10,WR8
+                                                ; SOURCE LINE # 268
+0001F0 7EB30000    E  MOV      R11,motor        ; A=R11
+0001F4 ACB7           MUL      R11,R7           ; A=R11
+0001F6 49150000    E  MOV      WR2,@WR10+motor+0x10
+0001FA 7E1F0000    E  MOV      DR4,motor+28
+0001FE 2F10           ADD      DR4,DR0
+000200 7A1F0000    E  MOV      motor+28,DR4
+                                                ; SOURCE LINE # 270
+000204 7E1F0000    E  MOV      DR4,motor+32
+000208 0B1C           INC      DR4,#01H
+00020A 7A1F0000    E  MOV      motor+32,DR4
+                                                ; SOURCE LINE # 272
+00020E 7E140003       MOV      WR2,#03H
+000212 7E1F0000    E  MOV      DR4,motor+36
+000216 120000      E  LCALL    ?C?LIMUL
+000219 7E0F0000    E  MOV      DR0,motor+28
+00021D 2F10           ADD      DR4,DR0
+00021F 7402           MOV      A,#02H           ; A=R11
+               ?C0068:
+000221 1E34           SRL      WR6
+000223 1E24           SRL      WR4
+000225 5003           JNC      ?C0069
+000227 4E6080         ORL      R6,#080H
+               ?C0069:
+00022A 14             DEC      A                ; A=R11
+00022B 78F4           JNE      ?C0068
+00022D 7A1F0000    E  MOV      motor+36,DR4
+                                                ; SOURCE LINE # 274
+               ?C0045:
+000231 7E140018       MOV      WR2,#018H
+000235 7E1F0000    E  MOV      DR4,motor+36
+000239 120000      E  LCALL    ?C?ULIDIV
+00023C 7F01           MOV      DR0,DR4
+00023E E5D2           MOV      A,T4H            ; A=R11
+000240 7C4B           MOV      R4,R11           ; A=R11
+000242 6C55           XRL      R5,R5
+000244 E5D3           MOV      A,T4L            ; A=R11
+000246 0A3B           MOVZ     WR6,R11          ; A=R11
+000248 4D32           ORL      WR6,WR4
+00024A 6D22           XRL      WR4,WR4
+00024C BF10           CMP      DR4,DR0
+00024E 40E1           JC       ?C0045
+                                                ; SOURCE LINE # 276
+000250 120000      E  LCALL    motor_next_step
+                                                ; SOURCE LINE # 278
+000253 7EB30000    E  MOV      R11,motor        ; A=R11
+000257 7E7002         MOV      R7,#02H
+00025A ACB7           MUL      R11,R7           ; A=R11
+00025C 49350000    E  MOV      WR6,@WR10+pwm_x_output
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 16  
+
+000260 9934           CALL     @WR6
+                                                ; SOURCE LINE # 279
+000262 8024           SJMP     ?C0049
+               ?C0044:
+                                                ; SOURCE LINE # 283
+000264 7E370000    R  MOV      WR6,stall_time_out_check
+000268 7D23           MOV      WR4,WR6
+00026A 0B24           INC      WR4,#01H
+00026C 7A270000    R  MOV      stall_time_out_check,WR4
+000270 BE3407D0       CMP      WR6,#07D0H
+000274 2812           JLE      ?C0049
+                                                ; SOURCE LINE # 285
+000276 6D33           XRL      WR6,WR6
+000278 7A370000    R  MOV      stall_time_out_check,WR6
+                                                ; SOURCE LINE # 286
+00027C 9F11           SUB      DR4,DR4
+00027E 7A1F0000    E  MOV      motor+32,DR4
+                                                ; SOURCE LINE # 287
+000282 7404           MOV      A,#04H           ; A=R11
+000284 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 288
+               ?C0049:
+                                                ; SOURCE LINE # 293
+000288 7E1F0000    E  MOV      DR4,motor+32
+00028C BE1800C8       CMP      DR4,#0C8H
+000290 281F           JLE      ?C0051
+                                                ; SOURCE LINE # 296
+000292 6D33           XRL      WR6,WR6
+000294 7A370000    E  MOV      motor+14,WR6
+                                                ; SOURCE LINE # 298
+000298 9F00           SUB      DR0,DR0
+00029A 7A0F0000    E  MOV      motor+32,DR0
+                                                ; SOURCE LINE # 299
+00029E 7A370000    R  MOV      stall_time_out_check,WR6
+                                                ; SOURCE LINE # 301
+0002A2 43AF40         ORL      IE2,#040H
+                                                ; SOURCE LINE # 303
+0002A5 43DD80         ORL      T4T3M,#080H
+                                                ; SOURCE LINE # 305
+0002A8 7403           MOV      A,#03H           ; A=R11
+0002AA 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 307
+0002AE 120000      E  LCALL    motor_close_loop_init
+                                                ; SOURCE LINE # 308
+               ?C0051:
+                                                ; SOURCE LINE # 311
+0002B1 E5D2           MOV      A,T4H            ; A=R11
+0002B3 7C4B           MOV      R4,R11           ; A=R11
+0002B5 6C55           XRL      R5,R5
+0002B7 E5D3           MOV      A,T4L            ; A=R11
+0002B9 0A3B           MOVZ     WR6,R11          ; A=R11
+0002BB 4D32           ORL      WR6,WR4
+0002BD BE344E20       CMP      WR6,#04E20H
+0002C1 3803        R  JG       $ + 5H
+0002C3 020000      R  LJMP     ?C0015
+                                                ; SOURCE LINE # 313
+0002C6 53DD7F         ANL      T4T3M,#07FH
+                                                ; SOURCE LINE # 314
+0002C9 75D300         MOV      T4L,#00H
+                                                ; SOURCE LINE # 315
+0002CC 75D200         MOV      T4H,#00H
+                                                ; SOURCE LINE # 316
+0002CF 43DD80         ORL      T4T3M,#080H
+                                                ; SOURCE LINE # 318
+0002D2 120000      E  LCALL    motor_next_step
+                                                ; SOURCE LINE # 320
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 17  
+
+0002D5 7EB30000    E  MOV      R11,motor        ; A=R11
+0002D9 7E7002         MOV      R7,#02H
+0002DC ACB7           MUL      R11,R7           ; A=R11
+0002DE 49350000    E  MOV      WR6,@WR10+pwm_x_output
+0002E2 9934           CALL     @WR6
+                                                ; SOURCE LINE # 321
+0002E4 7401           MOV      A,#01H           ; A=R11
+                                                ; SOURCE LINE # 322
+                                                ; SOURCE LINE # 324
+0002E6 020000      R  LJMP     ?C0073
+                                                ; SOURCE LINE # 325
+               ?C0019:
+                                                ; SOURCE LINE # 327
+0002E9 7EF1E6         MOV      R15,CMPCR1
+0002EC 5EF001         ANL      R15,#01H
+                                                ; SOURCE LINE # 329
+0002EF BEF30000    R  CMP      R15,oled_pin_state
+0002F3 680C           JE       ?C0053
+                                                ; SOURCE LINE # 331
+0002F5 6D33           XRL      WR6,WR6
+0002F7 7A370000    R  MOV      stall_time_out_check,WR6
+                                                ; SOURCE LINE # 332
+0002FB 7AF30000    R  MOV      oled_pin_state,R15
+                                                ; SOURCE LINE # 333
+0002FF 801E           SJMP     ?C0054
+               ?C0053:
+                                                ; SOURCE LINE # 337
+000301 7E370000    R  MOV      WR6,stall_time_out_check
+000305 7D23           MOV      WR4,WR6
+000307 0B24           INC      WR4,#01H
+000309 7A270000    R  MOV      stall_time_out_check,WR4
+00030D BE3407D0       CMP      WR6,#07D0H
+000311 280C           JLE      ?C0054
+                                                ; SOURCE LINE # 339
+000313 6D33           XRL      WR6,WR6
+000315 7A370000    R  MOV      stall_time_out_check,WR6
+                                                ; SOURCE LINE # 340
+000319 7404           MOV      A,#04H           ; A=R11
+00031B 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 341
+               ?C0054:
+                                                ; SOURCE LINE # 363
+00031F 7E1F0000    E  MOV      DR4,motor+32
+000323 BE1800C8       CMP      DR4,#0C8H
+000327 3803        R  JG       $ + 5H
+000329 020000      R  LJMP     ?C0015
+                                                ; SOURCE LINE # 364
+00032C 7E370000    E  MOV      WR6,motor+1
+000330 BE370000    E  CMP      WR6,motor+3
+000334 6876           JE       ?C0015
+                                                ; SOURCE LINE # 366
+000336 7E370000    E  MOV      WR6,motor+3
+00033A BE370000    E  CMP      WR6,motor+1
+00033E 5018           JNC      ?C0058
+                                                ; SOURCE LINE # 368
+000340 7D23           MOV      WR4,WR6
+000342 0B24           INC      WR4,#01H
+000344 7A270000    E  MOV      motor+3,WR4
+                                                ; SOURCE LINE # 369
+000348 BE240327       CMP      WR4,#0327H
+00034C 281E           JLE      ?C0060
+                                                ; SOURCE LINE # 371
+00034E 7E240327       MOV      WR4,#0327H
+000352 7A270000    E  MOV      motor+3,WR4
+                                                ; SOURCE LINE # 372
+000356 8014           SJMP     ?C0060
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 18  
+
+               ?C0058:
+                                                ; SOURCE LINE # 376
+000358 1B34           DEC      WR6,#01H
+00035A 7A370000    E  MOV      motor+3,WR6
+                                                ; SOURCE LINE # 377
+00035E BE340028       CMP      WR6,#028H
+000362 5008           JNC      ?C0060
+                                                ; SOURCE LINE # 379
+000364 7E340028       MOV      WR6,#028H
+000368 7A370000    E  MOV      motor+3,WR6
+                                                ; SOURCE LINE # 380
+               ?C0060:
+                                                ; SOURCE LINE # 393
+00036C 7E370000    E  MOV      WR6,motor+3
+000370 120000      E  LCALL    pwm_out_duty_update
+                                                ; SOURCE LINE # 394
+                                                ; SOURCE LINE # 398
+000373 8037           SJMP     ?C0015
+                                                ; SOURCE LINE # 399
+               ?C0020:
+                                                ; SOURCE LINE # 401
+000375 120000      E  LCALL    motor_stop
+                                                ; SOURCE LINE # 402
+000378 53AFBF         ANL      IE2,#0BFH
+                                                ; SOURCE LINE # 403
+00037B 120000      E  LCALL    comparator_close_isr
+                                                ; SOURCE LINE # 404
+00037E 7405           MOV      A,#05H           ; A=R11
+000380 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 405
+000384 7E342710       MOV      WR6,#02710H
+                                                ; SOURCE LINE # 407
+000388 800A           SJMP     ?C0074
+                                                ; SOURCE LINE # 408
+               ?C0021:
+                                                ; SOURCE LINE # 410
+00038A 7E370000    E  MOV      WR6,motor+12
+00038E 4D33           ORL      WR6,WR6
+000390 6808           JE       ?C0062
+                                                ; SOURCE LINE # 413
+000392 1B34           DEC      WR6,#01H
+               ?C0074:
+000394 7A370000    E  MOV      motor+12,WR6
+                                                ; SOURCE LINE # 414
+000398 8012           SJMP     ?C0015
+               ?C0062:
+                                                ; SOURCE LINE # 417
+00039A E4             CLR      A                ; A=R11
+               ?C0073:
+00039B 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 418
+                                                ; SOURCE LINE # 420
+00039F 800B           SJMP     ?C0015
+                                                ; SOURCE LINE # 421
+                                                ; SOURCE LINE # 422
+               ?C0022:
+                                                ; SOURCE LINE # 424
+0003A1 C2A9           CLR      ET0
+                                                ; SOURCE LINE # 425
+0003A3 53AFBF         ANL      IE2,#0BFH
+                                                ; SOURCE LINE # 426
+0003A6 120000      E  LCALL    comparator_close_isr
+                                                ; SOURCE LINE # 427
+0003A9 120000      E  LCALL    motor_stop
+                                                ; SOURCE LINE # 429
+                                                ; SOURCE LINE # 430
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 19  
+
+               ?C0015:
+                                                ; SOURCE LINE # 431
+0003AC DAF8           POP      R15
+0003AE 22             RET      
+;       FUNCTION pit_motor_control (END)
+
+;       FUNCTION TM1_Isr (BEGIN)
+                                                ; SOURCE LINE # 440
+000000 CA7B           PUSH     DR28
+000002 CA6B           PUSH     DR24
+000004 CA5B           PUSH     DR20
+000006 CA4B           PUSH     DR16
+000008 CA2B           PUSH     DR8
+00000A CA1B           PUSH     DR4
+00000C CA0B           PUSH     DR0
+00000E C0D1           PUSH     PSW1
+000010 C0D0           PUSH     PSW
+000012 C083           PUSH     DPH              ; WORD0(DR56)=DPTR
+000014 C082           PUSH     DPL              ; WORD0(DR56)=DPTR
+                                                ; SOURCE LINE # 442
+000016 7E1F0000    R  MOV      DR4,pit_count
+00001A 0B1C           INC      DR4,#01H
+00001C 7A1F0000    R  MOV      pit_count,DR4
+                                                ; SOURCE LINE # 443
+000020 120000      E  LCALL    pwm_input_timeout_tick
+                                                ; SOURCE LINE # 449
+000023 7EB30000    E  MOV      R11,motor+5      ; A=R11
+000027 BEB006         CMP      R11,#06H         ; A=R11
+00002A 6817           JE       ?C0064
+                                                ; SOURCE LINE # 452
+00002C 7E370000    E  MOV      WR6,motor+1
+000030 4D33           ORL      WR6,WR6
+000032 7803           JNE      ?C0065
+                                                ; SOURCE LINE # 454
+000034 E4             CLR      A                ; A=R11
+                                                ; SOURCE LINE # 455
+000035 8008           SJMP     ?C0075
+               ?C0065:
+                                                ; SOURCE LINE # 459
+000037 7EB30000    E  MOV      R11,motor+5      ; A=R11
+00003B 7006           JNZ      ?C0064
+                                                ; SOURCE LINE # 461
+00003D 7401           MOV      A,#01H           ; A=R11
+               ?C0075:
+00003F 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 462
+                                                ; SOURCE LINE # 464
+               ?C0064:
+                                                ; SOURCE LINE # 465
+000043 120000      R  LCALL    led_control
+                                                ; SOURCE LINE # 466
+000046 120000      R  LCALL    pit_motor_control
+                                                ; SOURCE LINE # 467
+000049 D082           POP      DPL              ; WORD0(DR56)=DPTR
+00004B D083           POP      DPH              ; WORD0(DR56)=DPTR
+00004D D0D0           POP      PSW
+00004F D0D1           POP      PSW1
+000051 DA0B           POP      DR0
+000053 DA1B           POP      DR4
+000055 DA2B           POP      DR8
+000057 DA4B           POP      DR16
+000059 DA5B           POP      DR20
+00005B DA6B           POP      DR24
+00005D DA7B           POP      DR28
+00005F 32             RETI     
+;       FUNCTION TM1_Isr (END)
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 20  
+
+
+;       FUNCTION pit_timer_init (BEGIN)
+                                                ; SOURCE LINE # 476
+                                                ; SOURCE LINE # 494
+000000 7E340001       MOV      WR6,#01H
+000004 CA39           PUSH     WR6
+000006 7E144240       MOV      WR2,#04240H
+00000A 7E04000F       MOV      WR0,#0FH
+00000E 7E1F0000    E  MOV      DR4,system_clock
+000012 120000      E  LCALL    ?C?SLDIV
+000015 7E140032       MOV      WR2,#032H
+000019 120000      E  LCALL    ?C?LIMUL
+00001C 7F01           MOV      DR0,DR4
+00001E DA39           POP      WR6
+000020 120000      E  LCALL    pit_init
+                                                ; SOURCE LINE # 495
+000023 9F11           SUB      DR4,DR4
+000025 7A1F0000    R  MOV      pit_count,DR4
+                                                ; SOURCE LINE # 496
+000029 E4             CLR      A                ; A=R11
+00002A 7AB30000    E  MOV      motor+5,R11      ; A=R11
+                                                ; SOURCE LINE # 497
+00002E 22             RET      
+;       FUNCTION pit_timer_init (END)
+
+;       FUNCTION led_init (BEGIN)
+                                                ; SOURCE LINE # 506
+                                                ; SOURCE LINE # 508
+000000 7E340046       MOV      WR6,#046H
+000004 7E240001       MOV      WR4,#01H
+000008 E4             CLR      A                ; A=R11
+000009 7E140010       MOV      WR2,#010H
+00000D 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 509
+000010 7E340047       MOV      WR6,#047H
+000014 7E240001       MOV      WR4,#01H
+000018 E4             CLR      A                ; A=R11
+000019 7E140010       MOV      WR2,#010H
+00001D 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 511
+000020 7E340014       MOV      WR6,#014H
+000024 120000      E  LCALL    system_delay_ms
+                                                ; SOURCE LINE # 513
+000027 D2B6           SETB     P36
+                                                ; SOURCE LINE # 514
+000029 D2B7           SETB     P37
+                                                ; SOURCE LINE # 515
+00002B 22             RET      
+;       FUNCTION led_init (END)
+
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =      1242     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =         8     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+C251 COMPILER V5.60.0,  pit_timer                                                          08/08/26  10:59:33  PAGE 21  
+
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        24     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

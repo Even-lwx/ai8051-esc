@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_uart
 OBJECT MODULE PLACED IN .\out_file\zf_driver_uart.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_uart.c XSMALL INTR2 NOALIA
                     -S WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\
-                    -libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_driver_uart.lst) TABS(2) OBJECT(.\out_file\zf_
-                    -driver_uart.obj) 
+                    -libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_driver_uart.lst) TABS(2) OBJECT(.\out_fil
+                    -e\zf_driver_uart.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    52          #define DMA_URXT_TXAL(uart_n)     (*(unsigned char volatile far *)(0x7efa36 + uart_n*0x10))
    53          #define DMA_URXR_CFG(uart_n)      (*(unsigned char volatile far *)(0x7efa38 + uart_n*0x10))
    54          #define DMA_URXR_CR(uart_n)       (*(unsigned char volatile far *)(0x7efa39 + uart_n*0x10))
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 2   
 
    55          #define DMA_URXR_STA(uart_n)      (*(unsigned char volatile far *)(0x7efa3a + uart_n*0x10))
    56          #define DMA_URXR_AMT(uart_n)      (*(unsigned char volatile far *)(0x7efa3b + uart_n*0x10))
@@ -134,7 +134,7 @@ stmt  level    source
   114   1          uint16 tmp_len;
   115   1        while(len)
   116   1        {
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 3   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 3   
 
   117   2              tmp_len = (len > BUFF_LEN) ? BUFF_LEN : len;        // 计算长度
   118   2              memcpy(tmp_buff, buff, tmp_len);                    // 拷贝
@@ -202,7 +202,7 @@ stmt  level    source
   174   1      }
   175          
   176          //-------------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 4   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 4   
 
              -------------
   177          // 函数简介     打开串口接收中断
@@ -270,7 +270,7 @@ stmt  level    source
   234   1        if(DMA_URXR_STA(uart_n) & 0x03)
   235   1        {
   236   2          ret = 1;
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 5   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 5   
 
   237   2          
   238   2          DMA_URXR_STA(uart_n) &= ~0x03;
@@ -338,7 +338,7 @@ stmt  level    source
   295   1        // UART2和SPI2使用同一个寄存器，要么用UART2要么使用SPI2,只能是二选一。
   296   1          zf_assert(uart_funciton_check(uart_n, UART_FUNCTION_UART));
   297   1        
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 6   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 6   
 
   298   1            
   299   1        // 如果程序在输出了断言信息 并且提示出错位置在这里
@@ -406,7 +406,7 @@ stmt  level    source
   361   2              
   362   2              case UART_2:
   363   2              {
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 7   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 7   
 
   364   3                  //            if(TIM_2 == tim_n)
   365   3                  {
@@ -474,7 +474,7 @@ stmt  level    source
   427   4                      T2H = brt >> 8;
   428   4                      AUXR |= 0x14;
   429   4                  }
-C251 COMPILER V5.60.0,  zf_driver_uart                                                     05/08/26  17:23:54  PAGE 8   
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 8   
 
   430   3                  //            else if(TIM_4 == tim_n)
   431   3                  //            {
@@ -508,6 +508,711 @@ stmt  level    source
   459   1      //    uart_dma_init(uart_n);
   460   1          
   461   1      }
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 9   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION uart_funciton_check (BEGIN)
+                                                ; SOURCE LINE # 83
+000000 7D12           MOV      WR2,WR4
+;---- Variable 'mode' assigned to Register 'WR2' ----
+;---- Variable 'index' assigned to Register 'WR6' ----
+                                                ; SOURCE LINE # 84
+                                                ; SOURCE LINE # 85
+000002 7401           MOV      A,#01H           ; A=R11
+;---- Variable 'return_state' assigned to Register 'R11' ----
+                                                ; SOURCE LINE # 86
+000004 3E34           SLL      WR6
+000006 49030000    R  MOV      WR0,@WR6+uart_function_state
+00000A 4D00           ORL      WR0,WR0
+00000C 7805           JNE      ?C0001
+                                                ; SOURCE LINE # 88
+00000E 59130000    R  MOV      @WR6+uart_function_state,WR2
+                                                ; SOURCE LINE # 89
+000012 22             RET      
+               ?C0001:
+                                                ; SOURCE LINE # 90
+000013 BD01           CMP      WR0,WR2
+000015 7803           JNE      ?C0003
+                                                ; SOURCE LINE # 92
+000017 7401           MOV      A,#01H           ; A=R11
+                                                ; SOURCE LINE # 93
+000019 22             RET      
+               ?C0003:
+                                                ; SOURCE LINE # 96
+00001A E4             CLR      A                ; A=R11
+                                                ; SOURCE LINE # 97
+                                                ; SOURCE LINE # 98
+                                                ; SOURCE LINE # 99
+00001B 22             RET      
+;       FUNCTION uart_funciton_check (END)
+
+;       FUNCTION uart_write_buffer (BEGIN)
+                                                ; SOURCE LINE # 108
+000000 CA3B           PUSH     DR12
+000002 7A270000    R  MOV      len,WR4
+000006 7F30           MOV      DR12,DR0
+;---- Variable 'buff' assigned to Register 'DR12' ----
+000008 7A370000    R  MOV      uart_n,WR6
+                                                ; SOURCE LINE # 109
+                                                ; SOURCE LINE # 113
+00000C 7E340000    R  MOV      WR6,#WORD0 ?tpl?0001
+000010 7E240000    R  MOV      WR4,#WORD2 ?tpl?0001
+000014 7E140000    R  MOV      WR2,#WORD0 tmp_buff
+000018 7E040000    E  MOV      WR0,#?C?XDATASEG
+00001C 7440           MOV      A,#040H          ; A=R11
+00001E 120000      E  LCALL    ?C?BMOVEPP8
+                                                ; SOURCE LINE # 115
+000021 020000      R  LJMP     ?C0006
+               ?C0008:
+                                                ; SOURCE LINE # 117
+000024 7E370000    R  MOV      WR6,len
+000028 BE340040       CMP      WR6,#040H
+00002C 2806           JLE      ?C0010
+00002E 7E340040       MOV      WR6,#040H
+000032 8004           SJMP     ?C0011
+               ?C0010:
+000034 7E370000    R  MOV      WR6,len
+               ?C0011:
+000038 7A370000    R  MOV      tmp_len,WR6
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 10  
+
+                                                ; SOURCE LINE # 118
+00003C CA39           PUSH     WR6
+00003E 7F13           MOV      DR4,DR12
+000040 7E140000    R  MOV      WR2,#WORD0 tmp_buff
+000044 7E040000    R  MOV      WR0,#WORD2 tmp_buff
+000048 120000      E  LCALL    memcpy?_
+00004B 1BFD           DEC      DR60,#02H
+                                                ; SOURCE LINE # 119
+00004D 7E370000    R  MOV      WR6,len
+000051 9E370000    R  SUB      WR6,tmp_len
+000055 7A370000    R  MOV      len,WR6
+                                                ; SOURCE LINE # 120
+000059 2E770000    R  ADD      WR14,tmp_len
+                                                ; SOURCE LINE # 123
+00005D 6CAA           XRL      R10,R10
+00005F 7E370000    R  MOV      WR6,uart_n
+000063 1A26           MOVS     WR4,R6
+000065 1A24           MOVS     WR4,R4
+000067 7404           MOV      A,#04H           ; A=R11
+               ?C0047:
+000069 2F11           ADD      DR4,DR4
+00006B 14             DEC      A                ; A=R11
+00006C 78FB           JNE      ?C0047
+00006E 7F01           MOV      DR0,DR4
+000070 2E04007E       ADD      WR0,#07EH
+000074 2E08FA32       ADD      DR0,#0FA32H
+000078 7A0BA0         MOV      @DR0,R10
+                                                ; SOURCE LINE # 125
+00007B 7E170000    R  MOV      WR2,tmp_len
+00007F 1B14           DEC      WR2,#01H
+000081 7F21           MOV      DR8,DR4
+000083 2E44007E       ADD      WR8,#07EH
+000087 2E28FA33       ADD      DR8,#0FA33H
+00008B 7A2B30         MOV      @DR8,R3
+                                                ; SOURCE LINE # 126
+00008E 0A52           MOVZ     WR10,R2
+000090 7E170000    R  MOV      WR2,uart_n
+000094 1A02           MOVS     WR0,R2
+000096 1A00           MOVS     WR0,R0
+000098 2F00           ADD      DR0,DR0
+00009A 2F00           ADD      DR0,DR0
+00009C 2E04007E       ADD      WR0,#07EH
+0000A0 2E08FA88       ADD      DR0,#0FA88H
+0000A4 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 127
+0000A7 7E540000    R  MOV      WR10,#WORD0 tmp_buff
+0000AB 7F01           MOV      DR0,DR4
+0000AD 2E04007E       ADD      WR0,#07EH
+0000B1 2E08FA35       ADD      DR0,#0FA35H
+0000B5 7A0BA0         MOV      @DR0,R10
+                                                ; SOURCE LINE # 128
+0000B8 7F01           MOV      DR0,DR4
+0000BA 2E04007E       ADD      WR0,#07EH
+0000BE 2E08FA36       ADD      DR0,#0FA36H
+0000C2 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 129
+0000C5 74C0           MOV      A,#0C0H          ; A=R11
+0000C7 2E24007E       ADD      WR4,#07EH
+0000CB 2E18FA31       ADD      DR4,#0FA31H
+0000CF 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 131
+               ?C0012:
+0000D2 7E370000    R  MOV      WR6,uart_n
+0000D6 1A26           MOVS     WR4,R6
+0000D8 1A24           MOVS     WR4,R4
+0000DA 7404           MOV      A,#04H           ; A=R11
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 11  
+
+               ?C0048:
+0000DC 2F11           ADD      DR4,DR4
+0000DE 14             DEC      A                ; A=R11
+0000DF 78FB           JNE      ?C0048
+0000E1 7F01           MOV      DR0,DR4
+0000E3 2E04007E       ADD      WR0,#07EH
+0000E7 2E08FA32       ADD      DR0,#0FA32H
+0000EB 7E0BB0         MOV      R11,@DR0         ; A=R11
+0000EE 30E0E1         JNB      ACC.0,?C0012
+                                                ; SOURCE LINE # 133
+0000F1 E4             CLR      A                ; A=R11
+0000F2 2E24007E       ADD      WR4,#07EH
+0000F6 2E18FA31       ADD      DR4,#0FA31H
+0000FA 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 134
+               ?C0006:
+0000FD 7E370000    R  MOV      WR6,len
+000101 4D33           ORL      WR6,WR6
+000103 6803        R  JE       $ + 5H
+000105 020000      R  LJMP     ?C0008
+                                                ; SOURCE LINE # 135
+000108 DA3B           POP      DR12
+00010A 22             RET      
+;       FUNCTION uart_write_buffer (END)
+
+;       FUNCTION uart_write_string (BEGIN)
+                                                ; SOURCE LINE # 143
+000000 CA3B           PUSH     DR12
+000002 7F30           MOV      DR12,DR0
+;---- Variable 'str' assigned to Register 'DR12' ----
+000004 7A370000    R  MOV      uart_n,WR6
+                                                ; SOURCE LINE # 144
+                                                ; SOURCE LINE # 145
+000008 120000      E  LCALL    strlen?_
+00000B 7D23           MOV      WR4,WR6
+;---- Variable 'len' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 146
+00000D 7E370000    R  MOV      WR6,uart_n
+000011 7F03           MOV      DR0,DR12
+000013 120000      R  LCALL    uart_write_buffer
+                                                ; SOURCE LINE # 147
+000016 DA3B           POP      DR12
+000018 22             RET      
+;       FUNCTION uart_write_string (END)
+
+;       FUNCTION uart_write_byte (BEGIN)
+                                                ; SOURCE LINE # 156
+000000 7AB30000    R  MOV      dat,R11          ; A=R11
+;---- Variable 'uart_n' assigned to Register 'WR6' ----
+                                                ; SOURCE LINE # 158
+000004 7E000000    R  MOV      DR0,#WORD0 dat
+000008 7E240001       MOV      WR4,#01H
+00000C 020000      R  LJMP     uart_write_buffer
+;       FUNCTION uart_write_byte (END)
+
+;       FUNCTION uart_rx_start_buff (BEGIN)
+                                                ; SOURCE LINE # 167
+000000 7D43           MOV      WR8,WR6
+;---- Variable 'uart_n' assigned to Register 'WR8' ----
+                                                ; SOURCE LINE # 169
+000002 6CAA           XRL      R10,R10
+000004 7D13           MOV      WR2,WR6
+000006 1A02           MOVS     WR0,R2
+000008 1A00           MOVS     WR0,R0
+00000A 7404           MOV      A,#04H           ; A=R11
+00000C 7F10           MOV      DR4,DR0
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 12  
+
+               ?C0049:
+00000E 2F11           ADD      DR4,DR4
+000010 14             DEC      A                ; A=R11
+000011 78FB           JNE      ?C0049
+000013 7F71           MOV      DR28,DR4
+000015 2EE4007E       ADD      WR28,#07EH
+000019 2E78FA3B       ADD      DR28,#0FA3BH
+00001D 7A7BA0         MOV      @DR28,R10
+                                                ; SOURCE LINE # 170
+000020 E4             CLR      A                ; A=R11
+000021 2F00           ADD      DR0,DR0
+000023 2F00           ADD      DR0,DR0
+000025 2E04007E       ADD      WR0,#07EH
+000029 2E08FA8A       ADD      DR0,#0FA8AH
+00002D 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 171
+000030 7D14           MOV      WR2,WR8
+000032 2E140000    R  ADD      WR2,#WORD0 uart_rx_buff
+000036 7F21           MOV      DR8,DR4
+000038 2E44007E       ADD      WR8,#07EH
+00003C 2E28FA3E       ADD      DR8,#0FA3EH
+000040 7A2B30         MOV      @DR8,R3
+                                                ; SOURCE LINE # 172
+000043 0A52           MOVZ     WR10,R2
+000045 7F01           MOV      DR0,DR4
+000047 2E04007E       ADD      WR0,#07EH
+00004B 2E08FA3D       ADD      DR0,#0FA3DH
+00004F 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 173
+000052 74A1           MOV      A,#0A1H          ; A=R11
+000054 2E24007E       ADD      WR4,#07EH
+000058 2E18FA39       ADD      DR4,#0FA39H
+00005C 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 174
+00005F 22             RET      
+;       FUNCTION uart_rx_start_buff (END)
+
+;       FUNCTION uart_rx_interrupt (BEGIN)
+                                                ; SOURCE LINE # 183
+000000 7C5B           MOV      R5,R11           ; A=R11
+;---- Variable 'status' assigned to Register 'R5' ----
+;---- Variable 'uart_n' assigned to Register 'WR6' ----
+                                                ; SOURCE LINE # 185
+000002 4C5B           ORL      R5,R11           ; A=R11
+000004 681A           JE       ?C0016
+                                                ; SOURCE LINE # 187
+000006 1A26           MOVS     WR4,R6
+000008 1A24           MOVS     WR4,R4
+00000A 7404           MOV      A,#04H           ; A=R11
+               ?C0050:
+00000C 2F11           ADD      DR4,DR4
+00000E 14             DEC      A                ; A=R11
+00000F 78FB           JNE      ?C0050
+000011 2E24007E       ADD      WR4,#07EH
+000015 2E18FA38       ADD      DR4,#0FA38H
+000019 7E1BB0         MOV      R11,@DR4         ; A=R11
+00001C 4480           ORL      A,#080H          ; A=R11
+                                                ; SOURCE LINE # 188
+00001E 8018           SJMP     ?C0057
+               ?C0016:
+                                                ; SOURCE LINE # 191
+000020 1A26           MOVS     WR4,R6
+000022 1A24           MOVS     WR4,R4
+000024 7404           MOV      A,#04H           ; A=R11
+               ?C0051:
+000026 2F11           ADD      DR4,DR4
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 13  
+
+000028 14             DEC      A                ; A=R11
+000029 78FB           JNE      ?C0051
+00002B 2E24007E       ADD      WR4,#07EH
+00002F 2E18FA38       ADD      DR4,#0FA38H
+000033 7E1BB0         MOV      R11,@DR4         ; A=R11
+000036 547F           ANL      A,#07FH          ; A=R11
+               ?C0057:
+000038 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 192
+                                                ; SOURCE LINE # 193
+00003B 22             RET      
+;       FUNCTION uart_rx_interrupt (END)
+
+;       FUNCTION uart_read_byte (BEGIN)
+                                                ; SOURCE LINE # 202
+000000 CAF8           PUSH     R15
+000002 7D43           MOV      WR8,WR6
+;---- Variable 'uart_n' assigned to Register 'WR8' ----
+                                                ; SOURCE LINE # 203
+                                                ; SOURCE LINE # 207
+               ?C0018:
+000004 7D34           MOV      WR6,WR8
+000006 1A28           MOVS     WR4,R8
+000008 1A24           MOVS     WR4,R4
+00000A 7404           MOV      A,#04H           ; A=R11
+               ?C0052:
+00000C 2F11           ADD      DR4,DR4
+00000E 14             DEC      A                ; A=R11
+00000F 78FB           JNE      ?C0052
+000011 2E24007E       ADD      WR4,#07EH
+000015 2E18FA3A       ADD      DR4,#0FA3AH
+000019 7E1BB0         MOV      R11,@DR4         ; A=R11
+00001C 5403           ANL      A,#03H           ; A=R11
+00001E 68E4           JE       ?C0018
+                                                ; SOURCE LINE # 210
+000020 7D54           MOV      WR10,WR8
+000022 2E540000    R  ADD      WR10,#WORD0 uart_rx_buff
+000026 7AB182         MOV      DPL,R11          ; A=R11 WORD0(DR56)=DPTR
+000029 7AA183         MOV      DPH,R10          ; WORD0(DR56)=DPTR
+00002C 7EEBF0         MOV      R15,@DR56        ; WORD0(DR56)=DPTR
+;---- Variable 'dat' assigned to Register 'R15' ----
+                                                ; SOURCE LINE # 213
+00002F E4             CLR      A                ; A=R11
+000030 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 216
+000033 7D34           MOV      WR6,WR8
+000035 120000      R  LCALL    uart_rx_start_buff
+                                                ; SOURCE LINE # 217
+000038 7CBF           MOV      R11,R15          ; A=R11
+                                                ; SOURCE LINE # 218
+00003A DAF8           POP      R15
+00003C 22             RET      
+;       FUNCTION uart_read_byte (END)
+
+;       FUNCTION uart_query_byte (BEGIN)
+                                                ; SOURCE LINE # 227
+000000 CAF8           PUSH     R15
+000002 7F70           MOV      DR28,DR0
+;---- Variable 'dat' assigned to Register 'DR28' ----
+000004 7D13           MOV      WR2,WR6
+;---- Variable 'uart_n' assigned to Register 'WR2' ----
+                                                ; SOURCE LINE # 228
+                                                ; SOURCE LINE # 229
+;---- Variable 'ret' assigned to Register 'R15' ----
+                                                ; SOURCE LINE # 232
+000006 7D03           MOV      WR0,WR6
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 14  
+
+000008 2E040000    R  ADD      WR0,#WORD0 uart_rx_buff
+00000C 7A1182         MOV      DPL,R1           ; WORD0(DR56)=DPTR
+00000F 7A0183         MOV      DPH,R0           ; WORD0(DR56)=DPTR
+000012 E0             MOVX     A,@DPTR          ; A=R11
+000013 7A7BB0         MOV      @DR28,R11        ; A=R11
+                                                ; SOURCE LINE # 234
+000016 1A22           MOVS     WR4,R2
+000018 1A24           MOVS     WR4,R4
+00001A 7404           MOV      A,#04H           ; A=R11
+               ?C0053:
+00001C 2F11           ADD      DR4,DR4
+00001E 14             DEC      A                ; A=R11
+00001F 78FB           JNE      ?C0053
+000021 2E24007E       ADD      WR4,#07EH
+000025 2E18FA3A       ADD      DR4,#0FA3AH
+000029 7E1BB0         MOV      R11,@DR4         ; A=R11
+00002C 5403           ANL      A,#03H           ; A=R11
+00002E 680D           JE       ?C0023
+                                                ; SOURCE LINE # 236
+000030 7EF001         MOV      R15,#01H
+                                                ; SOURCE LINE # 238
+000033 7E1BB0         MOV      R11,@DR4         ; A=R11
+000036 54FC           ANL      A,#0FCH          ; A=R11
+000038 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 239
+00003B 8002           SJMP     ?C0024
+               ?C0023:
+                                                ; SOURCE LINE # 242
+00003D 6CFF           XRL      R15,R15
+                                                ; SOURCE LINE # 243
+               ?C0024:
+                                                ; SOURCE LINE # 246
+00003F 7D31           MOV      WR6,WR2
+000041 120000      R  LCALL    uart_rx_start_buff
+                                                ; SOURCE LINE # 248
+000044 7CBF           MOV      R11,R15          ; A=R11
+                                                ; SOURCE LINE # 249
+000046 DAF8           POP      R15
+000048 22             RET      
+;       FUNCTION uart_query_byte (END)
+
+;       FUNCTION uart_dma_init (BEGIN)
+                                                ; SOURCE LINE # 257
+000000 CA3B           PUSH     DR12
+000002 7D43           MOV      WR8,WR6
+;---- Variable 'uart_n' assigned to Register 'WR8' ----
+                                                ; SOURCE LINE # 259
+000004 6CAA           XRL      R10,R10
+000006 7DF3           MOV      WR30,WR6
+000008 1A36           MOVS     WR6,R6
+00000A 1AE6           MOVS     WR28,R6
+00000C 7404           MOV      A,#04H           ; A=R11
+               ?C0054:
+00000E 2F77           ADD      DR28,DR28
+000010 14             DEC      A                ; A=R11
+000011 78FB           JNE      ?C0054
+000013 7F17           MOV      DR4,DR28
+000015 2E24007E       ADD      WR4,#07EH
+000019 2E18FA30       ADD      DR4,#0FA30H
+00001D 7A1BA0         MOV      @DR4,R10
+                                                ; SOURCE LINE # 260
+000020 E4             CLR      A                ; A=R11
+000021 7F17           MOV      DR4,DR28
+000023 2E24007E       ADD      WR4,#07EH
+000027 2E18FA32       ADD      DR4,#0FA32H
+00002B 7A1BB0         MOV      @DR4,R11         ; A=R11
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 15  
+
+                                                ; SOURCE LINE # 261
+00002E 7F17           MOV      DR4,DR28
+000030 2E24007E       ADD      WR4,#07EH
+000034 2E18FA31       ADD      DR4,#0FA31H
+000038 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 263
+00003B 7F07           MOV      DR0,DR28
+00003D 2E04007E       ADD      WR0,#07EH
+000041 2E08FA38       ADD      DR0,#0FA38H
+000045 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 264
+000048 7F17           MOV      DR4,DR28
+00004A 2E24007E       ADD      WR4,#07EH
+00004E 2E18FA3A       ADD      DR4,#0FA3AH
+000052 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 265
+000055 7F17           MOV      DR4,DR28
+000057 2E24007E       ADD      WR4,#07EH
+00005B 2E18FA39       ADD      DR4,#0FA39H
+00005F 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 267
+000062 7F67           MOV      DR24,DR28
+000064 2EC4007E       ADD      WR24,#07EH
+000068 2E68FA3B       ADD      DR24,#0FA3BH
+00006C 7A6BB0         MOV      @DR24,R11        ; A=R11
+                                                ; SOURCE LINE # 268
+00006F 7DD4           MOV      WR26,WR8
+000071 1A78           MOVS     WR14,R8
+000073 1ACE           MOVS     WR24,R14
+000075 7F36           MOV      DR12,DR24
+000077 2F36           ADD      DR12,DR24
+000079 2F33           ADD      DR12,DR12
+00007B 7F63           MOV      DR24,DR12
+00007D 2EC4007E       ADD      WR24,#07EH
+000081 2E68FA8A       ADD      DR24,#0FA8AH
+000085 7A6BB0         MOV      @DR24,R11        ; A=R11
+                                                ; SOURCE LINE # 269
+000088 7D54           MOV      WR10,WR8
+00008A 2E540000    R  ADD      WR10,#WORD0 uart_rx_buff
+00008E 7F67           MOV      DR24,DR28
+000090 2EC4007E       ADD      WR24,#07EH
+000094 2E68FA3E       ADD      DR24,#0FA3EH
+000098 7A6BB0         MOV      @DR24,R11        ; A=R11
+                                                ; SOURCE LINE # 270
+00009B 0A7A           MOVZ     WR14,R10
+00009D 7F27           MOV      DR8,DR28
+00009F 2E44007E       ADD      WR8,#07EH
+0000A3 2E28FA3D       ADD      DR8,#0FA3DH
+0000A7 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 271
+0000AA 740F           MOV      A,#0FH           ; A=R11
+0000AC 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 272
+0000AF 74A1           MOV      A,#0A1H          ; A=R11
+0000B1 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 274
+0000B4 DA3B           POP      DR12
+0000B6 22             RET      
+;       FUNCTION uart_dma_init (END)
+
+;       FUNCTION uart_init (BEGIN)
+                                                ; SOURCE LINE # 286
+000000 CA3B           PUSH     DR12
+000002 7D72           MOV      WR14,WR4
+;---- Variable 'tx_pin' assigned to Register 'WR14' ----
+000004 7A0F0000    R  MOV      baud,DR0
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 16  
+
+000008 7D63           MOV      WR12,WR6
+;---- Variable 'uart_n' assigned to Register 'WR12' ----
+                                                ; SOURCE LINE # 287
+                                                ; SOURCE LINE # 311
+00000A 7D32           MOV      WR6,WR4
+00000C 6C66           XRL      R6,R6
+00000E 7E240001       MOV      WR4,#01H
+000012 7401           MOV      A,#01H           ; A=R11
+000014 7E140010       MOV      WR2,#010H
+000018 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 312
+00001B 7E370000    R  MOV      WR6,rx_pin
+00001F 6C66           XRL      R6,R6
+000021 6D22           XRL      WR4,WR4
+000023 7401           MOV      A,#01H           ; A=R11
+000025 7E140001       MOV      WR2,#01H
+000029 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 314
+00002C 7E0F0000    R  MOV      DR0,baud
+000030 0B0D           INC      DR0,#02H
+000032 7E1F0000    E  MOV      DR4,system_clock
+000036 120000      E  LCALL    ?C?ULDIV
+000039 7402           MOV      A,#02H           ; A=R11
+00003B 7F01           MOV      DR0,DR4
+               ?C0055:
+00003D 1E14           SRL      WR2
+00003F 1E04           SRL      WR0
+000041 5003           JNC      ?C0056
+000043 4E2080         ORL      R2,#080H
+               ?C0056:
+000046 14             DEC      A                ; A=R11
+000047 78F4           JNE      ?C0055
+000049 6D33           XRL      WR6,WR6
+00004B 7E240001       MOV      WR4,#01H
+00004F 9F10           SUB      DR4,DR0
+;---- Variable 'brt' assigned to Register 'WR6' ----
+                                                ; SOURCE LINE # 316
+000051 1B64           DEC      WR12,#01H
+000053 7803        R  JNE      $ + 5H
+000055 020000      R  LJMP     ?C0028
+000058 1B64           DEC      WR12,#01H
+00005A 7803        R  JNE      $ + 5H
+00005C 020000      R  LJMP     ?C0029
+00005F 1B64           DEC      WR12,#01H
+000061 7803        R  JNE      $ + 5H
+000063 020000      R  LJMP     ?C0030
+000066 2E640003       ADD      WR12,#03H
+00006A 6803        R  JE       $ + 5H
+00006C 020000      R  LJMP     ?C0026
+                                                ; SOURCE LINE # 318
+               ?C0027:
+                                                ; SOURCE LINE # 332
+00006F 439850         ORL      SCON,#050H
+                                                ; SOURCE LINE # 333
+000072 7CB7           MOV      R11,R7           ; A=R11
+000074 F5D7           MOV      T2L,A            ; A=R11
+                                                ; SOURCE LINE # 334
+000076 0A56           MOVZ     WR10,R6
+000078 F5D6           MOV      T2H,A            ; A=R11
+                                                ; SOURCE LINE # 335
+00007A 438E15         ORL      AUXR,#015H
+                                                ; SOURCE LINE # 336
+00007D C28E           CLR      TR1
+                                                ; SOURCE LINE # 339
+00007F 53A23F         ANL      P_SW1,#03FH
+                                                ; SOURCE LINE # 341
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 17  
+
+000082 7E270000    R  MOV      WR4,rx_pin
+000086 BE240040       CMP      WR4,#040H
+00008A 780D           JNE      ?C0031
+00008C BE740041       CMP      WR14,#041H
+000090 7807           JNE      ?C0031
+                                                ; SOURCE LINE # 343
+000092 E5A2           MOV      A,P_SW1          ; A=R11
+000094 F5A2           MOV      P_SW1,A          ; A=R11
+                                                ; SOURCE LINE # 344
+000096 020000      R  LJMP     ?C0026
+               ?C0031:
+                                                ; SOURCE LINE # 345
+000099 BE240146       CMP      WR4,#0146H
+00009D 780C           JNE      ?C0033
+00009F BE740147       CMP      WR14,#0147H
+0000A3 7806           JNE      ?C0033
+                                                ; SOURCE LINE # 347
+0000A5 43A240         ORL      P_SW1,#040H
+                                                ; SOURCE LINE # 348
+0000A8 020000      R  LJMP     ?C0026
+               ?C0033:
+                                                ; SOURCE LINE # 349
+0000AB BE240226       CMP      WR4,#0226H
+0000AF 780C           JNE      ?C0035
+0000B1 BE740227       CMP      WR14,#0227H
+0000B5 7806           JNE      ?C0035
+                                                ; SOURCE LINE # 351
+0000B7 43A280         ORL      P_SW1,#080H
+                                                ; SOURCE LINE # 352
+0000BA 020000      R  LJMP     ?C0026
+               ?C0035:
+                                                ; SOURCE LINE # 353
+0000BD BE240353       CMP      WR4,#0353H
+0000C1 6803        R  JE       $ + 5H
+0000C3 020000      R  LJMP     ?C0026
+0000C6 BE740354       CMP      WR14,#0354H
+0000CA 6803        R  JE       $ + 5H
+0000CC 020000      R  LJMP     ?C0026
+                                                ; SOURCE LINE # 355
+0000CF 43A2C0         ORL      P_SW1,#0C0H
+                                                ; SOURCE LINE # 356
+                                                ; SOURCE LINE # 359
+0000D2 020000      R  LJMP     ?C0026
+                                                ; SOURCE LINE # 362
+               ?C0028:
+                                                ; SOURCE LINE # 366
+0000D5 439A50         ORL      S2CON,#050H
+                                                ; SOURCE LINE # 367
+0000D8 7CB7           MOV      R11,R7           ; A=R11
+0000DA F5D7           MOV      T2L,A            ; A=R11
+                                                ; SOURCE LINE # 368
+0000DC 0A56           MOVZ     WR10,R6
+0000DE F5D6           MOV      T2H,A            ; A=R11
+                                                ; SOURCE LINE # 369
+0000E0 438E14         ORL      AUXR,#014H
+                                                ; SOURCE LINE # 372
+0000E3 53BAFE         ANL      P_SW2,#0FEH
+                                                ; SOURCE LINE # 374
+0000E6 7E270000    R  MOV      WR4,rx_pin
+0000EA BE241022       CMP      WR4,#01022H
+0000EE 7808           JNE      ?C0038
+0000F0 BE741023       CMP      WR14,#01023H
+0000F4 7802           JNE      ?C0038
+                                                ; SOURCE LINE # 376
+                                                ; SOURCE LINE # 377
+0000F6 8066           SJMP     ?C0059
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 18  
+
+               ?C0038:
+                                                ; SOURCE LINE # 378
+0000F8 BE241152       CMP      WR4,#01152H
+0000FC 7875           JNE      ?C0026
+0000FE BE741153       CMP      WR14,#01153H
+000102 786F           JNE      ?C0026
+                                                ; SOURCE LINE # 380
+000104 43BA01         ORL      P_SW2,#01H
+                                                ; SOURCE LINE # 381
+                                                ; SOURCE LINE # 385
+000107 806A           SJMP     ?C0026
+                                                ; SOURCE LINE # 388
+               ?C0029:
+                                                ; SOURCE LINE # 392
+000109 43AC10         ORL      S3CON,#010H
+                                                ; SOURCE LINE # 393
+00010C 7CB7           MOV      R11,R7           ; A=R11
+00010E F5D7           MOV      T2L,A            ; A=R11
+                                                ; SOURCE LINE # 394
+000110 0A56           MOVZ     WR10,R6
+000112 F5D6           MOV      T2H,A            ; A=R11
+                                                ; SOURCE LINE # 395
+000114 438E14         ORL      AUXR,#014H
+                                                ; SOURCE LINE # 405
+000117 53BAFD         ANL      P_SW2,#0FDH
+                                                ; SOURCE LINE # 407
+00011A 7E270000    R  MOV      WR4,rx_pin
+00011E BE242010       CMP      WR4,#02010H
+000122 7808           JNE      ?C0041
+000124 BE742011       CMP      WR14,#02011H
+000128 7802           JNE      ?C0041
+                                                ; SOURCE LINE # 409
+               ?C0058:
+                                                ; SOURCE LINE # 410
+00012A 8032           SJMP     ?C0059
+               ?C0041:
+                                                ; SOURCE LINE # 411
+00012C BE242160       CMP      WR4,#02160H
+000130 7841           JNE      ?C0026
+000132 BE742161       CMP      WR14,#02161H
+000136 783B           JNE      ?C0026
+                                                ; SOURCE LINE # 413
+000138 43BA02         ORL      P_SW2,#02H
+                                                ; SOURCE LINE # 414
+                                                ; SOURCE LINE # 418
+00013B 8036           SJMP     ?C0026
+                                                ; SOURCE LINE # 421
+               ?C0030:
+                                                ; SOURCE LINE # 425
+00013D 43FD10         ORL      S4CON,#010H
+                                                ; SOURCE LINE # 426
+000140 7CB7           MOV      R11,R7           ; A=R11
+000142 F5D7           MOV      T2L,A            ; A=R11
+                                                ; SOURCE LINE # 427
+000144 0A56           MOVZ     WR10,R6
+000146 F5D6           MOV      T2H,A            ; A=R11
+                                                ; SOURCE LINE # 428
+000148 438E14         ORL      AUXR,#014H
+                                                ; SOURCE LINE # 438
+00014B 53BAFB         ANL      P_SW2,#0FBH
+                                                ; SOURCE LINE # 440
+00014E 7E370000    R  MOV      WR6,rx_pin
+000152 BE343012       CMP      WR6,#03012H
+000156 780C           JNE      ?C0044
+000158 BE743013       CMP      WR14,#03013H
+00015C 7806           JNE      ?C0044
+C251 COMPILER V5.60.0,  zf_driver_uart                                                     08/08/26  11:10:18  PAGE 19  
+
+                                                ; SOURCE LINE # 442
+               ?C0059:
+00015E E5BA           MOV      A,P_SW2          ; A=R11
+000160 F5BA           MOV      P_SW2,A          ; A=R11
+                                                ; SOURCE LINE # 443
+000162 800F           SJMP     ?C0026
+               ?C0044:
+                                                ; SOURCE LINE # 444
+000164 BE343162       CMP      WR6,#03162H
+000168 7809           JNE      ?C0026
+00016A BE743163       CMP      WR14,#03163H
+00016E 7803           JNE      ?C0026
+                                                ; SOURCE LINE # 448
+000170 43BA04         ORL      P_SW2,#04H
+                                                ; SOURCE LINE # 449
+                                                ; SOURCE LINE # 453
+                                                ; SOURCE LINE # 456
+               ?C0026:
+                                                ; SOURCE LINE # 461
+000173 DA3B           POP      DR12
+000175 22             RET      
+;       FUNCTION uart_init (END)
+
 
 
 Module Information          Static   Overlayable

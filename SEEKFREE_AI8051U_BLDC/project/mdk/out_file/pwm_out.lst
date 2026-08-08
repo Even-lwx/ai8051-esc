@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 1   
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm_out
 OBJECT MODULE PLACED IN .\out_file\pwm_out.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\bldc\pwm_out.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3) BROW
                     -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
-                    -\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\pwm_out.lst) TABS(2) OBJECT(.\out_file\pwm_out.obj) 
+                    -\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\pwm_out.lst) TABS(2) OBJECT(.\out_file\pwm_out.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    51          {
    52   1        _nop_();
    53   1          _nop_();
-C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 2   
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 2   
 
    54   1          _nop_();
    55   1          _nop_();
@@ -134,7 +134,7 @@ stmt  level    source
   111   1      
   112   1          PWM_A_L_PIN = 0;
   113   1          PWM_C_L_PIN = 0;
-C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 3   
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 3   
 
   114   1          PWM_B_L_PIN = 1;
   115   1          
@@ -202,7 +202,7 @@ stmt  level    source
   171          void pwm_b_an_output()
   172          {
   173   1      #if BLDC_USR_COMPLEMENTARY
-C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 4   
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 4   
 
   174   1          PWMA_ENO = 0x0C;
   175   1      #else
@@ -270,7 +270,7 @@ stmt  level    source
   232          //  @brief      更新PWM占空比
   233          //  @param      void                        
   234          //  @return     void          
-C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 5   
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 5   
 
   235          //  @since      v1.0
   236          //  Sample usage:
@@ -338,7 +338,7 @@ stmt  level    source
   295   1        PWMA_CCR3H  = 0;
   296   1          PWMA_CCR3L  = 0;
   297   1        PWMA_CCER2 |= 0x0F;   // 开启比较输出, 低电平有效
-C251 COMPILER V5.60.0,  pwm_out                                                            07/08/26  21:04:10  PAGE 6   
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 6   
 
   298   1         
   299   1      //    PWMA_IER    = 0x10;     // 开启更新中
@@ -363,6 +363,372 @@ stmt  level    source
   317   1      //    PWM_B_L_PIN = 1;
   318   1      //    PWM_C_L_PIN = 1;
   319   1      }
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 7   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION delay_500ns (BEGIN)
+                                                ; SOURCE LINE # 50
+                                                ; SOURCE LINE # 52
+000000 00             NOP      
+                                                ; SOURCE LINE # 53
+000001 00             NOP      
+                                                ; SOURCE LINE # 54
+000002 00             NOP      
+                                                ; SOURCE LINE # 55
+000003 00             NOP      
+                                                ; SOURCE LINE # 56
+000004 00             NOP      
+                                                ; SOURCE LINE # 57
+000005 00             NOP      
+                                                ; SOURCE LINE # 58
+000006 00             NOP      
+                                                ; SOURCE LINE # 59
+000007 00             NOP      
+                                                ; SOURCE LINE # 60
+000008 00             NOP      
+                                                ; SOURCE LINE # 61
+000009 22             RET      
+;       FUNCTION delay_500ns (END)
+
+;       FUNCTION pwm_brake (BEGIN)
+                                                ; SOURCE LINE # 70
+                                                ; SOURCE LINE # 72
+000000 E4             CLR      A                ; A=R11
+000001 7E34FEB1       MOV      WR6,#0FEB1H
+000005 7E24007E       MOV      WR4,#07EH
+000009 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 73
+00000C D281           SETB     P01
+                                                ; SOURCE LINE # 74
+00000E D283           SETB     P03
+                                                ; SOURCE LINE # 75
+000010 D285           SETB     P05
+                                                ; SOURCE LINE # 76
+000012 22             RET      
+;       FUNCTION pwm_brake (END)
+
+;       FUNCTION pwm_close_output (BEGIN)
+                                                ; SOURCE LINE # 85
+                                                ; SOURCE LINE # 87
+000000 C280           CLR      P00
+                                                ; SOURCE LINE # 88
+000002 C282           CLR      P02
+                                                ; SOURCE LINE # 89
+000004 C284           CLR      P04
+                                                ; SOURCE LINE # 91
+000006 C281           CLR      P01
+                                                ; SOURCE LINE # 92
+000008 C283           CLR      P03
+                                                ; SOURCE LINE # 93
+00000A C285           CLR      P05
+                                                ; SOURCE LINE # 94
+00000C E4             CLR      A                ; A=R11
+00000D 7E34FEB1       MOV      WR6,#0FEB1H
+000011 7E24007E       MOV      WR4,#07EH
+000015 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 95
+000018 22             RET      
+;       FUNCTION pwm_close_output (END)
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 8   
+
+
+;       FUNCTION pwm_a_bn_output (BEGIN)
+                                                ; SOURCE LINE # 104
+                                                ; SOURCE LINE # 107
+000000 7403           MOV      A,#03H           ; A=R11
+000002 7E34FEB1       MOV      WR6,#0FEB1H
+000006 7E24007E       MOV      WR4,#07EH
+00000A 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 112
+00000D C281           CLR      P01
+                                                ; SOURCE LINE # 113
+00000F C285           CLR      P05
+                                                ; SOURCE LINE # 114
+000011 D283           SETB     P03
+                                                ; SOURCE LINE # 116
+000013 7402           MOV      A,#02H           ; A=R11
+000015 7E34FEAE       MOV      WR6,#0FEAEH
+000019 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 117
+00001C 22             RET      
+;       FUNCTION pwm_a_bn_output (END)
+
+;       FUNCTION pwm_a_cn_output (BEGIN)
+                                                ; SOURCE LINE # 126
+                                                ; SOURCE LINE # 129
+000000 7403           MOV      A,#03H           ; A=R11
+000002 7E34FEB1       MOV      WR6,#0FEB1H
+000006 7E24007E       MOV      WR4,#07EH
+00000A 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 134
+00000D C281           CLR      P01
+                                                ; SOURCE LINE # 135
+00000F C283           CLR      P03
+                                                ; SOURCE LINE # 136
+000011 D285           SETB     P05
+                                                ; SOURCE LINE # 138
+000013 7401           MOV      A,#01H           ; A=R11
+000015 7E34FEAE       MOV      WR6,#0FEAEH
+000019 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 139
+00001C 22             RET      
+;       FUNCTION pwm_a_cn_output (END)
+
+;       FUNCTION pwm_b_cn_output (BEGIN)
+                                                ; SOURCE LINE # 148
+                                                ; SOURCE LINE # 151
+000000 740C           MOV      A,#0CH           ; A=R11
+000002 7E34FEB1       MOV      WR6,#0FEB1H
+000006 7E24007E       MOV      WR4,#07EH
+00000A 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 156
+00000D C281           CLR      P01
+                                                ; SOURCE LINE # 157
+00000F C283           CLR      P03
+                                                ; SOURCE LINE # 158
+000011 D285           SETB     P05
+                                                ; SOURCE LINE # 160
+000013 E4             CLR      A                ; A=R11
+000014 7E34FEAE       MOV      WR6,#0FEAEH
+000018 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 162
+00001B 22             RET      
+;       FUNCTION pwm_b_cn_output (END)
+
+;       FUNCTION pwm_b_an_output (BEGIN)
+                                                ; SOURCE LINE # 171
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 9   
+
+                                                ; SOURCE LINE # 174
+000000 740C           MOV      A,#0CH           ; A=R11
+000002 7E34FEB1       MOV      WR6,#0FEB1H
+000006 7E24007E       MOV      WR4,#07EH
+00000A 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 179
+00000D C283           CLR      P03
+                                                ; SOURCE LINE # 180
+00000F C285           CLR      P05
+                                                ; SOURCE LINE # 181
+000011 D281           SETB     P01
+                                                ; SOURCE LINE # 183
+000013 7402           MOV      A,#02H           ; A=R11
+000015 7E34FEAE       MOV      WR6,#0FEAEH
+000019 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 184
+00001C 22             RET      
+;       FUNCTION pwm_b_an_output (END)
+
+;       FUNCTION pwm_c_an_output (BEGIN)
+                                                ; SOURCE LINE # 193
+                                                ; SOURCE LINE # 196
+000000 7430           MOV      A,#030H          ; A=R11
+000002 7E34FEB1       MOV      WR6,#0FEB1H
+000006 7E24007E       MOV      WR4,#07EH
+00000A 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 201
+00000D C283           CLR      P03
+                                                ; SOURCE LINE # 202
+00000F C285           CLR      P05
+                                                ; SOURCE LINE # 203
+000011 D281           SETB     P01
+                                                ; SOURCE LINE # 205
+000013 7401           MOV      A,#01H           ; A=R11
+000015 7E34FEAE       MOV      WR6,#0FEAEH
+000019 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 206
+00001C 22             RET      
+;       FUNCTION pwm_c_an_output (END)
+
+;       FUNCTION pwm_c_bn_output (BEGIN)
+                                                ; SOURCE LINE # 215
+                                                ; SOURCE LINE # 218
+000000 7430           MOV      A,#030H          ; A=R11
+000002 7E34FEB1       MOV      WR6,#0FEB1H
+000006 7E24007E       MOV      WR4,#07EH
+00000A 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 223
+00000D C281           CLR      P01
+                                                ; SOURCE LINE # 224
+00000F C285           CLR      P05
+                                                ; SOURCE LINE # 225
+000011 D283           SETB     P03
+                                                ; SOURCE LINE # 227
+000013 E4             CLR      A                ; A=R11
+000014 7E34FEAE       MOV      WR6,#0FEAEH
+000018 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 228
+00001B 22             RET      
+;       FUNCTION pwm_c_bn_output (END)
+
+;       FUNCTION pwm_out_duty_update (BEGIN)
+                                                ; SOURCE LINE # 238
+000000 7D23           MOV      WR4,WR6
+;---- Variable 'duty' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 239
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 10  
+
+                                                ; SOURCE LINE # 242
+000002 7C26           MOV      R2,R6
+;---- Variable 'temp_h' assigned to Register 'R2' ----
+                                                ; SOURCE LINE # 243
+000004 7C35           MOV      R3,R5
+;---- Variable 'temp_l' assigned to Register 'R3' ----
+                                                ; SOURCE LINE # 245
+000006 7E34FED5       MOV      WR6,#0FED5H
+00000A 7E24007E       MOV      WR4,#07EH
+00000E 7A1B20         MOV      @DR4,R2
+                                                ; SOURCE LINE # 246
+000011 7E34FED6       MOV      WR6,#0FED6H
+000015 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 248
+000018 7E34FED7       MOV      WR6,#0FED7H
+00001C 7A1B20         MOV      @DR4,R2
+                                                ; SOURCE LINE # 249
+00001F 7E34FED8       MOV      WR6,#0FED8H
+000023 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 251
+000026 7E34FED9       MOV      WR6,#0FED9H
+00002A 7A1B20         MOV      @DR4,R2
+                                                ; SOURCE LINE # 252
+00002D 7E34FEDA       MOV      WR6,#0FEDAH
+000031 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 254
+000034 22             RET      
+;       FUNCTION pwm_out_duty_update (END)
+
+;       FUNCTION pwm_out_init (BEGIN)
+                                                ; SOURCE LINE # 263
+000000 CAF8           PUSH     R15
+                                                ; SOURCE LINE # 265
+000002 C280           CLR      P00
+                                                ; SOURCE LINE # 266
+000004 C281           CLR      P01
+                                                ; SOURCE LINE # 267
+000006 C282           CLR      P02
+                                                ; SOURCE LINE # 268
+000008 C283           CLR      P03
+                                                ; SOURCE LINE # 269
+00000A C284           CLR      P04
+                                                ; SOURCE LINE # 270
+00000C C285           CLR      P05
+                                                ; SOURCE LINE # 272
+00000E E4             CLR      A                ; A=R11
+00000F 7EF4FEB1       MOV      WR30,#0FEB1H
+000013 7EE4007E       MOV      WR28,#07EH
+000017 7A7BB0         MOV      @DR28,R11        ; A=R11
+                                                ; SOURCE LINE # 274
+00001A 7E14FECC       MOV      WR2,#0FECCH
+00001E 7E04007E       MOV      WR0,#07EH
+000022 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 275
+000025 7E34FECD       MOV      WR6,#0FECDH
+000029 7E24007E       MOV      WR4,#07EH
+00002D 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 276
+000030 6CFF           XRL      R15,R15
+000032 7E54FEC5       MOV      WR10,#0FEC5H
+000036 7E44007E       MOV      WR8,#07EH
+00003A 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 277
+00003D 7E54FEC6       MOV      WR10,#0FEC6H
+000041 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 278
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 11  
+
+000044 E4             CLR      A                ; A=R11
+000045 7A7BB0         MOV      @DR28,R11        ; A=R11
+                                                ; SOURCE LINE # 279
+000048 7E54FEC4       MOV      WR10,#0FEC4H
+00004C 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 282
+00004F 7EF055         MOV      R15,#055H
+000052 7E54FEB2       MOV      WR10,#0FEB2H
+000056 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 284
+000059 7EF078         MOV      R15,#078H
+00005C 7E54FEC8       MOV      WR10,#0FEC8H
+000060 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 285
+000063 6CFF           XRL      R15,R15
+000065 7E54FED5       MOV      WR10,#0FED5H
+000069 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 286
+00006C 7E54FED6       MOV      WR10,#0FED6H
+000070 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 287
+000073 7E0BB0         MOV      R11,@DR0         ; A=R11
+000076 440F           ORL      A,#0FH           ; A=R11
+000078 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 289
+00007B 7EF078         MOV      R15,#078H
+00007E 7E54FEC9       MOV      WR10,#0FEC9H
+000082 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 290
+000085 6CFF           XRL      R15,R15
+000087 7E54FED7       MOV      WR10,#0FED7H
+00008B 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 291
+00008E 7E54FED8       MOV      WR10,#0FED8H
+000092 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 292
+000095 7E0BB0         MOV      R11,@DR0         ; A=R11
+000098 44F0           ORL      A,#0F0H          ; A=R11
+00009A 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 294
+00009D 7478           MOV      A,#078H          ; A=R11
+00009F 7E14FECA       MOV      WR2,#0FECAH
+0000A3 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 295
+0000A6 E4             CLR      A                ; A=R11
+0000A7 7E14FED9       MOV      WR2,#0FED9H
+0000AB 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 296
+0000AE 7E14FEDA       MOV      WR2,#0FEDAH
+0000B2 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 297
+0000B5 7E1BB0         MOV      R11,@DR4         ; A=R11
+0000B8 440F           ORL      A,#0FH           ; A=R11
+0000BA 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 303
+0000BD E4             CLR      A                ; A=R11
+0000BE 7E34FED0       MOV      WR6,#0FED0H
+0000C2 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 304
+0000C5 7E34FED1       MOV      WR6,#0FED1H
+0000C9 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 307
+0000CC 7403           MOV      A,#03H           ; A=R11
+0000CE 7E34FED2       MOV      WR6,#0FED2H
+0000D2 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 308
+C251 COMPILER V5.60.0,  pwm_out                                                            08/08/26  11:10:19  PAGE 12  
+
+0000D5 7426           MOV      A,#026H          ; A=R11
+0000D7 7E34FED3       MOV      WR6,#0FED3H
+0000DB 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 310
+0000DE 7405           MOV      A,#05H           ; A=R11
+0000E0 7E34FEDE       MOV      WR6,#0FEDEH
+0000E4 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 311
+0000E7 7480           MOV      A,#080H          ; A=R11
+0000E9 7E34FEDD       MOV      WR6,#0FEDDH
+0000ED 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 312
+0000F0 7485           MOV      A,#085H          ; A=R11
+0000F2 7E34FEC0       MOV      WR6,#0FEC0H
+0000F6 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 313
+0000F9 7401           MOV      A,#01H           ; A=R11
+0000FB 7E34FEC7       MOV      WR6,#0FEC7H
+0000FF 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 319
+000102 DAF8           POP      R15
+000104 22             RET      
+;       FUNCTION pwm_out_init (END)
+
 
 
 Module Information          Static   Overlayable

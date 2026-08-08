@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 1   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_common_debug
 OBJECT MODULE PLACED IN .\out_file\zf_common_debug.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_common\zf_common_debug.c XSMALL INTR2 NOALI
                     -AS WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..
-                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_common_debug.lst) TABS(2) OBJECT(.\out_file\z
-                    -f_common_debug.obj) 
+                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_common_debug.lst) TABS(2) OBJECT(.\out_f
+                    -ile\zf_common_debug.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    51          fifo_struct                 debug_uart_fifo;
    52          
    53          //static debug_output_struct  debug_output_info;
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 2   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 2   
 
    54          static volatile uint8       zf_debug_init_flag = 1;
    55          static volatile uint8       zf_debug_assert_enable = 1;
@@ -134,7 +134,7 @@ stmt  level    source
   109          //    char *file_str;
   110          
   111          //    vuint16 i = 0, j = 0;
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 3   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 3   
 
   112          //    vint16 len_origin = 0;
   113          //    vuint16 show_len = 0;
@@ -202,7 +202,7 @@ stmt  level    source
   175          //                {
   176          //                    if(strlen(output_buffer) < (j + i * show_len))
   177          //                    {
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 4   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 4   
 
   178          //                        break;
   179          //                    }
@@ -270,7 +270,7 @@ stmt  level    source
   237          //// Ê¹ÓÃÊ¾Àý
   238          //// ±¸×¢ÐÅÏ¢     ±¾º¯ÊýÐèÒª¿ªÆô DEBUG_UART_USE_INTERRUPT ºê¶¨Òå²Å¿ÉÊ¹ÓÃ
   239          ////-----------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 5   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 5   
 
              ---------------
   240          //uint32 debug_send_buffer(const uint8 *buff, uint32 len)
@@ -338,7 +338,7 @@ stmt  level    source
   295          // º¯Êý¼ò½é     printfÖØ¶¨Ïò
   296          // ²ÎÊýËµÃ÷     void
   297          // ·µ»Ø²ÎÊý     void
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 6   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 6   
 
   298          //  @since      v1.0
   299          // ±¸×¢ÐÅÏ¢              ÖØ¶¨Ïòprintfµ½DEBUG´®¿ÚÉÏ
@@ -406,7 +406,7 @@ stmt  level    source
   353   1        uint8 log_str[] = "Assert error";
   354   1      
   355   1        while(!pass)
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 7   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 7   
 
   356   1        {
   357   2          // Èç¹û´úÂëÌø×ªµ½ÕâÀïÍ£×¡ÁË
@@ -474,7 +474,7 @@ stmt  level    source
   415          
   416          //    info->display_x_max         = 0xFFFF;
   417          //    info->display_y_max         = 0xFFFF;
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 8   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 8   
 
   418          
   419          //    info->font_x_size           = 0xFF;
@@ -542,7 +542,7 @@ stmt  level    source
              -®¿ÚÖÐ¶Ï²Å±àÒë
   473   1      //    fifo_init(&debug_uart_fifo, FIFO_DATA_8BIT, debug_uart_buffer, DEBUG_RING_BUFFER_LEN);
   474   1      //    uart_rx_interrupt(DEBUG_UART_INDEX, 1);                                     // Ê¹ÄÜ¶ÔÓ¦´®¿Ú½ÓÊÕÖÐ¶Ï
-C251 COMPILER V5.60.0,  zf_common_debug                                                    05/08/26  17:23:53  PAGE 9   
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 9   
 
   475   1      
   476   1      //  // ÉèÖÃ´®¿Ú»Øµ÷º¯Êý
@@ -570,6 +570,82 @@ stmt  level    source
   498          
   499          
   500          
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 10  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION putchar (BEGIN)
+                                                ; SOURCE LINE # 303
+000000 7CAB           MOV      R10,R11          ; A=R11
+;---- Variable 'c' assigned to Register 'R10' ----
+                                                ; SOURCE LINE # 308
+000002 7AB199         MOV      SBUF,R11         ; A=R11
+                                                ; SOURCE LINE # 309
+               ?C0001:
+000005 3099FD         JNB      TI,?C0001
+                                                ; SOURCE LINE # 310
+000008 C299           CLR      TI
+                                                ; SOURCE LINE # 311
+00000A 7CBA           MOV      R11,R10          ; A=R11
+                                                ; SOURCE LINE # 313
+00000C 22             RET      
+;       FUNCTION putchar (END)
+
+;       FUNCTION debug_assert_handler (BEGIN)
+                                                ; SOURCE LINE # 351
+000000 CA3B           PUSH     DR12
+000002 7A370000    R  MOV      line,WR6
+000006 7F30           MOV      DR12,DR0
+;---- Variable 'file' assigned to Register 'DR12' ----
+000008 7AB30000    R  MOV      pass,R11         ; A=R11
+                                                ; SOURCE LINE # 352
+                                                ; SOURCE LINE # 353
+00000C 7E340000    R  MOV      WR6,#WORD0 ?tpl?0001
+000010 7E240000    R  MOV      WR4,#WORD2 ?tpl?0001
+000014 7E140000    R  MOV      WR2,#WORD0 log_str
+000018 740D           MOV      A,#0DH           ; A=R11
+00001A 120000      E  LCALL    ?C?BMOVENP8
+                                                ; SOURCE LINE # 355
+00001D 8026           SJMP     ?C0006
+               ?C0008:
+                                                ; SOURCE LINE # 371
+00001F 7E100000    R  MOV      DR4,#WORD0 log_str
+000023 7A1F0000    E  MOV      ?printf?BYTE-4,DR4
+000027 7A3F0000    E  MOV      ?printf?BYTE-8,DR12
+00002B 7E370000    R  MOV      WR6,line
+00002F 7A370000    E  MOV      ?printf?BYTE-10,WR6
+000033 7E140000    R  MOV      WR2,#WORD0 ?SC_0000
+000037 7E040000    R  MOV      WR0,#WORD2 ?SC_0000
+00003B 120000      E  LCALL    printf
+                                                ; SOURCE LINE # 374
+00003E 7E3401F4       MOV      WR6,#01F4H
+000042 120000      E  LCALL    system_delay_ms
+                                                ; SOURCE LINE # 375
+               ?C0006:
+000045 7EB30000    R  MOV      R11,pass         ; A=R11
+000049 60D4           JZ       ?C0008
+                                                ; SOURCE LINE # 376
+00004B DA3B           POP      DR12
+00004D 22             RET      
+;       FUNCTION debug_assert_handler (END)
+
+;       FUNCTION debug_init (BEGIN)
+                                                ; SOURCE LINE # 458
+                                                ; SOURCE LINE # 459
+                                                ; SOURCE LINE # 460
+                                                ; SOURCE LINE # 466
+000000 7E340040       MOV      WR6,#040H
+000004 7A370000    E  MOV      ?uart_init?BYTE+8,WR6
+000008 6D33           XRL      WR6,WR6
+C251 COMPILER V5.60.0,  zf_common_debug                                                    08/08/26  11:10:17  PAGE 11  
+
+00000A 7E14C200       MOV      WR2,#0C200H
+00000E 7E040001       MOV      WR0,#01H
+000012 7E240041       MOV      WR4,#041H
+000016 020000      E  LJMP     uart_init
+;       FUNCTION debug_init (END)
+
 
 
 Module Information          Static   Overlayable

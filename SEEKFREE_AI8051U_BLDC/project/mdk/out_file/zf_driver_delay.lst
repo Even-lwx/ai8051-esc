@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_driver_delay                                                    05/08/26  17:23:54  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_delay                                                    08/08/26  11:10:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_delay
 OBJECT MODULE PLACED IN .\out_file\zf_driver_delay.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_delay.c XSMALL INTR2 NOALI
                     -AS WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..
-                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_driver_delay.lst) TABS(2) OBJECT(.\out_file\z
-                    -f_driver_delay.obj) 
+                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_driver_delay.lst) TABS(2) OBJECT(.\out_f
+                    -ile\zf_driver_delay.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    50   1        pca_delay_1ms = ((system_clock) / (1000));
    51   1        pca_delay_1us = ((system_clock) / (1000000));
    52   1        
-C251 COMPILER V5.60.0,  zf_driver_delay                                                    05/08/26  17:23:54  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_delay                                                    08/08/26  11:10:18  PAGE 2   
 
    53   1        CCAPM0 = 0x48;      //PCA_2作为软件延时
    54   1        CMOD = 0x03<<5 | 0x04 << 1;     //频率=FSOC,引脚为空，禁止PCA中断
@@ -121,6 +121,135 @@ stmt  level    source
    99   2          CCON &= ~0x01;
   100   2        }
   101   1      }
+C251 COMPILER V5.60.0,  zf_driver_delay                                                    08/08/26  11:10:18  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION system_delay_init (BEGIN)
+                                                ; SOURCE LINE # 48
+                                                ; SOURCE LINE # 50
+000000 7E0803E8       MOV      DR0,#03E8H
+000004 7E7F0000    E  MOV      DR28,system_clock
+000008 7F17           MOV      DR4,DR28
+00000A 120000      E  LCALL    ?C?SLDIV
+00000D 7A370000    R  MOV      pca_delay_1ms,WR6
+                                                ; SOURCE LINE # 51
+000011 7E144240       MOV      WR2,#04240H
+000015 7E04000F       MOV      WR0,#0FH
+000019 7F17           MOV      DR4,DR28
+00001B 120000      E  LCALL    ?C?SLDIV
+00001E 7A370000    R  MOV      pca_delay_1us,WR6
+                                                ; SOURCE LINE # 53
+000022 7448           MOV      A,#048H          ; A=R11
+000024 7E34FD58       MOV      WR6,#0FD58H
+000028 7E24007E       MOV      WR4,#07EH
+00002C 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 54
+00002F 7468           MOV      A,#068H          ; A=R11
+000031 7E34FD67       MOV      WR6,#0FD67H
+000035 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 55
+000038 7E34FD64       MOV      WR6,#0FD64H
+00003C 7E1BB0         MOV      R11,@DR4         ; A=R11
+00003F 4440           ORL      A,#040H          ; A=R11
+000041 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 57
+000044 22             RET      
+;       FUNCTION system_delay_init (END)
+
+;       FUNCTION system_delay_ms (BEGIN)
+                                                ; SOURCE LINE # 65
+000000 7D43           MOV      WR8,WR6
+;---- Variable 'ms' assigned to Register 'WR8' ----
+                                                ; SOURCE LINE # 66
+                                                ; SOURCE LINE # 69
+000002 8042           SJMP     ?C0001
+               ?C0003:
+                                                ; SOURCE LINE # 71
+000004 7E34FD66       MOV      WR6,#0FD66H
+000008 7E24007E       MOV      WR4,#07EH
+00000C 7E1B70         MOV      R7,@DR4
+00000F 7C47           MOV      R4,R7
+000011 7E14FD65       MOV      WR2,#0FD65H
+000015 7E04007E       MOV      WR0,#07EH
+000019 7E0B70         MOV      R7,@DR0
+00001C 7C64           MOV      R6,R4
+00001E 2E370000    R  ADD      WR6,pca_delay_1ms
+;---- Variable 'temp' assigned to Register 'WR6' ----
+                                                ; SOURCE LINE # 73
+000022 7E14FD59       MOV      WR2,#0FD59H
+000026 7A0B70         MOV      @DR0,R7
+                                                ; SOURCE LINE # 74
+000029 7E14FD5A       MOV      WR2,#0FD5AH
+00002D 7A0B60         MOV      @DR0,R6
+                                                ; SOURCE LINE # 76
+               ?C0005:
+000030 7E14FD64       MOV      WR2,#0FD64H
+000034 7E04007E       MOV      WR0,#07EH
+000038 7E0BB0         MOV      R11,@DR0         ; A=R11
+00003B 30E0F2         JNB      ACC.0,?C0005
+C251 COMPILER V5.60.0,  zf_driver_delay                                                    08/08/26  11:10:18  PAGE 4   
+
+                                                ; SOURCE LINE # 77
+00003E 7E0BB0         MOV      R11,@DR0         ; A=R11
+000041 54FE           ANL      A,#0FEH          ; A=R11
+000043 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 78
+               ?C0001:
+000046 7D24           MOV      WR4,WR8
+000048 1B44           DEC      WR8,#01H
+00004A 4D22           ORL      WR4,WR4
+00004C 78B6           JNE      ?C0003
+                                                ; SOURCE LINE # 79
+00004E 22             RET      
+;       FUNCTION system_delay_ms (END)
+
+;       FUNCTION system_delay_us (BEGIN)
+                                                ; SOURCE LINE # 87
+000000 7D43           MOV      WR8,WR6
+;---- Variable 'ms' assigned to Register 'WR8' ----
+                                                ; SOURCE LINE # 88
+                                                ; SOURCE LINE # 91
+000002 8042           SJMP     ?C0009
+               ?C0011:
+                                                ; SOURCE LINE # 93
+000004 7E34FD66       MOV      WR6,#0FD66H
+000008 7E24007E       MOV      WR4,#07EH
+00000C 7E1B70         MOV      R7,@DR4
+00000F 7C47           MOV      R4,R7
+000011 7E14FD65       MOV      WR2,#0FD65H
+000015 7E04007E       MOV      WR0,#07EH
+000019 7E0B70         MOV      R7,@DR0
+00001C 7C64           MOV      R6,R4
+00001E 2E370000    R  ADD      WR6,pca_delay_1us
+;---- Variable 'temp' assigned to Register 'WR6' ----
+                                                ; SOURCE LINE # 95
+000022 7E14FD59       MOV      WR2,#0FD59H
+000026 7A0B70         MOV      @DR0,R7
+                                                ; SOURCE LINE # 96
+000029 7E14FD5A       MOV      WR2,#0FD5AH
+00002D 7A0B60         MOV      @DR0,R6
+                                                ; SOURCE LINE # 98
+               ?C0013:
+000030 7E14FD64       MOV      WR2,#0FD64H
+000034 7E04007E       MOV      WR0,#07EH
+000038 7E0BB0         MOV      R11,@DR0         ; A=R11
+00003B 30E0F2         JNB      ACC.0,?C0013
+                                                ; SOURCE LINE # 99
+00003E 7E0BB0         MOV      R11,@DR0         ; A=R11
+000041 54FE           ANL      A,#0FEH          ; A=R11
+000043 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 100
+               ?C0009:
+000046 7D24           MOV      WR4,WR8
+000048 1B44           DEC      WR8,#01H
+00004A 4D22           ORL      WR4,WR4
+00004C 78B6           JNE      ?C0011
+                                                ; SOURCE LINE # 101
+00004E 22             RET      
+;       FUNCTION system_delay_us (END)
+
 
 
 Module Information          Static   Overlayable
@@ -129,14 +258,14 @@ Module Information          Static   Overlayable
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
+C251 COMPILER V5.60.0,  zf_driver_delay                                                    08/08/26  11:10:18  PAGE 5   
+
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
   edata size           =         4     ------
   bit size             =    ------     ------
   ebit size            =    ------     ------
-C251 COMPILER V5.60.0,  zf_driver_delay                                                    05/08/26  17:23:54  PAGE 3   
-
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------

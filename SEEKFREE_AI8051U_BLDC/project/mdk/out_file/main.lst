@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  main                                                               07/08/26  21:04:09  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               08/08/26  11:10:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
 OBJECT MODULE PLACED IN .\out_file\main.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\user\main.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3) BROWSE INC
                     -DIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..\user;
-                    -..\code;..\..\bldc) DEBUG PRINT(.\out_file\main.lst) TABS(2) OBJECT(.\out_file\main.obj) 
+                    -..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\main.lst) TABS(2) OBJECT(.\out_file\main.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    53          {
    54   1              
    55   1          // STC-ISP下载的时候，输入用户程序运行时的IRC频率必须设置为35MHz
-C251 COMPILER V5.60.0,  main                                                               07/08/26  21:04:09  PAGE 2   
+C251 COMPILER V5.60.0,  main                                                               08/08/26  11:10:18  PAGE 2   
 
    56   1          // STC-ISP下载的时候，输入用户程序运行时的IRC频率必须设置为35MHz
    57   1          // STC-ISP下载的时候，输入用户程序运行时的IRC频率必须设置为35MHz
@@ -98,6 +98,49 @@ stmt  level    source
    83   1      }
    84          
    85          
+C251 COMPILER V5.60.0,  main                                                               08/08/26  11:10:18  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION main (BEGIN)
+                                                ; SOURCE LINE # 52
+000000 120000      R  LCALL    _m
+000003 9F00           SUB      DR0,DR0
+000005 7E340000    R  MOV      WR6,#WORD0 ?SC_0000
+000009 7E240000    R  MOV      WR4,#WORD2 ?SC_0000
+00000D 120000      E  LCALL    sprintf
+000010 7E140000    R  MOV      WR2,#WORD0 ?SC_0000
+000014 7E040000    R  MOV      WR0,#WORD2 ?SC_0000
+000018 020000      E  LJMP     strlen?_
+;       FUNCTION main (END)
+
+;       FUNCTION _m (BEGIN)
+                                                ; SOURCE LINE # 52
+                                                ; SOURCE LINE # 59
+000000 7E340EC0       MOV      WR6,#0EC0H
+000004 7E240216       MOV      WR4,#0216H
+000008 120000      E  LCALL    clock_init
+                                                ; SOURCE LINE # 63
+00000B 120000      E  LCALL    led_init
+                                                ; SOURCE LINE # 64
+00000E 120000      E  LCALL    pwm_input_init
+                                                ; SOURCE LINE # 65
+000011 120000      E  LCALL    comparator_init
+                                                ; SOURCE LINE # 66
+000014 120000      E  LCALL    motor_init
+                                                ; SOURCE LINE # 71
+000017 120000      E  LCALL    pwm_out_init
+                                                ; SOURCE LINE # 73
+00001A 120000      E  LCALL    pit_timer_init
+                                                ; SOURCE LINE # 76
+00001D D2AF           SETB     EA
+                                                ; SOURCE LINE # 79
+                                                ; SOURCE LINE # 82
+               ?C0001:
+00001F 80FE           SJMP     ?C0001
+;       FUNCTION _m (END)
+
 
 
 Module Information          Static   Overlayable

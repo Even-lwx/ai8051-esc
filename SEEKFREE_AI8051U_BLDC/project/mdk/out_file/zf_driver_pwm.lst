@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_driver_pwm                                                      05/08/26  17:23:54  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_pwm
 OBJECT MODULE PLACED IN .\out_file\zf_driver_pwm.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_pwm.c XSMALL INTR2 NOALIAS
                     - WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\l
-                    -ibraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_driver_pwm.lst) TABS(2) OBJECT(.\out_file\zf_dr
-                    -iver_pwm.obj) 
+                    -ibraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_driver_pwm.lst) TABS(2) OBJECT(.\out_file\
+                    -zf_driver_pwm.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    52          const uint32 PWM_CCER_ADDR[] = {0x7efecc, 0x7efecd,   // PWMA_CCERX
    53                                          0x7efeec, 0x7efeed
    54                                         }; // PWMB_CCERX
-C251 COMPILER V5.60.0,  zf_driver_pwm                                                      05/08/26  17:23:54  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 2   
 
    55          
    56          // 控制寄存器,高8位地址  低8位地址 + 1即可
@@ -134,7 +134,7 @@ stmt  level    source
   111   2              match_temp = period_temp + 1;               // duty为100%
   112   2        }
   113   1      
-C251 COMPILER V5.60.0,  zf_driver_pwm                                                      05/08/26  17:23:54  PAGE 3   
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 3   
 
   114   1        PWMX_PSCRH(pin) = (uint8)(freq_div >> 8);     // 设置预分频值
   115   1        PWMX_PSCRL(pin) = (uint8)freq_div;
@@ -202,7 +202,7 @@ stmt  level    source
   171   1        // 如果是这一行报错 那你得去看看最大占空比是限定的多少 占空比写入错误
   172   1          zf_assert(PWM_DUTY_MAX >= duty);
   173   1        
-C251 COMPILER V5.60.0,  zf_driver_pwm                                                      05/08/26  17:23:54  PAGE 4   
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 4   
 
   174   1          gpio_init(pin  & 0xFF, GPO, 1, GPO_PUSH_PULL);              // GPIO需要设置为推挽输出
   175   1          
@@ -252,6 +252,650 @@ stmt  level    source
   219   1        PWMX_CCMRX(pin) |= 0x06 << 4;         // 设置为PWM模式1
   220   1        PWMX_CCMRX(pin) |= 1 << 3;            // 开启PWM寄存器的预装载功
   221   1      }
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 5   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION pwm_set_freq (BEGIN)
+                                                ; SOURCE LINE # 91
+000000 CA3B           PUSH     DR12
+000002 7F60           MOV      DR24,DR0
+;---- Variable 'freq' assigned to Register 'DR24' ----
+000004 7DF3           MOV      WR30,WR6
+;---- Variable 'pin' assigned to Register 'WR30' ----
+                                                ; SOURCE LINE # 92
+                                                ; SOURCE LINE # 93
+;---- Variable 'match_temp' assigned to Register 'DR0' ----
+                                                ; SOURCE LINE # 94
+                                                ; SOURCE LINE # 95
+                                                ; SOURCE LINE # 101
+000006 7E1F0000    E  MOV      DR4,system_clock
+00000A 120000      E  LCALL    ?C?ULDIV
+00000D 7D12           MOV      WR2,WR4
+00000F 6D00           XRL      WR0,WR0
+000011 7DE2           MOV      WR28,WR4
+;---- Variable 'freq_div' assigned to Register 'WR28' ----
+                                                ; SOURCE LINE # 102
+;---- Variable 'period_temp' assigned to Register 'DR12' ----
+                                                ; SOURCE LINE # 103
+000013 0B14           INC      WR2,#01H
+000015 120000      E  LCALL    ?C?ULIDIV
+000018 7F31           MOV      DR12,DR4
+00001A 1B3C           DEC      DR12,#01H
+                                                ; SOURCE LINE # 105
+00001C 7E1F0000    R  MOV      DR4,duty
+000020 BE182710       CMP      DR4,#02710H
+000024 6821           JE       ?C0001
+                                                ; SOURCE LINE # 107
+000026 E4             CLR      A                ; A=R11
+000027 120000      E  LCALL    ?C?FCASTL
+00002A 7E144000       MOV      WR2,#04000H
+00002E 7E04461C       MOV      WR0,#0461CH
+000032 120000      E  LCALL    ?C?FPDIV
+000035 7F01           MOV      DR0,DR4
+000037 7F13           MOV      DR4,DR12
+000039 E4             CLR      A                ; A=R11
+00003A 120000      E  LCALL    ?C?FCASTL
+00003D 120000      E  LCALL    ?C?FPMUL
+000040 120000      E  LCALL    ?C?CASTF
+000043 7F01           MOV      DR0,DR4
+                                                ; SOURCE LINE # 108
+000045 8004           SJMP     ?C0002
+               ?C0001:
+                                                ; SOURCE LINE # 111
+000047 7F03           MOV      DR0,DR12
+000049 0B0C           INC      DR0,#01H
+                                                ; SOURCE LINE # 112
+               ?C0002:
+                                                ; SOURCE LINE # 114
+00004B 7D5E           MOV      WR10,WR28
+00004D 0A5A           MOVZ     WR10,R10
+00004F 7D3F           MOV      WR6,WR30
+000051 1A36           MOVS     WR6,R6
+000053 7C76           MOV      R7,R6
+000055 5E340001       ANL      WR6,#01H
+000059 1A26           MOVS     WR4,R6
+00005B 1A24           MOVS     WR4,R4
+00005D 7F51           MOV      DR20,DR4
+00005F 2F51           ADD      DR20,DR4
+000061 2F55           ADD      DR20,DR20
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 6   
+
+000063 2EA40000    R  ADD      WR20,#WORD2 PWM_PSCR_ADDR
+000067 2E580000    R  ADD      DR20,#WORD0 PWM_PSCR_ADDR
+00006B 69D50002       MOV      WR26,@DR20+0x2
+00006F 0B5AC0         MOV      WR24,@DR20
+000072 7A6BB0         MOV      @DR24,R11        ; A=R11
+                                                ; SOURCE LINE # 115
+000075 7D5E           MOV      WR10,WR28
+000077 69D50002       MOV      WR26,@DR20+0x2
+00007B 0B5AC0         MOV      WR24,@DR20
+00007E 0B6C           INC      DR24,#01H
+000080 7A6BB0         MOV      @DR24,R11        ; A=R11
+                                                ; SOURCE LINE # 117
+000083 7F61           MOV      DR24,DR4
+000085 2F61           ADD      DR24,DR4
+000087 2F66           ADD      DR24,DR24
+000089 2EC40000    R  ADD      WR24,#WORD2 PWM_ARR_ADDR
+00008D 2E680000    R  ADD      DR24,#WORD0 PWM_ARR_ADDR
+000091 69B60002       MOV      WR22,@DR24+0x2
+000095 0B6AA0         MOV      WR20,@DR24
+000098 7A5BE0         MOV      @DR20,R14
+                                                ; SOURCE LINE # 118
+00009B 69560002       MOV      WR10,@DR24+0x2
+00009F 0B6A40         MOV      WR8,@DR24
+0000A2 0B2C           INC      DR8,#01H
+0000A4 7A2BF0         MOV      @DR8,R15
+                                                ; SOURCE LINE # 120
+0000A7 7F21           MOV      DR8,DR4
+0000A9 2F21           ADD      DR8,DR4
+0000AB 2F22           ADD      DR8,DR8
+0000AD 7D3F           MOV      WR6,WR30
+0000AF 1A36           MOVS     WR6,R6
+0000B1 0E34           SRA      WR6
+0000B3 0E34           SRA      WR6
+0000B5 0E34           SRA      WR6
+0000B7 0E34           SRA      WR6
+0000B9 5E340007       ANL      WR6,#07H
+0000BD 1A26           MOVS     WR4,R6
+0000BF 1A24           MOVS     WR4,R4
+0000C1 2F12           ADD      DR4,DR8
+0000C3 7F21           MOV      DR8,DR4
+0000C5 2F21           ADD      DR8,DR4
+0000C7 2F22           ADD      DR8,DR8
+0000C9 2E440000    R  ADD      WR8,#WORD2 PWM_CCR_ADDR
+0000CD 2E280000    R  ADD      DR8,#WORD0 PWM_CCR_ADDR
+0000D1 69320002       MOV      WR6,@DR8+0x2
+0000D5 0B2A20         MOV      WR4,@DR8
+0000D8 7A1B20         MOV      @DR4,R2
+                                                ; SOURCE LINE # 121
+0000DB 69320002       MOV      WR6,@DR8+0x2
+0000DF 0B2A20         MOV      WR4,@DR8
+0000E2 0B1C           INC      DR4,#01H
+0000E4 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 122
+0000E7 DA3B           POP      DR12
+0000E9 22             RET      
+;       FUNCTION pwm_set_freq (END)
+
+;       FUNCTION pwm_set_duty (BEGIN)
+                                                ; SOURCE LINE # 132
+000000 7F60           MOV      DR24,DR0
+;---- Variable 'duty' assigned to Register 'DR24' ----
+000002 7DF3           MOV      WR30,WR6
+;---- Variable 'pin' assigned to Register 'WR30' ----
+;---- Variable 'match_temp' assigned to Register 'DR20' ----
+                                                ; SOURCE LINE # 133
+                                                ; SOURCE LINE # 135
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 7   
+
+000004 1A36           MOVS     WR6,R6
+000006 7C76           MOV      R7,R6
+000008 5E340001       ANL      WR6,#01H
+00000C 1A26           MOVS     WR4,R6
+00000E 1A24           MOVS     WR4,R4
+000010 7F01           MOV      DR0,DR4
+000012 2F01           ADD      DR0,DR4
+000014 2F00           ADD      DR0,DR0
+000016 2E040000    R  ADD      WR0,#WORD2 PWM_ARR_ADDR
+00001A 2E080000    R  ADD      DR0,#WORD0 PWM_ARR_ADDR
+00001E 69300002       MOV      WR6,@DR0+0x2
+000022 0B0A20         MOV      WR4,@DR0
+000025 0B1C           INC      DR4,#01H
+000027 7E1B70         MOV      R7,@DR4
+00002A 0AE7           MOVZ     WR28,R7
+00002C 69300002       MOV      WR6,@DR0+0x2
+000030 0B0A20         MOV      WR4,@DR0
+000033 7E1B70         MOV      R7,@DR4
+000036 0A97           MOVZ     WR18,R7
+000038 7D39           MOV      WR6,WR18
+00003A 7C67           MOV      R6,R7
+00003C 6C77           XRL      R7,R7
+00003E 7D93           MOV      WR18,WR6
+000040 4D9E           ORL      WR18,WR28
+000042 6D88           XRL      WR16,WR16
+;---- Variable 'arr' assigned to Register 'DR16' ----
+                                                ; SOURCE LINE # 140
+000044 BE682710       CMP      DR24,#02710H
+000048 6823           JE       ?C0003
+                                                ; SOURCE LINE # 142
+00004A 7F16           MOV      DR4,DR24
+00004C E4             CLR      A                ; A=R11
+00004D 120000      E  LCALL    ?C?FCASTL
+000050 7E144000       MOV      WR2,#04000H
+000054 7E04461C       MOV      WR0,#0461CH
+000058 120000      E  LCALL    ?C?FPDIV
+00005B 7F01           MOV      DR0,DR4
+00005D 7F14           MOV      DR4,DR16
+00005F E4             CLR      A                ; A=R11
+000060 120000      E  LCALL    ?C?FCASTL
+000063 120000      E  LCALL    ?C?FPMUL
+000066 120000      E  LCALL    ?C?CASTF
+000069 7F51           MOV      DR20,DR4
+                                                ; SOURCE LINE # 143
+00006B 8004           SJMP     ?C0004
+               ?C0003:
+                                                ; SOURCE LINE # 146
+00006D 7F54           MOV      DR20,DR16
+00006F 0B5C           INC      DR20,#01H
+                                                ; SOURCE LINE # 147
+               ?C0004:
+                                                ; SOURCE LINE # 150
+000071 7D1B           MOV      WR2,WR22
+000073 7D3F           MOV      WR6,WR30
+000075 1A36           MOVS     WR6,R6
+000077 7C76           MOV      R7,R6
+000079 5E340001       ANL      WR6,#01H
+00007D 1A26           MOVS     WR4,R6
+00007F 1A24           MOVS     WR4,R4
+000081 7F21           MOV      DR8,DR4
+000083 2F21           ADD      DR8,DR4
+000085 2F22           ADD      DR8,DR8
+000087 7D3F           MOV      WR6,WR30
+000089 1A36           MOVS     WR6,R6
+00008B 0E34           SRA      WR6
+00008D 0E34           SRA      WR6
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 8   
+
+00008F 0E34           SRA      WR6
+000091 0E34           SRA      WR6
+000093 5E340007       ANL      WR6,#07H
+000097 1A26           MOVS     WR4,R6
+000099 1A24           MOVS     WR4,R4
+00009B 2F12           ADD      DR4,DR8
+00009D 7F21           MOV      DR8,DR4
+00009F 2F21           ADD      DR8,DR4
+0000A1 2F22           ADD      DR8,DR8
+0000A3 2E440000    R  ADD      WR8,#WORD2 PWM_CCR_ADDR
+0000A7 2E280000    R  ADD      DR8,#WORD0 PWM_CCR_ADDR
+0000AB 69320002       MOV      WR6,@DR8+0x2
+0000AF 0B2A20         MOV      WR4,@DR8
+0000B2 7A1B20         MOV      @DR4,R2
+                                                ; SOURCE LINE # 151
+0000B5 7D3B           MOV      WR6,WR22
+0000B7 69320002       MOV      WR6,@DR8+0x2
+0000BB 0B2A20         MOV      WR4,@DR8
+0000BE 0B1C           INC      DR4,#01H
+0000C0 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 153
+0000C3 22             RET      
+;       FUNCTION pwm_set_duty (END)
+
+;       FUNCTION pwm_init (BEGIN)
+                                                ; SOURCE LINE # 164
+000000 CA79           PUSH     WR14
+000002 7A0F0000    R  MOV      freq,DR0
+000006 7D73           MOV      WR14,WR6
+;---- Variable 'pin' assigned to Register 'WR14' ----
+                                                ; SOURCE LINE # 165
+                                                ; SOURCE LINE # 167
+;---- Variable 'match_temp' assigned to Register 'WR2' ----
+                                                ; SOURCE LINE # 168
+                                                ; SOURCE LINE # 169
+                                                ; SOURCE LINE # 174
+000008 6C66           XRL      R6,R6
+00000A 7E240001       MOV      WR4,#01H
+00000E 7401           MOV      A,#01H           ; A=R11
+000010 7E140010       MOV      WR2,#010H
+000014 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 178
+000017 7E1F0000    E  MOV      DR4,system_clock
+00001B 7E0F0000    R  MOV      DR0,freq
+00001F 120000      E  LCALL    ?C?ULDIV
+000022 7D12           MOV      WR2,WR4
+000024 6D00           XRL      WR0,WR0
+000026 7DD2           MOV      WR26,WR4
+;---- Variable 'freq_div' assigned to Register 'WR26' ----
+                                                ; SOURCE LINE # 179
+;---- Variable 'period_temp' assigned to Register 'DR28' ----
+                                                ; SOURCE LINE # 180
+000028 0B14           INC      WR2,#01H
+00002A 120000      E  LCALL    ?C?ULIDIV
+00002D 7F71           MOV      DR28,DR4
+00002F 1B7C           DEC      DR28,#01H
+                                                ; SOURCE LINE # 182
+000031 7E1F0000    R  MOV      DR4,duty
+000035 BE182710       CMP      DR4,#02710H
+000039 6821           JE       ?C0005
+                                                ; SOURCE LINE # 184
+00003B E4             CLR      A                ; A=R11
+00003C 120000      E  LCALL    ?C?FCASTL
+00003F 7E144000       MOV      WR2,#04000H
+000043 7E04461C       MOV      WR0,#0461CH
+000047 120000      E  LCALL    ?C?FPDIV
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 9   
+
+00004A 7F01           MOV      DR0,DR4
+00004C 7F17           MOV      DR4,DR28
+00004E E4             CLR      A                ; A=R11
+00004F 120000      E  LCALL    ?C?FCASTL
+000052 120000      E  LCALL    ?C?FPMUL
+000055 120000      E  LCALL    ?C?CASTF
+000058 7D13           MOV      WR2,WR6
+                                                ; SOURCE LINE # 185
+00005A 8004           SJMP     ?C0006
+               ?C0005:
+                                                ; SOURCE LINE # 188
+00005C 7D1F           MOV      WR2,WR30
+00005E 0B14           INC      WR2,#01H
+                                                ; SOURCE LINE # 189
+               ?C0006:
+                                                ; SOURCE LINE # 191
+000060 7D0D           MOV      WR0,WR26
+000062 0A00           MOVZ     WR0,R0
+000064 1A3E           MOVS     WR6,R14
+000066 7C76           MOV      R7,R6
+000068 5E340001       ANL      WR6,#01H
+00006C 1A26           MOVS     WR4,R6
+00006E 1A24           MOVS     WR4,R4
+000070 7F21           MOV      DR8,DR4
+000072 2F21           ADD      DR8,DR4
+000074 2F22           ADD      DR8,DR8
+000076 2E440000    R  ADD      WR8,#WORD2 PWM_PSCR_ADDR
+00007A 2E280000    R  ADD      DR8,#WORD0 PWM_PSCR_ADDR
+00007E 69320002       MOV      WR6,@DR8+0x2
+000082 0B2A20         MOV      WR4,@DR8
+000085 7A1B10         MOV      @DR4,R1
+                                                ; SOURCE LINE # 192
+000088 7D3D           MOV      WR6,WR26
+00008A 7C17           MOV      R1,R7
+00008C 69320002       MOV      WR6,@DR8+0x2
+000090 0B2A20         MOV      WR4,@DR8
+000093 0B1C           INC      DR4,#01H
+000095 7A1B10         MOV      @DR4,R1
+                                                ; SOURCE LINE # 194
+000098 7D3F           MOV      WR6,WR30
+00009A 7C16           MOV      R1,R6
+00009C 1A3E           MOVS     WR6,R14
+00009E 7C76           MOV      R7,R6
+0000A0 5E340001       ANL      WR6,#01H
+0000A4 1A26           MOVS     WR4,R6
+0000A6 1A24           MOVS     WR4,R4
+0000A8 7F21           MOV      DR8,DR4
+0000AA 2F21           ADD      DR8,DR4
+0000AC 2F22           ADD      DR8,DR8
+0000AE 2E440000    R  ADD      WR8,#WORD2 PWM_ARR_ADDR
+0000B2 2E280000    R  ADD      DR8,#WORD0 PWM_ARR_ADDR
+0000B6 69320002       MOV      WR6,@DR8+0x2
+0000BA 0B2A20         MOV      WR4,@DR8
+0000BD 7A1B10         MOV      @DR4,R1
+                                                ; SOURCE LINE # 195
+0000C0 7D3F           MOV      WR6,WR30
+0000C2 7C17           MOV      R1,R7
+0000C4 69320002       MOV      WR6,@DR8+0x2
+0000C8 0B2A20         MOV      WR4,@DR8
+0000CB 0B1C           INC      DR4,#01H
+0000CD 7A1B10         MOV      @DR4,R1
+                                                ; SOURCE LINE # 197
+0000D0 1A3E           MOVS     WR6,R14
+0000D2 7C76           MOV      R7,R6
+0000D4 5E340001       ANL      WR6,#01H
+0000D8 1A26           MOVS     WR4,R6
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 10  
+
+0000DA 1A24           MOVS     WR4,R4
+0000DC 7F21           MOV      DR8,DR4
+0000DE 2F21           ADD      DR8,DR4
+0000E0 2F22           ADD      DR8,DR8
+0000E2 1A3E           MOVS     WR6,R14
+0000E4 0E34           SRA      WR6
+0000E6 0E34           SRA      WR6
+0000E8 0E34           SRA      WR6
+0000EA 0E34           SRA      WR6
+0000EC 5E340007       ANL      WR6,#07H
+0000F0 1A26           MOVS     WR4,R6
+0000F2 1A24           MOVS     WR4,R4
+0000F4 2F12           ADD      DR4,DR8
+0000F6 7F21           MOV      DR8,DR4
+0000F8 2F21           ADD      DR8,DR4
+0000FA 2F22           ADD      DR8,DR8
+0000FC 2E440000    R  ADD      WR8,#WORD2 PWM_CCR_ADDR
+000100 2E280000    R  ADD      DR8,#WORD0 PWM_CCR_ADDR
+000104 69320002       MOV      WR6,@DR8+0x2
+000108 0B2A20         MOV      WR4,@DR8
+00010B 7A1B20         MOV      @DR4,R2
+                                                ; SOURCE LINE # 198
+00010E 69320002       MOV      WR6,@DR8+0x2
+000112 0B2A20         MOV      WR4,@DR8
+000115 0B1C           INC      DR4,#01H
+000117 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 200
+00011A 1A3E           MOVS     WR6,R14
+00011C 7C76           MOV      R7,R6
+00011E 5E340001       ANL      WR6,#01H
+000122 6803        R  JE       $ + 5H
+000124 020000      R  LJMP     ?C0007
+                                                ; SOURCE LINE # 202
+000127 1A3E           MOVS     WR6,R14
+000129 0E34           SRA      WR6
+00012B 0E34           SRA      WR6
+00012D 0E34           SRA      WR6
+00012F 0E34           SRA      WR6
+000131 5E340007       ANL      WR6,#07H
+000135 3E34           SLL      WR6
+000137 1A2E           MOVS     WR4,R14
+000139 0E24           SRA      WR4
+00013B 0E24           SRA      WR4
+00013D 0E24           SRA      WR4
+00013F 7D52           MOV      WR10,WR4
+000141 5E540001       ANL      WR10,#01H
+000145 2D53           ADD      WR10,WR6
+000147 7E340001       MOV      WR6,#01H
+00014B 7D13           MOV      WR2,WR6
+00014D 6005           JZ       ?C0011
+               ?C0010:
+00014F 3E14           SLL      WR2
+000151 14             DEC      A                ; A=R11
+000152 78FB           JNE      ?C0010
+               ?C0011:
+000154 7C23           MOV      R2,R3
+000156 7E54FEB1       MOV      WR10,#0FEB1H
+00015A 7E44007E       MOV      WR8,#07EH
+00015E 7E2B30         MOV      R3,@DR8
+000161 4C32           ORL      R3,R2
+000163 7A2B30         MOV      @DR8,R3
+                                                ; SOURCE LINE # 203
+000166 1A5E           MOVS     WR10,R14
+000168 0E54           SRA      WR10
+00016A 0E54           SRA      WR10
+00016C 0E54           SRA      WR10
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 11  
+
+00016E 0E54           SRA      WR10
+000170 5E540007       ANL      WR10,#07H
+000174 3E54           SLL      WR10
+000176 1A1E           MOVS     WR2,R14
+000178 0E14           SRA      WR2
+00017A 5E140003       ANL      WR2,#03H
+00017E 6005           JZ       ?C0013
+               ?C0012:
+000180 3E14           SLL      WR2
+000182 14             DEC      A                ; A=R11
+000183 78FB           JNE      ?C0012
+               ?C0013:
+000185 7C23           MOV      R2,R3
+000187 7E54FEB2       MOV      WR10,#0FEB2H
+00018B 7E44007E       MOV      WR8,#07EH
+00018F 7E2B30         MOV      R3,@DR8
+000192 4C32           ORL      R3,R2
+000194 7A2B30         MOV      @DR8,R3
+                                                ; SOURCE LINE # 204
+000197 5E240001       ANL      WR4,#01H
+00019B 3E24           SLL      WR4
+00019D 1A5E           MOVS     WR10,R14
+00019F 0E54           SRA      WR10
+0001A1 0E54           SRA      WR10
+0001A3 0E54           SRA      WR10
+0001A5 0E54           SRA      WR10
+0001A7 5E540001       ANL      WR10,#01H
+0001AB 3E54           SLL      WR10
+0001AD 3E54           SLL      WR10
+0001AF 2D52           ADD      WR10,WR4
+0001B1 6005           JZ       ?C0015
+               ?C0014:
+0001B3 3E34           SLL      WR6
+0001B5 14             DEC      A                ; A=R11
+0001B6 78FB           JNE      ?C0014
+               ?C0015:
+0001B8 7C67           MOV      R6,R7
+0001BA 1A1E           MOVS     WR2,R14
+0001BC 7C32           MOV      R3,R2
+0001BE 5E140001       ANL      WR2,#01H
+0001C2 1A02           MOVS     WR0,R2
+0001C4 1A00           MOVS     WR0,R0
+0001C6 7F20           MOV      DR8,DR0
+0001C8 2F20           ADD      DR8,DR0
+0001CA 1A1E           MOVS     WR2,R14
+0001CC 0E14           SRA      WR2
+0001CE 0E14           SRA      WR2
+0001D0 0E14           SRA      WR2
+0001D2 0E14           SRA      WR2
+0001D4 5E140002       ANL      WR2,#02H
+0001D8 0E14           SRA      WR2
+0001DA 1A02           MOVS     WR0,R2
+0001DC 1A00           MOVS     WR0,R0
+0001DE 2F02           ADD      DR0,DR8
+0001E0 7F20           MOV      DR8,DR0
+0001E2 2F20           ADD      DR8,DR0
+0001E4 2F22           ADD      DR8,DR8
+0001E6 2E440000    R  ADD      WR8,#WORD2 PWM_CCER_ADDR
+0001EA 2E280000    R  ADD      DR8,#WORD0 PWM_CCER_ADDR
+0001EE 69120002       MOV      WR2,@DR8+0x2
+0001F2 0B2A00         MOV      WR0,@DR8
+0001F5 7E0B70         MOV      R7,@DR0
+0001F8 4C76           ORL      R7,R6
+0001FA 7A0B70         MOV      @DR0,R7
+                                                ; SOURCE LINE # 206
+0001FD 7480           MOV      A,#080H          ; A=R11
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 12  
+
+0001FF 7E34FEDD       MOV      WR6,#0FEDDH
+000203 7E24007E       MOV      WR4,#07EH
+000207 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 207
+00020A 7401           MOV      A,#01H           ; A=R11
+00020C 7E34FEC0       MOV      WR6,#0FEC0H
+                                                ; SOURCE LINE # 208
+000210 020000      R  LJMP     ?C0022
+               ?C0007:
+                                                ; SOURCE LINE # 209
+000213 1A3E           MOVS     WR6,R14
+000215 7C76           MOV      R7,R6
+000217 5E340001       ANL      WR6,#01H
+00021B BE340001       CMP      WR6,#01H
+00021F 6803        R  JE       $ + 5H
+000221 020000      R  LJMP     ?C0008
+                                                ; SOURCE LINE # 211
+000224 1A4E           MOVS     WR8,R14
+000226 0E44           SRA      WR8
+000228 0E44           SRA      WR8
+00022A 0E44           SRA      WR8
+00022C 0E44           SRA      WR8
+00022E 5E440007       ANL      WR8,#07H
+000232 3E44           SLL      WR8
+000234 1A5E           MOVS     WR10,R14
+000236 0E54           SRA      WR10
+000238 0E54           SRA      WR10
+00023A 0E54           SRA      WR10
+00023C 5E540001       ANL      WR10,#01H
+000240 2D54           ADD      WR10,WR8
+000242 7E340001       MOV      WR6,#01H
+000246 7D23           MOV      WR4,WR6
+000248 6005           JZ       ?C0017
+               ?C0016:
+00024A 3E24           SLL      WR4
+00024C 14             DEC      A                ; A=R11
+00024D 78FB           JNE      ?C0016
+               ?C0017:
+00024F 7C45           MOV      R4,R5
+000251 7E14FEB5       MOV      WR2,#0FEB5H
+000255 7E04007E       MOV      WR0,#07EH
+000259 7E0B50         MOV      R5,@DR0
+00025C 4C54           ORL      R5,R4
+00025E 7A0B50         MOV      @DR0,R5
+                                                ; SOURCE LINE # 212
+000261 1A5E           MOVS     WR10,R14
+000263 0E54           SRA      WR10
+000265 0E54           SRA      WR10
+000267 0E54           SRA      WR10
+000269 0E54           SRA      WR10
+00026B 5E540007       ANL      WR10,#07H
+00026F 3E54           SLL      WR10
+000271 1A2E           MOVS     WR4,R14
+000273 0E24           SRA      WR4
+000275 5E240003       ANL      WR4,#03H
+000279 6005           JZ       ?C0019
+               ?C0018:
+00027B 3E24           SLL      WR4
+00027D 14             DEC      A                ; A=R11
+00027E 78FB           JNE      ?C0018
+               ?C0019:
+000280 7C45           MOV      R4,R5
+000282 7E14FEB6       MOV      WR2,#0FEB6H
+000286 7E04007E       MOV      WR0,#07EH
+00028A 7E0B50         MOV      R5,@DR0
+00028D 4C54           ORL      R5,R4
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 13  
+
+00028F 7A0B50         MOV      @DR0,R5
+                                                ; SOURCE LINE # 213
+000292 1A5E           MOVS     WR10,R14
+000294 0E54           SRA      WR10
+000296 0E54           SRA      WR10
+000298 0E54           SRA      WR10
+00029A 0E54           SRA      WR10
+00029C 5E540001       ANL      WR10,#01H
+0002A0 3E54           SLL      WR10
+0002A2 3E54           SLL      WR10
+0002A4 6005           JZ       ?C0021
+               ?C0020:
+0002A6 3E34           SLL      WR6
+0002A8 14             DEC      A                ; A=R11
+0002A9 78FB           JNE      ?C0020
+               ?C0021:
+0002AB 7C67           MOV      R6,R7
+0002AD 1A1E           MOVS     WR2,R14
+0002AF 7C32           MOV      R3,R2
+0002B1 5E140001       ANL      WR2,#01H
+0002B5 1A02           MOVS     WR0,R2
+0002B7 1A00           MOVS     WR0,R0
+0002B9 7F20           MOV      DR8,DR0
+0002BB 2F20           ADD      DR8,DR0
+0002BD 1A1E           MOVS     WR2,R14
+0002BF 0E14           SRA      WR2
+0002C1 0E14           SRA      WR2
+0002C3 0E14           SRA      WR2
+0002C5 0E14           SRA      WR2
+0002C7 5E140002       ANL      WR2,#02H
+0002CB 0E14           SRA      WR2
+0002CD 1A02           MOVS     WR0,R2
+0002CF 1A00           MOVS     WR0,R0
+0002D1 2F02           ADD      DR0,DR8
+0002D3 7F20           MOV      DR8,DR0
+0002D5 2F20           ADD      DR8,DR0
+0002D7 2F22           ADD      DR8,DR8
+0002D9 2E440000    R  ADD      WR8,#WORD2 PWM_CCER_ADDR
+0002DD 2E280000    R  ADD      DR8,#WORD0 PWM_CCER_ADDR
+0002E1 69120002       MOV      WR2,@DR8+0x2
+0002E5 0B2A00         MOV      WR0,@DR8
+0002E8 7E0B70         MOV      R7,@DR0
+0002EB 4C76           ORL      R7,R6
+0002ED 7A0B70         MOV      @DR0,R7
+                                                ; SOURCE LINE # 215
+0002F0 7480           MOV      A,#080H          ; A=R11
+0002F2 7E34FEFD       MOV      WR6,#0FEFDH
+0002F6 7E24007E       MOV      WR4,#07EH
+0002FA 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 216
+0002FD 7401           MOV      A,#01H           ; A=R11
+0002FF 7E34FEE0       MOV      WR6,#0FEE0H
+               ?C0022:
+000303 7E24007E       MOV      WR4,#07EH
+000307 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 217
+               ?C0008:
+                                                ; SOURCE LINE # 219
+00030A 1A3E           MOVS     WR6,R14
+00030C 7C76           MOV      R7,R6
+00030E 5E340001       ANL      WR6,#01H
+000312 1A26           MOVS     WR4,R6
+000314 1A24           MOVS     WR4,R4
+000316 7F01           MOV      DR0,DR4
+000318 2F01           ADD      DR0,DR4
+00031A 2F00           ADD      DR0,DR0
+C251 COMPILER V5.60.0,  zf_driver_pwm                                                      08/08/26  11:10:18  PAGE 14  
+
+00031C 1A3E           MOVS     WR6,R14
+00031E 0E34           SRA      WR6
+000320 0E34           SRA      WR6
+000322 0E34           SRA      WR6
+000324 0E34           SRA      WR6
+000326 5E340007       ANL      WR6,#07H
+00032A 1A26           MOVS     WR4,R6
+00032C 1A24           MOVS     WR4,R4
+00032E 2F10           ADD      DR4,DR0
+000330 7F01           MOV      DR0,DR4
+000332 2F01           ADD      DR0,DR4
+000334 2F00           ADD      DR0,DR0
+000336 2E040000    R  ADD      WR0,#WORD2 PWM_CCMR_ADDR
+00033A 2E080000    R  ADD      DR0,#WORD0 PWM_CCMR_ADDR
+00033E 69300002       MOV      WR6,@DR0+0x2
+000342 0B0A20         MOV      WR4,@DR0
+000345 7E1BB0         MOV      R11,@DR4         ; A=R11
+000348 4460           ORL      A,#060H          ; A=R11
+00034A 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 220
+00034D 69300002       MOV      WR6,@DR0+0x2
+000351 0B0A20         MOV      WR4,@DR0
+000354 7E1BB0         MOV      R11,@DR4         ; A=R11
+000357 4408           ORL      A,#08H           ; A=R11
+000359 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 221
+00035C DA79           POP      WR14
+00035E 22             RET      
+;       FUNCTION pwm_init (END)
+
 
 
 Module Information          Static   Overlayable
@@ -271,8 +915,6 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-C251 COMPILER V5.60.0,  zf_driver_pwm                                                      05/08/26  17:23:54  PAGE 5   
-
   hconst size          =        96     ------
 End of Module Information.
 

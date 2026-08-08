@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  comparator                                                         05/08/26  17:23:55  PAGE 1   
+C251 COMPILER V5.60.0,  comparator                                                         08/08/26  11:10:19  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE comparator
 OBJECT MODULE PLACED IN .\out_file\comparator.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\bldc\comparator.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3) B
                     -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
-                    -;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\comparator.lst) TABS(2) OBJECT(.\out_file\comparator.obj) 
+                    -;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\comparator.lst) TABS(2) OBJECT(.\out_file\comparator.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    50          //  @since      v1.0
    51          //  Sample usage:
    52          //-------------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  comparator                                                         05/08/26  17:23:55  PAGE 2   
+C251 COMPILER V5.60.0,  comparator                                                         08/08/26  11:10:19  PAGE 2   
 
              -------------
    53          void comparator_falling(void)
@@ -134,7 +134,7 @@ stmt  level    source
   108          //  @param      void                        
   109          //  @return     void          
   110          //  @since      v1.0
-C251 COMPILER V5.60.0,  comparator                                                         05/08/26  17:23:55  PAGE 3   
+C251 COMPILER V5.60.0,  comparator                                                         08/08/26  11:10:19  PAGE 3   
 
   111          //  Sample usage:
   112          //-------------------------------------------------------------------------------------------------------
@@ -154,6 +154,109 @@ stmt  level    source
   125   1      
   126   1      }
   127          
+C251 COMPILER V5.60.0,  comparator                                                         08/08/26  11:10:19  PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION comparator_rising (BEGIN)
+                                                ; SOURCE LINE # 40
+                                                ; SOURCE LINE # 43
+000000 75E6A2         MOV      CMPCR1,#0A2H
+                                                ; SOURCE LINE # 44
+000003 22             RET      
+;       FUNCTION comparator_rising (END)
+
+;       FUNCTION comparator_falling (BEGIN)
+                                                ; SOURCE LINE # 53
+                                                ; SOURCE LINE # 56
+000000 75E692         MOV      CMPCR1,#092H
+                                                ; SOURCE LINE # 57
+000003 22             RET      
+;       FUNCTION comparator_falling (END)
+
+;       FUNCTION comparator_result_get (BEGIN)
+                                                ; SOURCE LINE # 66
+                                                ; SOURCE LINE # 68
+000000 E5E6           MOV      A,CMPCR1         ; A=R11
+000002 5401           ANL      A,#01H           ; A=R11
+                                                ; SOURCE LINE # 69
+000004 22             RET      
+;       FUNCTION comparator_result_get (END)
+
+;       FUNCTION comparator_close_isr (BEGIN)
+                                                ; SOURCE LINE # 78
+                                                ; SOURCE LINE # 80
+000000 75E682         MOV      CMPCR1,#082H
+                                                ; SOURCE LINE # 81
+000003 22             RET      
+;       FUNCTION comparator_close_isr (END)
+
+;       FUNCTION comparator_open_isr (BEGIN)
+                                                ; SOURCE LINE # 90
+                                                ; SOURCE LINE # 93
+000000 53E6BF         ANL      CMPCR1,#0BFH
+                                                ; SOURCE LINE # 96
+000003 7E730000    E  MOV      R7,motor
+000007 0A37           MOVZ     WR6,R7
+000009 7E240002       MOV      WR4,#02H
+00000D 120000      E  LCALL    ?C?SIDIV
+000010 4D22           ORL      WR4,WR4
+000012 6803           JE       ?C0002
+                                                ; SOURCE LINE # 98
+000014 020000      R  LJMP     comparator_rising
+                                                ; SOURCE LINE # 99
+               ?C0002:
+                                                ; SOURCE LINE # 102
+000017 020000      R  LJMP     comparator_falling
+                                                ; SOURCE LINE # 103
+                                                ; SOURCE LINE # 104
+;       FUNCTION comparator_open_isr (END)
+
+;       FUNCTION comparator_init (BEGIN)
+                                                ; SOURCE LINE # 113
+                                                ; SOURCE LINE # 115
+000000 7E340055       MOV      WR6,#055H
+000004 6D11           XRL      WR2,WR2
+000006 6D22           XRL      WR4,WR4
+000008 E4             CLR      A                ; A=R11
+000009 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 117
+C251 COMPILER V5.60.0,  comparator                                                         08/08/26  11:10:19  PAGE 5   
+
+00000C 7E340054       MOV      WR6,#054H
+000010 6D11           XRL      WR2,WR2
+000012 6D22           XRL      WR4,WR4
+000014 E4             CLR      A                ; A=R11
+000015 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 118
+000018 7E340056       MOV      WR6,#056H
+00001C 6D11           XRL      WR2,WR2
+00001E 6D22           XRL      WR4,WR4
+000020 E4             CLR      A                ; A=R11
+000021 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 119
+000024 7E340060       MOV      WR6,#060H
+000028 6D11           XRL      WR2,WR2
+00002A 6D22           XRL      WR4,WR4
+00002C E4             CLR      A                ; A=R11
+00002D 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 120
+000030 7E340061       MOV      WR6,#061H
+000034 6D11           XRL      WR2,WR2
+000036 6D22           XRL      WR4,WR4
+000038 E4             CLR      A                ; A=R11
+000039 120000      E  LCALL    gpio_init
+                                                ; SOURCE LINE # 122
+00003C 75E68E         MOV      CMPCR1,#08EH
+                                                ; SOURCE LINE # 123
+00003F 75E77F         MOV      CMPCR2,#07FH
+                                                ; SOURCE LINE # 124
+000042 A9D3BA         SETB     CMPO_S
+                                                ; SOURCE LINE # 126
+000045 22             RET      
+;       FUNCTION comparator_init (END)
+
 
 
 Module Information          Static   Overlayable

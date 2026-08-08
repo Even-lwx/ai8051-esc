@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_common_clock                                                    05/08/26  17:23:53  PAGE 1   
+C251 COMPILER V5.60.0,  zf_common_clock                                                    08/08/26  11:10:17  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_common_clock
 OBJECT MODULE PLACED IN .\out_file\zf_common_clock.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_common\zf_common_clock.c XSMALL INTR2 NOALI
                     -AS WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..
-                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_common_clock.lst) TABS(2) OBJECT(.\out_file\z
-                    -f_common_clock.obj) 
+                    -\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_common_clock.lst) TABS(2) OBJECT(.\out_f
+                    -ile\zf_common_clock.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    52          #define T33M_ADDR CHIPID15 //33.1776MHz
    53          #define T35M_ADDR CHIPID16 //35MHz
    54          #define T36M_ADDR CHIPID17 //36.864MHz
-C251 COMPILER V5.60.0,  zf_common_clock                                                    05/08/26  17:23:53  PAGE 2   
+C251 COMPILER V5.60.0,  zf_common_clock                                                    08/08/26  11:10:17  PAGE 2   
 
    55          #define T40M_ADDR CHIPID18 //40MHz
    56          #define T44M_ADDR CHIPID19 //4 4.2368 MHz
@@ -134,7 +134,61 @@ stmt  level    source
   118   1      }
   119          
   120          
-C251 COMPILER V5.60.0,  zf_common_clock                                                    05/08/26  17:23:53  PAGE 3   
+C251 COMPILER V5.60.0,  zf_common_clock                                                    08/08/26  11:10:17  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION clock_init (BEGIN)
+                                                ; SOURCE LINE # 64
+;---- Variable 'clock' assigned to Register 'DR0' ----
+                                                ; SOURCE LINE # 66
+000000 75BA80         MOV      P_SW2,#080H
+                                                ; SOURCE LINE # 67
+000003 75E900         MOV      WTST,#00H
+                                                ; SOURCE LINE # 68
+000006 75EA00         MOV      CKCON,#00H
+                                                ; SOURCE LINE # 96
+000009 7A1F0000    R  MOV      system_clock,DR4
+                                                ; SOURCE LINE # 98
+00000D 120000      E  LCALL    system_delay_init
+                                                ; SOURCE LINE # 100
+000010 75DE00         MOV      ADCCFG,#00H
+                                                ; SOURCE LINE # 101
+000013 758E00         MOV      AUXR,#00H
+                                                ; SOURCE LINE # 102
+000016 759800         MOV      SCON,#00H
+                                                ; SOURCE LINE # 103
+000019 759A00         MOV      S2CON,#00H
+                                                ; SOURCE LINE # 104
+00001C 75AC00         MOV      S3CON,#00H
+                                                ; SOURCE LINE # 105
+00001F 75FD00         MOV      S4CON,#00H
+                                                ; SOURCE LINE # 106
+000022 75A200         MOV      P_SW1,#00H
+                                                ; SOURCE LINE # 107
+000025 75BB00         MOV      P_SW3,#00H
+                                                ; SOURCE LINE # 108
+000028 75AF00         MOV      IE2,#00H
+                                                ; SOURCE LINE # 109
+00002B 758900         MOV      TMOD,#00H
+                                                ; SOURCE LINE # 110
+00002E E4             CLR      A                ; A=R11
+00002F 7E34FEB1       MOV      WR6,#0FEB1H
+000033 7E24007E       MOV      WR4,#07EH
+000037 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 111
+00003A 7E34FEB5       MOV      WR6,#0FEB5H
+00003E 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 113
+000041 7E34FE0B       MOV      WR6,#0FE0BH
+000045 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 114
+000048 7E34FE90       MOV      WR6,#0FE90H
+00004C 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 118
+00004F 22             RET      
+;       FUNCTION clock_init (END)
 
 
 
@@ -149,6 +203,8 @@ Module Information          Static   Overlayable
   xdata-const size     =    ------     ------
   edata size           =         4     ------
   bit size             =    ------     ------
+C251 COMPILER V5.60.0,  zf_common_clock                                                    08/08/26  11:10:17  PAGE 4   
+
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------

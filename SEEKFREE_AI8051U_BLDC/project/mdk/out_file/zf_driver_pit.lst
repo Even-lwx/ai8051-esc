@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      05/08/26  17:23:54  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_pit
 OBJECT MODULE PLACED IN .\out_file\zf_driver_pit.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_pit.c XSMALL INTR2 NOALIAS
                     - WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\l
-                    -ibraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_driver_pit.lst) TABS(2) OBJECT(.\out_file\zf_dr
-                    -iver_pit.obj) 
+                    -ibraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_driver_pit.lst) TABS(2) OBJECT(.\out_file\
+                    -zf_driver_pit.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    50          void pit_init(pit_index_enum pit_n, uint32 period)
    51          {
    52   1        uint8 freq_div = 0;                
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      05/08/26  17:23:54  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 2   
 
    53   1          uint16 period_temp = 0;               
    54   1          uint16 temp = 0;
@@ -134,7 +134,7 @@ stmt  level    source
   116   1          
   117   1        
   118   1        freq_div = ((period) >> 15);                   // 计算预分频
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      05/08/26  17:23:54  PAGE 3   
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 3   
 
   119   1        period_temp = ((period) / (freq_div+1));       // 计算自动重装载值
   120   1      
@@ -192,6 +192,305 @@ stmt  level    source
   172   2        }
   173   1      }
   174          
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION pit_init (BEGIN)
+                                                ; SOURCE LINE # 50
+000000 CA3B           PUSH     DR12
+000002 7F60           MOV      DR24,DR0
+;---- Variable 'period' assigned to Register 'DR24' ----
+000004 7DF3           MOV      WR30,WR6
+;---- Variable 'pit_n' assigned to Register 'WR30' ----
+                                                ; SOURCE LINE # 51
+                                                ; SOURCE LINE # 52
+;---- Variable 'freq_div' assigned to Register 'R15' ----
+                                                ; SOURCE LINE # 53
+                                                ; SOURCE LINE # 54
+;---- Variable 'temp' assigned to Register 'WR28' ----
+                                                ; SOURCE LINE # 57
+000006 7E34FF01       MOV      WR6,#0FF01H
+00000A 7E2400FE       MOV      WR4,#0FEH
+00000E BF61           CMP      DR24,DR4
+000010 2857           JLE      ?C0001
+                                                ; SOURCE LINE # 60
+000012 7E14000C       MOV      WR2,#0CH
+000016 7F16           MOV      DR4,DR24
+000018 120000      E  LCALL    ?C?ULIDIV
+00001B 7F61           MOV      DR24,DR4
+                                                ; SOURCE LINE # 62
+00001D 4DFF           ORL      WR30,WR30
+00001F 7806           JNE      ?C0002
+                                                ; SOURCE LINE # 64
+000021 538E7F         ANL      AUXR,#07FH
+                                                ; SOURCE LINE # 65
+000024 020000      R  LJMP     ?C0013
+               ?C0002:
+                                                ; SOURCE LINE # 66
+000027 BEF40001       CMP      WR30,#01H
+00002B 7806           JNE      ?C0004
+                                                ; SOURCE LINE # 68
+00002D 538EBF         ANL      AUXR,#0BFH
+                                                ; SOURCE LINE # 69
+000030 020000      R  LJMP     ?C0013
+               ?C0004:
+                                                ; SOURCE LINE # 70
+000033 BEF40002       CMP      WR30,#02H
+000037 7805           JNE      ?C0006
+                                                ; SOURCE LINE # 72
+000039 538EFB         ANL      AUXR,#0FBH
+                                                ; SOURCE LINE # 73
+00003C 8076           SJMP     ?C0013
+               ?C0006:
+                                                ; SOURCE LINE # 74
+00003E BEF40003       CMP      WR30,#03H
+000042 7805           JNE      ?C0008
+                                                ; SOURCE LINE # 76
+000044 53DDFD         ANL      T4T3M,#0FDH
+                                                ; SOURCE LINE # 77
+000047 806B           SJMP     ?C0013
+               ?C0008:
+                                                ; SOURCE LINE # 78
+000049 BEF40004       CMP      WR30,#04H
+00004D 7805           JNE      ?C0010
+                                                ; SOURCE LINE # 80
+00004F 53DDDF         ANL      T4T3M,#0DFH
+                                                ; SOURCE LINE # 81
+000052 8060           SJMP     ?C0013
+               ?C0010:
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 5   
+
+                                                ; SOURCE LINE # 82
+000054 BEF40005       CMP      WR30,#05H
+000058 785A           JNE      ?C0013
+                                                ; SOURCE LINE # 84
+00005A 7E34FE78       MOV      WR6,#0FE78H
+00005E 7E24007E       MOV      WR4,#07EH
+000062 7E1BB0         MOV      R11,@DR4         ; A=R11
+000065 54EF           ANL      A,#0EFH          ; A=R11
+                                                ; SOURCE LINE # 85
+000067 8048           SJMP     ?C0038
+               ?C0001:
+                                                ; SOURCE LINE # 91
+000069 4DFF           ORL      WR30,WR30
+00006B 7805           JNE      ?C0014
+                                                ; SOURCE LINE # 93
+00006D 438E80         ORL      AUXR,#080H
+                                                ; SOURCE LINE # 94
+000070 8042           SJMP     ?C0013
+               ?C0014:
+                                                ; SOURCE LINE # 95
+000072 BEF40001       CMP      WR30,#01H
+000076 7805           JNE      ?C0016
+                                                ; SOURCE LINE # 97
+000078 438E40         ORL      AUXR,#040H
+                                                ; SOURCE LINE # 98
+00007B 8037           SJMP     ?C0013
+               ?C0016:
+                                                ; SOURCE LINE # 99
+00007D BEF40002       CMP      WR30,#02H
+000081 7805           JNE      ?C0018
+                                                ; SOURCE LINE # 101
+000083 438E04         ORL      AUXR,#04H
+                                                ; SOURCE LINE # 102
+000086 802C           SJMP     ?C0013
+               ?C0018:
+                                                ; SOURCE LINE # 103
+000088 BEF40003       CMP      WR30,#03H
+00008C 7805           JNE      ?C0020
+                                                ; SOURCE LINE # 105
+00008E 43DD02         ORL      T4T3M,#02H
+                                                ; SOURCE LINE # 106
+000091 8021           SJMP     ?C0013
+               ?C0020:
+                                                ; SOURCE LINE # 107
+000093 BEF40004       CMP      WR30,#04H
+000097 7805           JNE      ?C0022
+                                                ; SOURCE LINE # 109
+000099 43DD20         ORL      T4T3M,#020H
+                                                ; SOURCE LINE # 110
+00009C 8016           SJMP     ?C0013
+               ?C0022:
+                                                ; SOURCE LINE # 111
+00009E BEF40005       CMP      WR30,#05H
+0000A2 7810           JNE      ?C0013
+                                                ; SOURCE LINE # 113
+0000A4 7E34FE78       MOV      WR6,#0FE78H
+0000A8 7E24007E       MOV      WR4,#07EH
+0000AC 7E1BB0         MOV      R11,@DR4         ; A=R11
+0000AF 4410           ORL      A,#010H          ; A=R11
+               ?C0038:
+0000B1 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 114
+               ?C0013:
+                                                ; SOURCE LINE # 118
+0000B4 740F           MOV      A,#0FH           ; A=R11
+0000B6 7F36           MOV      DR12,DR24
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 6   
+
+               ?C0036:
+0000B8 1E74           SRL      WR14
+0000BA 1E64           SRL      WR12
+0000BC 5003           JNC      ?C0037
+0000BE 4EE080         ORL      R14,#080H
+               ?C0037:
+0000C1 14             DEC      A                ; A=R11
+0000C2 78F4           JNE      ?C0036
+                                                ; SOURCE LINE # 119
+0000C4 0A1F           MOVZ     WR2,R15
+0000C6 6D00           XRL      WR0,WR0
+0000C8 0B0C           INC      DR0,#01H
+0000CA 7F16           MOV      DR4,DR24
+0000CC 120000      E  LCALL    ?C?ULDIV
+0000CF 7DE3           MOV      WR28,WR6
+;---- Variable 'period_temp' assigned to Register 'WR28' ----
+                                                ; SOURCE LINE # 121
+0000D1 6EE4FFFF       XRL      WR28,#0FFFFH
+0000D5 0BE4           INC      WR28,#01H
+                                                ; SOURCE LINE # 123
+0000D7 4DFF           ORL      WR30,WR30
+0000D9 7820           JNE      ?C0025
+                                                ; SOURCE LINE # 125
+0000DB 7E34FEA0       MOV      WR6,#0FEA0H
+0000DF 7E24007E       MOV      WR4,#07EH
+0000E3 7A1BF0         MOV      @DR4,R15
+                                                ; SOURCE LINE # 126
+0000E6 E589           MOV      A,TMOD           ; A=R11
+0000E8 F589           MOV      TMOD,A           ; A=R11
+                                                ; SOURCE LINE # 127
+0000EA 7D3E           MOV      WR6,WR28
+0000EC 7CB7           MOV      R11,R7           ; A=R11
+0000EE F58A           MOV      TL0,A            ; A=R11
+                                                ; SOURCE LINE # 128
+0000F0 0A56           MOVZ     WR10,R6
+0000F2 F58C           MOV      TH0,A            ; A=R11
+                                                ; SOURCE LINE # 129
+0000F4 D28C           SETB     TR0
+                                                ; SOURCE LINE # 130
+0000F6 D2A9           SETB     ET0
+                                                ; SOURCE LINE # 131
+0000F8 020000      R  LJMP     ?C0026
+               ?C0025:
+                                                ; SOURCE LINE # 132
+0000FB BEF40001       CMP      WR30,#01H
+0000FF 7820           JNE      ?C0027
+                                                ; SOURCE LINE # 134
+000101 7E34FEA1       MOV      WR6,#0FEA1H
+000105 7E24007E       MOV      WR4,#07EH
+000109 7A1BF0         MOV      @DR4,R15
+                                                ; SOURCE LINE # 135
+00010C E589           MOV      A,TMOD           ; A=R11
+00010E F589           MOV      TMOD,A           ; A=R11
+                                                ; SOURCE LINE # 136
+000110 7D3E           MOV      WR6,WR28
+000112 7CB7           MOV      R11,R7           ; A=R11
+000114 F58B           MOV      TL1,A            ; A=R11
+                                                ; SOURCE LINE # 137
+000116 0A56           MOVZ     WR10,R6
+000118 F58D           MOV      TH1,A            ; A=R11
+                                                ; SOURCE LINE # 138
+00011A D28E           SETB     TR1
+                                                ; SOURCE LINE # 139
+00011C D2AB           SETB     ET1
+                                                ; SOURCE LINE # 140
+00011E 020000      R  LJMP     ?C0026
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 7   
+
+               ?C0027:
+                                                ; SOURCE LINE # 141
+000121 BEF40002       CMP      WR30,#02H
+000125 781D           JNE      ?C0029
+                                                ; SOURCE LINE # 143
+000127 7E34FEA2       MOV      WR6,#0FEA2H
+00012B 7E24007E       MOV      WR4,#07EH
+00012F 7A1BF0         MOV      @DR4,R15
+                                                ; SOURCE LINE # 144
+000132 7D3E           MOV      WR6,WR28
+000134 7CB7           MOV      R11,R7           ; A=R11
+000136 F5D7           MOV      T2L,A            ; A=R11
+                                                ; SOURCE LINE # 145
+000138 0A56           MOVZ     WR10,R6
+00013A F5D6           MOV      T2H,A            ; A=R11
+                                                ; SOURCE LINE # 146
+00013C 438E10         ORL      AUXR,#010H
+                                                ; SOURCE LINE # 147
+00013F 43AF04         ORL      IE2,#04H
+                                                ; SOURCE LINE # 148
+000142 8076           SJMP     ?C0026
+               ?C0029:
+                                                ; SOURCE LINE # 149
+000144 BEF40003       CMP      WR30,#03H
+000148 781D           JNE      ?C0031
+                                                ; SOURCE LINE # 151
+00014A 7E34FEA3       MOV      WR6,#0FEA3H
+00014E 7E24007E       MOV      WR4,#07EH
+000152 7A1BF0         MOV      @DR4,R15
+                                                ; SOURCE LINE # 152
+000155 7D3E           MOV      WR6,WR28
+000157 7CB7           MOV      R11,R7           ; A=R11
+000159 F5D5           MOV      T3L,A            ; A=R11
+                                                ; SOURCE LINE # 153
+00015B 0A56           MOVZ     WR10,R6
+00015D F5D4           MOV      T3H,A            ; A=R11
+                                                ; SOURCE LINE # 154
+00015F 43DD08         ORL      T4T3M,#08H
+                                                ; SOURCE LINE # 155
+000162 43AF20         ORL      IE2,#020H
+                                                ; SOURCE LINE # 156
+000165 8053           SJMP     ?C0026
+               ?C0031:
+                                                ; SOURCE LINE # 157
+000167 BEF40004       CMP      WR30,#04H
+00016B 781D           JNE      ?C0033
+                                                ; SOURCE LINE # 159
+00016D 7E34FEA4       MOV      WR6,#0FEA4H
+000171 7E24007E       MOV      WR4,#07EH
+000175 7A1BF0         MOV      @DR4,R15
+                                                ; SOURCE LINE # 160
+000178 7D3E           MOV      WR6,WR28
+00017A 7CB7           MOV      R11,R7           ; A=R11
+00017C F5D3           MOV      T4L,A            ; A=R11
+                                                ; SOURCE LINE # 161
+00017E 0A56           MOVZ     WR10,R6
+000180 F5D2           MOV      T4H,A            ; A=R11
+                                                ; SOURCE LINE # 162
+000182 43DD80         ORL      T4T3M,#080H
+                                                ; SOURCE LINE # 163
+000185 43AF40         ORL      IE2,#040H
+                                                ; SOURCE LINE # 164
+000188 8030           SJMP     ?C0026
+               ?C0033:
+                                                ; SOURCE LINE # 165
+00018A BEF40005       CMP      WR30,#05H
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      08/08/26  11:10:18  PAGE 8   
+
+00018E 782A           JNE      ?C0026
+                                                ; SOURCE LINE # 167
+000190 7E34FE79       MOV      WR6,#0FE79H
+000194 7E24007E       MOV      WR4,#07EH
+000198 7A1BF0         MOV      @DR4,R15
+                                                ; SOURCE LINE # 168
+00019B 7D3E           MOV      WR6,WR28
+00019D 7C37           MOV      R3,R7
+00019F 7E34FE7B       MOV      WR6,#0FE7BH
+0001A3 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 169
+0001A6 7D1E           MOV      WR2,WR28
+0001A8 0A12           MOVZ     WR2,R2
+0001AA 7E34FE7A       MOV      WR6,#0FE7AH
+0001AE 7A1B30         MOV      @DR4,R3
+                                                ; SOURCE LINE # 170
+0001B1 7482           MOV      A,#082H          ; A=R11
+0001B3 7E34FE78       MOV      WR6,#0FE78H
+0001B7 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 172
+               ?C0026:
+0001BA DA3B           POP      DR12
+0001BC 22             RET      
+;       FUNCTION pit_init (END)
+
 
 
 Module Information          Static   Overlayable
@@ -203,8 +502,6 @@ Module Information          Static   Overlayable
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      05/08/26  17:23:54  PAGE 4   
-
   edata size           =    ------     ------
   bit size             =    ------     ------
   ebit size            =    ------     ------

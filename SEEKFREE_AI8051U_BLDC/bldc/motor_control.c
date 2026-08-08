@@ -31,15 +31,27 @@
 #include "battery.h"
 #include "motor_control.h"
 
+#if (BLDC_MOTOR_ANGLE != 10)
+#error "The cached commutation delay requires BLDC_MOTOR_ANGLE to remain 10 degrees."
+#endif
+
+#define COMMUTATION_PHASE_SWITCH        (0u)
+#define COMMUTATION_PHASE_DEMAGNETIZE   (1u)
+#define COMMUTATION_PHASE_DEMAG_DONE    (2u)
+#define COMMUTATION_PHASE_CACHE_INIT    (3u)
+
+extern uint32 bldc_mdu32_div_u32(uint32 dividend, uint32 divisor);
 
  motor_struct motor;
 
  static uint16 temp_commutation_time;
+ static uint16 commutation_delay_10deg;
 
- static uint8 xc_flag = 0;	
+ static uint8 xc_flag = COMMUTATION_PHASE_DEMAG_DONE;
 // 0-换相
 // 1-消磁
 // 2-消磁结束
+// 3-进入闭环前初始化换相延时缓存
 
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      电机step加一
@@ -90,6 +102,19 @@ void TM4_Isr(void) interrupt 20
     }
 }
 
+void motor_close_loop_init(void)
+{
+    comparator_close_isr();
+    xc_flag = COMMUTATION_PHASE_CACHE_INIT;
+
+    // Timer0 最高优先级中断负责首次访问 MDU32，避免低优先级代码被抢占。
+    TR0 = 0;
+    TL0 = 0xff;
+    TH0 = 0xff;
+    ET0 = 1;
+    TR0 = 1;
+}
+
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      定时器0换相中断
 //  @param      void
@@ -100,9 +125,22 @@ void TM4_Isr(void) interrupt 20
 void TM0_Isr(void) interrupt TMR0_VECTOR
 {	
 	//	硬件自动清除中断标志位
-	uint16 tim_com; 	
+	uint16 tim_com;
+	uint32 temp_times_4;
 
-	if(xc_flag == 0)
+	if(xc_flag == COMMUTATION_PHASE_CACHE_INIT)
+	{
+		TR0 = 0;
+		ET0 = 0;
+
+		if(MOTOR_CLOSE_LOOP == motor.run_flag)
+		{
+			commutation_delay_10deg = (uint16)bldc_mdu32_div_u32(motor.filter_commutation_time_sum, 36UL);
+			xc_flag = COMMUTATION_PHASE_DEMAG_DONE;
+			comparator_open_isr();
+		}
+	}
+	else if(xc_flag == COMMUTATION_PHASE_SWITCH)
 	{
 		if(MOTOR_CLOSE_LOOP == motor.run_flag)
 		{
@@ -110,9 +148,9 @@ void TM0_Isr(void) interrupt TMR0_VECTOR
 			motor_next_step();
 			// 换相
 			pwm_x_output[motor.step]();
-			xc_flag = 1;
+			xc_flag = COMMUTATION_PHASE_DEMAGNETIZE;
 
-			tim_com = 0xffff - (motor.filter_commutation_time_sum / 36);
+			tim_com = 0xffff - commutation_delay_10deg;
 
 			// 停止定时器0
 			TR0 = 0;         
@@ -129,13 +167,17 @@ void TM0_Isr(void) interrupt TMR0_VECTOR
 			motor.commutation_time_sum += temp_commutation_time;
 			motor.commutation_num++;
 			// 一阶低通滤波
-			motor.filter_commutation_time_sum = (motor.filter_commutation_time_sum * 7 + motor.commutation_time_sum * 1) >> 3;
+			motor.filter_commutation_time_sum = (((motor.filter_commutation_time_sum << 3)
+				- motor.filter_commutation_time_sum) + motor.commutation_time_sum) >> 3;
+			commutation_delay_10deg = (uint16)bldc_mdu32_div_u32(motor.filter_commutation_time_sum, 36UL);
 			
 			// 等待稳定，再开始换相错误判断
 			if((BLDC_CLOSE_LOOP_WAIT) < motor.commutation_num)
 			{
+				temp_times_4 = ((uint32)temp_commutation_time << 2);
 				// 本次换向60度的时间，在上一次换向一圈时间的30度到90度，否则认为换向错误
-				if((temp_commutation_time > (motor.filter_commutation_time_sum * 30 / 360)) && (temp_commutation_time < (motor.filter_commutation_time_sum * 90 / 360)))
+				if((((uint32)temp_commutation_time << 3) + temp_times_4 > motor.filter_commutation_time_sum)
+				&& ((temp_times_4 + 3u) < motor.filter_commutation_time_sum))
 				{
 					// 延时减去换向失败计数器
 					if((motor.commutation_failed_num))
@@ -169,12 +211,9 @@ void TM0_Isr(void) interrupt TMR0_VECTOR
            
 		}
 	}
-	else if(xc_flag == 1)
+	else if(xc_flag == COMMUTATION_PHASE_DEMAGNETIZE)
 	{
-		xc_flag = 2;
-		
-//		// 等待消磁, 10度
-//		while(((TH0 << 8) | TL0) < (motor.filter_commutation_time_sum / 36));
+		xc_flag = COMMUTATION_PHASE_DEMAG_DONE;
 
 		comparator_open_isr();
 		
@@ -193,18 +232,12 @@ void TM0_Isr(void) interrupt TMR0_VECTOR
 void comparator_isr(void) interrupt 21		// 比较器中断函数, 检测到反电动势过0事件
 {
 	// BLDC_MOTOR_ANGLE度换相
-	uint16 tim_com = 0xffff - (motor.filter_commutation_time_sum * BLDC_MOTOR_ANGLE / 360); 	
+	uint16 tim_com = 0xffff - commutation_delay_10deg;
 	
     // 获取换相时间
 	temp_commutation_time = (T4H << 8) | T4L;
 
-	xc_flag = 0;
-
-//	// 去除反电动势毛刺
-//    if((temp_commutation_time < (motor.commutation_time_sum / 36) && (BLDC_CLOSE_LOOP_WAIT) < motor.commutation_num))
-//    {
-//        return;
-//    }
+	xc_flag = COMMUTATION_PHASE_SWITCH;
 		
 	T4T3M &= ~0x80; 		// 停止定时器4
 	T4L = 0;

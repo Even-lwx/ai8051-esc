@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  battery                                                            07/08/26  21:04:09  PAGE 1   
+C251 COMPILER V5.60.0,  battery                                                            08/08/26  11:10:19  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE battery
 OBJECT MODULE PLACED IN .\out_file\battery.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\bldc\battery.c XSMALL INTR2 NOALIAS WARNINGLEVEL(3) BROW
                     -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
-                    -\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\battery.lst) TABS(2) OBJECT(.\out_file\battery.obj) 
+                    -\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\battery.lst) TABS(2) OBJECT(.\out_file\battery.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    50   1        
    51   1        // 开启下一次ADC_DMA转换
    52   1        DMA_ADC_CR = 0xc0;
-C251 COMPILER V5.60.0,  battery                                                            07/08/26  21:04:09  PAGE 2   
+C251 COMPILER V5.60.0,  battery                                                            08/08/26  11:10:19  PAGE 2   
 
    53   1        
    54   1          if((BLDC_MIN_BATTERY > battery_voltage))
@@ -115,6 +115,120 @@ stmt  level    source
    95   1          // 初始化的时候先采集一次电压
    96   1          battery_voltage_get();
    97   1      }
+C251 COMPILER V5.60.0,  battery                                                            08/08/26  11:10:19  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION battery_voltage_get (BEGIN)
+                                                ; SOURCE LINE # 41
+                                                ; SOURCE LINE # 42
+                                                ; SOURCE LINE # 47
+000000 900000      R  MOV      DPTR,#WORD0 adc_dma_buff
+000003 E0             MOVX     A,@DPTR          ; A=R11
+000004 0A2B           MOVZ     WR4,R11          ; A=R11
+;---- Variable 'adc_reg_value' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 48
+000006 7E341388       MOV      WR6,#01388H
+00000A AD23           MUL      WR4,WR6
+00000C 7C76           MOV      R7,R6
+00000E 7C65           MOV      R6,R5
+000010 7D23           MOV      WR4,WR6
+;---- Variable 'pin_voltage' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 49
+000012 7E340039       MOV      WR6,#039H
+000016 AD23           MUL      WR4,WR6
+000018 7E14000A       MOV      WR2,#0AH
+00001C 120000      E  LCALL    ?C?ULIDIV
+00001F 7A370000    R  MOV      battery_voltage,WR6
+                                                ; SOURCE LINE # 52
+000023 74C0           MOV      A,#0C0H          ; A=R11
+000025 7E14FA11       MOV      WR2,#0FA11H
+000029 7E04007E       MOV      WR0,#07EH
+00002D 7A0BB0         MOV      @DR0,R11         ; A=R11
+                                                ; SOURCE LINE # 54
+000030 BE342328       CMP      WR6,#02328H
+000034 501E           JNC      ?C0001
+                                                ; SOURCE LINE # 56
+000036 7E1F0000    R  MOV      DR4,low_power_num
+00003A 0B1C           INC      DR4,#01H
+00003C 7A1F0000    R  MOV      low_power_num,DR4
+                                                ; SOURCE LINE # 57
+000040 7E140014       MOV      WR2,#014H
+000044 7E1F0000    R  MOV      DR4,low_power_num
+000048 120000      E  LCALL    ?C?ULIDIV
+00004B BE1807D0       CMP      DR4,#07D0H
+00004F 2809           JLE      ?C0004
+                                                ; SOURCE LINE # 59
+000051 7401           MOV      A,#01H           ; A=R11
+000053 22             RET      
+                                                ; SOURCE LINE # 60
+               ?C0001:
+                                                ; SOURCE LINE # 64
+000054 9F11           SUB      DR4,DR4
+000056 7A1F0000    R  MOV      low_power_num,DR4
+                                                ; SOURCE LINE # 65
+               ?C0004:
+                                                ; SOURCE LINE # 67
+00005A E4             CLR      A                ; A=R11
+                                                ; SOURCE LINE # 68
+00005B 22             RET      
+;       FUNCTION battery_voltage_get (END)
+
+;       FUNCTION battery_init (BEGIN)
+                                                ; SOURCE LINE # 77
+                                                ; SOURCE LINE # 80
+000000 7E340025       MOV      WR6,#025H
+000004 6D11           XRL      WR2,WR2
+000006 6D22           XRL      WR4,WR4
+000008 E4             CLR      A                ; A=R11
+000009 120000      E  LCALL    gpio_init
+C251 COMPILER V5.60.0,  battery                                                            08/08/26  11:10:19  PAGE 4   
+
+                                                ; SOURCE LINE # 82
+00000C 75BC80         MOV      ADC_CONTR,#080H
+                                                ; SOURCE LINE # 83
+00000F 743F           MOV      A,#03FH          ; A=R11
+000011 7E34FEA8       MOV      WR6,#0FEA8H
+000015 7E24007E       MOV      WR4,#07EH
+000019 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 84
+00001C 75DE0F         MOV      ADCCFG,#0FH
+                                                ; SOURCE LINE # 86
+00001F E4             CLR      A                ; A=R11
+000020 7E34FA12       MOV      WR6,#0FA12H
+000024 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 87
+000027 740F           MOV      A,#0FH           ; A=R11
+000029 7E34FA10       MOV      WR6,#0FA10H
+00002D 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 88
+000030 7408           MOV      A,#08H           ; A=R11
+000032 7E34FA17       MOV      WR6,#0FA17H
+000036 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 89
+000039 E4             CLR      A                ; A=R11
+00003A 7E34FA18       MOV      WR6,#0FA18H
+00003E 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 90
+000041 7E34FA19       MOV      WR6,#0FA19H
+000045 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 91
+000048 7420           MOV      A,#020H          ; A=R11
+00004A 7E34FA1A       MOV      WR6,#0FA1AH
+00004E 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 92
+000051 E4             CLR      A                ; A=R11
+000052 7E34FA1B       MOV      WR6,#0FA1BH
+000056 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 93
+000059 74C0           MOV      A,#0C0H          ; A=R11
+00005B 7E34FA11       MOV      WR6,#0FA11H
+00005F 7A1BB0         MOV      @DR4,R11         ; A=R11
+                                                ; SOURCE LINE # 96
+000062 020000      R  LJMP     battery_voltage_get
+;       FUNCTION battery_init (END)
+
 
 
 Module Information          Static   Overlayable
@@ -135,8 +249,6 @@ Module Information          Static   Overlayable
   huge data size       =    ------     ------
   const size           =    ------     ------
   hconst size          =         8     ------
-C251 COMPILER V5.60.0,  battery                                                            07/08/26  21:04:09  PAGE 3   
-
 End of Module Information.
 
 

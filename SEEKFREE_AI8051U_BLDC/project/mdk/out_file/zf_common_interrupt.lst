@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_common_interrupt                                                05/08/26  17:23:53  PAGE 1   
+C251 COMPILER V5.60.0,  zf_common_interrupt                                                08/08/26  11:10:17  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_common_interrupt
 OBJECT MODULE PLACED IN .\out_file\zf_common_interrupt.obj
 COMPILER INVOKED BY: D:\keil5-C251-5.60\C251\BIN\C251.EXE ..\..\libraries\zf_common\zf_common_interrupt.c XSMALL INTR2 N
                     -OALIAS WARNINGLEVEL(3) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;.
-                    -.\..\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG PRINT(.\out_file\zf_common_interrupt.lst) TABS(2) OBJECT(.\ou
-                    -t_file\zf_common_interrupt.obj) 
+                    -.\..\libraries\zf_driver;..\user;..\code;..\..\bldc) DEBUG CODE PRINT(.\out_file\zf_common_interrupt.lst) TABS(2) OBJECT
+                    -(.\out_file\zf_common_interrupt.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    50   1          if((irqn >> 4) == 0)
    51   1          {
    52   2              IP  |= (priority & 0x01) << (irqn & 0x0F);
-C251 COMPILER V5.60.0,  zf_common_interrupt                                                05/08/26  17:23:53  PAGE 2   
+C251 COMPILER V5.60.0,  zf_common_interrupt                                                08/08/26  11:10:17  PAGE 2   
 
    53   2              IPH |= ((priority >> 1) & 0x01) << (irqn & 0x0F);
    54   2          }
@@ -112,10 +112,145 @@ stmt  level    source
    90   1          EA = 1;
    91   1      }
    92          
+C251 COMPILER V5.60.0,  zf_common_interrupt                                                08/08/26  11:10:17  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+;       FUNCTION interrupt_set_priority (BEGIN)
+                                                ; SOURCE LINE # 48
+000000 7C3B           MOV      R3,R11           ; A=R11
+;---- Variable 'priority' assigned to Register 'R3' ----
+000002 7D23           MOV      WR4,WR6
+;---- Variable 'irqn' assigned to Register 'WR4' ----
+                                                ; SOURCE LINE # 50
+000004 0E34           SRA      WR6
+000006 0E34           SRA      WR6
+000008 0E34           SRA      WR6
+00000A 0E34           SRA      WR6
+00000C 782C           JNE      ?C0001
+                                                ; SOURCE LINE # 52
+00000E 7C25           MOV      R2,R5
+000010 5E200F         ANL      R2,#0FH
+000013 7CA3           MOV      R10,R3
+000015 5EA001         ANL      R10,#01H
+000018 7CB2           MOV      R11,R2           ; A=R11
+00001A 6005           JZ       ?C0007
+               ?C0006:
+00001C 3EA0           SLL      R10
+00001E 14             DEC      A                ; A=R11
+00001F 78FB           JNE      ?C0006
+               ?C0007:
+000021 7CBA           MOV      R11,R10          ; A=R11
+000023 42B8           ORL      IP,A             ; A=R11
+                                                ; SOURCE LINE # 53
+000025 7CA3           MOV      R10,R3
+000027 1EA0           SRL      R10
+000029 5EA001         ANL      R10,#01H
+00002C 7CB2           MOV      R11,R2           ; A=R11
+00002E 6005           JZ       ?C0009
+               ?C0008:
+000030 3EA0           SLL      R10
+000032 14             DEC      A                ; A=R11
+000033 78FB           JNE      ?C0008
+               ?C0009:
+000035 7CBA           MOV      R11,R10          ; A=R11
+000037 42B7           ORL      IPH,A            ; A=R11
+                                                ; SOURCE LINE # 54
+000039 22             RET      
+               ?C0001:
+                                                ; SOURCE LINE # 55
+00003A BE340001       CMP      WR6,#01H
+00003E 782C           JNE      ?C0003
+                                                ; SOURCE LINE # 57
+000040 7C25           MOV      R2,R5
+000042 5E200F         ANL      R2,#0FH
+000045 7CA3           MOV      R10,R3
+000047 5EA001         ANL      R10,#01H
+00004A 7CB2           MOV      R11,R2           ; A=R11
+00004C 6005           JZ       ?C0011
+               ?C0010:
+00004E 3EA0           SLL      R10
+000050 14             DEC      A                ; A=R11
+000051 78FB           JNE      ?C0010
+               ?C0011:
+000053 7CBA           MOV      R11,R10          ; A=R11
+000055 42B5           ORL      IP2,A            ; A=R11
+                                                ; SOURCE LINE # 58
+000057 7CA3           MOV      R10,R3
+000059 1EA0           SRL      R10
+00005B 5EA001         ANL      R10,#01H
+C251 COMPILER V5.60.0,  zf_common_interrupt                                                08/08/26  11:10:17  PAGE 4   
+
+00005E 7CB2           MOV      R11,R2           ; A=R11
+000060 6005           JZ       ?C0013
+               ?C0012:
+000062 3EA0           SLL      R10
+000064 14             DEC      A                ; A=R11
+000065 78FB           JNE      ?C0012
+               ?C0013:
+000067 7CBA           MOV      R11,R10          ; A=R11
+000069 42B6           ORL      IP2H,A           ; A=R11
+                                                ; SOURCE LINE # 59
+00006B 22             RET      
+               ?C0003:
+                                                ; SOURCE LINE # 60
+00006C BE340002       CMP      WR6,#02H
+000070 782B           JNE      ?C0002
+                                                ; SOURCE LINE # 62
+000072 7C25           MOV      R2,R5
+000074 5E200F         ANL      R2,#0FH
+000077 7CA3           MOV      R10,R3
+000079 5EA001         ANL      R10,#01H
+00007C 7CB2           MOV      R11,R2           ; A=R11
+00007E 6005           JZ       ?C0015
+               ?C0014:
+000080 3EA0           SLL      R10
+000082 14             DEC      A                ; A=R11
+000083 78FB           JNE      ?C0014
+               ?C0015:
+000085 7CBA           MOV      R11,R10          ; A=R11
+000087 42DF           ORL      IP3,A            ; A=R11
+                                                ; SOURCE LINE # 63
+000089 7CA3           MOV      R10,R3
+00008B 1EA0           SRL      R10
+00008D 5EA001         ANL      R10,#01H
+000090 7CB2           MOV      R11,R2           ; A=R11
+000092 6005           JZ       ?C0017
+               ?C0016:
+000094 3EA0           SLL      R10
+000096 14             DEC      A                ; A=R11
+000097 78FB           JNE      ?C0016
+               ?C0017:
+000099 7CBA           MOV      R11,R10          ; A=R11
+00009B 42EE           ORL      IP3H,A           ; A=R11
+                                                ; SOURCE LINE # 64
+               ?C0002:
+00009D 22             RET      
+;       FUNCTION interrupt_set_priority (END)
+
+;       FUNCTION interrupt_global_disable (BEGIN)
+                                                ; SOURCE LINE # 75
+                                                ; SOURCE LINE # 77
+000000 C2AF           CLR      EA
+                                                ; SOURCE LINE # 78
+000002 22             RET      
+;       FUNCTION interrupt_global_disable (END)
+
+;       FUNCTION interrupt_global_enable (BEGIN)
+                                                ; SOURCE LINE # 88
+                                                ; SOURCE LINE # 90
+000000 D2AF           SETB     EA
+                                                ; SOURCE LINE # 91
+000002 22             RET      
+;       FUNCTION interrupt_global_enable (END)
+
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
+C251 COMPILER V5.60.0,  zf_common_interrupt                                                08/08/26  11:10:17  PAGE 5   
+
   code size            =       164     ------
   ecode size           =    ------     ------
   data size            =    ------     ------

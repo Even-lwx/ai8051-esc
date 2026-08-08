@@ -64,6 +64,7 @@ extern  motor_struct motor;
 void motor_power_on_beep(uint16 volume);
 void motor_stop(void);
 void motor_init(void);
+void motor_close_loop_init(void);
 void motor_commutation_isr_open(void);
 
 void motor_next_step(void);
@@ -73,4 +74,4 @@ void motor_next_step(void);
 
 
 
-#endif 
+#endif

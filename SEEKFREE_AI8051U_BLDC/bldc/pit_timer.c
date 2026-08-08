@@ -297,14 +297,14 @@ void pit_motor_control()
 				// 清除一些变量
 				motor.commutation_num = 0;
 				stall_time_out_check = 0;
-				// 打开比较器中断
-				comparator_open_isr();
 				// 使能定时器4中断
 				IE2 |= 0x40;
 				// 使能定时器4
 				T4T3M |= 0x80;
 				// 切换为闭环状态
 				motor.run_flag = MOTOR_CLOSE_LOOP;
+				// Timer0 初始化换相延时缓存，完成后再打开比较器中断。
+				motor_close_loop_init();
 			}
 			
 			// 超过20ms没有检测到跳变，则从进入电机开始状态
@@ -355,10 +355,10 @@ void pit_motor_control()
 //            }
 			
 
-			// 缓慢加减速
-			// BLDC_PWM_ARR_MAX = 833
+			// 闭环加减速
+			// BLDC_PWM_ARR_MAX = 807
 			// 50us进一次PIT中断，一毫秒进20次。
-			// 如果每一次进来，就修改一次duty的值，那么41.65ms就能从0%拉到100%
+			// 每次中断修改一个 count，40.35ms 能从 0 拉到 807。
             // 等待稳定。
             if((BLDC_CLOSE_LOOP_WAIT) < motor.commutation_num)
 			if(motor.duty_register != motor.duty)

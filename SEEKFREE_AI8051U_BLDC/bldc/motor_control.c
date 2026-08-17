@@ -82,12 +82,14 @@ uint16 tim4_reconfig(void)
 void TM4_Isr(void) interrupt 20
 {
     TIM4_CLEAR_FLAG;
+#if BLDC_ENABLE_PROTECTION
     // 换相超时
     if(MOTOR_CLOSE_LOOP == motor.run_flag && (500) < motor.commutation_num)
     {
         // 正在运行的时候 进入此中断应该立即关闭输出
         motor.run_flag = MOTOR_STOP_STALL;
     }
+#endif
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -132,6 +134,7 @@ void TM0_Isr(void) interrupt TMR0_VECTOR
 			motor.filter_commutation_time_sum = (motor.filter_commutation_time_sum * 7 + motor.commutation_time_sum * 1) >> 3;
 			
 			// 等待稳定，再开始换相错误判断
+#if BLDC_ENABLE_PROTECTION
 			if((BLDC_CLOSE_LOOP_WAIT) < motor.commutation_num)
 			{
 				// 本次换向60度的时间，在上一次换向一圈时间的30度到90度，否则认为换向错误
@@ -165,6 +168,7 @@ void TM0_Isr(void) interrupt TMR0_VECTOR
 //                    motor.run_flag = MOTOR_STOP_STALL;
 //                }
 			}
+#endif
             
            
 		}

@@ -46,7 +46,14 @@ void pwmb_isr()interrupt 27
 		PWMB_SR1 = 0;
         
         // 计算输入PWM信号的频率
-        pwmin.frequency = system_clock / (PWMB_PSCRL + 1) / pwmin.period;
+		if(pwmin.period)
+		{
+            pwmin.frequency = system_clock / (PWMB_PSCRL + 1) / pwmin.period;
+		}
+		else
+		{
+			pwmin.frequency = 0;
+		}
 	}
 	
 	if(PWMB_SR1 & 0x04)
@@ -62,8 +69,7 @@ void pwmb_isr()interrupt 27
             
             if((3000 < pwmin.high_time) || (1000 > pwmin.high_time))
             {
-                // 高电平时间过长或者过短，则油门设置为0
-                pwmin.throttle = 0;
+				// 忽略无效输入帧，保持上一次有效油门
             }
             else
             {
@@ -80,21 +86,20 @@ void pwmb_isr()interrupt 27
                     temp = 0;
                 }
                 pwmin.throttle = temp;
-            }
-			
-			pwm_input_timeout_count = 0;
-        }
-        
-        // 更新占空比（BLDC_USR_DUTY>0 时为宏固定占空比，见 bldc_config.h）
+
 #if (BLDC_USR_DUTY == 0)
-        motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000;
+                motor.duty = (uint32)pwmin.throttle * BLDC_PWM_ARR_MAX / 1000;
 #endif
+				pwm_input_timeout_count = 0;
+            }
+        }
 	}
     
     if(PWMB_SR1 & 0x01)
     {
         PWMB_SR1 = 0;
 				
+#if BLDC_ENABLE_PROTECTION
 #if (BLDC_USR_DUTY == 0)
         // 未检测到输入信号则输出油门都清零
 		if(motor.duty > 0)
@@ -107,6 +112,7 @@ void pwmb_isr()interrupt 27
 				motor.duty = 0;
 			}
 		}
+#endif
 #endif
     }
 

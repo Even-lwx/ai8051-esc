@@ -277,6 +277,7 @@ void pit_motor_control()
 				// 电机换相
 				pwm_x_output[motor.step]();
 			}
+			#if BLDC_ENABLE_PROTECTION
 			else
 			{
 				// 堵转检测
@@ -287,6 +288,7 @@ void pit_motor_control()
 					motor.run_flag = MOTOR_STOP_STALL;
 				}
 			}
+			#endif
 			
 			// 闭环状态切换
 			//if((motor.commutation_num > (BLDC_OPEN_LOOP_WAIT)) && (motor.filter_commutation_time_sum < 30000))
@@ -331,6 +333,7 @@ void pit_motor_control()
 				stall_time_out_check = 0;
 				oled_pin_state = pin_state;
 			}
+			#if BLDC_ENABLE_PROTECTION
 			else
 			{
 				// 如果引脚一直是一个状态，且超过了 BLDC_STALL_TIME_OUT ms 则认为堵转了
@@ -340,6 +343,7 @@ void pit_motor_control()
 					motor.run_flag = MOTOR_STOP_STALL;
 				}
 			}
+			#endif
 			
 //			// 闭环缓慢加速		
 //			if(motor.commutation_num < (BLDC_CLOSE_LOOP_WAIT))
@@ -396,6 +400,7 @@ void pit_motor_control()
 	
 		}
 		break;
+		#if BLDC_ENABLE_PROTECTION
 		case MOTOR_STOP_STALL:
 		{
 			motor_stop();
@@ -405,6 +410,7 @@ void pit_motor_control()
 			motor.restart_delay = BLDC_START_DELAY;
 		}
 		break;
+		#endif
 		case MOTOR_RESTART:
 		{
 			if(motor.restart_delay)

@@ -36,6 +36,8 @@
 #define BLDC_MIN_BATTERY                (9000)   		// 最小电压，单位mv，当检测到电压低于此值电机停转
 	
 #define BLDC_COMMUTATION_FAILED_MAX     (200)     		// 换相错误最大次数 大于这个次数后认为电机堵转
+
+#define BLDC_ENABLE_PROTECTION          (0)             // 1:使能自动故障停机保护 0:禁用
 	
 #define BLDC_START_DELAY                (10000)   		// 当遇到堵转后电机停止时间，之后电机会再次尝试启动（单位0.05ms）
 
